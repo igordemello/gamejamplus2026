@@ -21,3 +21,7 @@ func _on_btn_config_button_down() -> void:
 
 func _on_btn_sair_button_down() -> void:
 	get_tree().quit()
+
+
+func _on_btn_credits_button_down() -> void:
+	get_tree().change_scene_to_file("res://scene/credito.tscn")

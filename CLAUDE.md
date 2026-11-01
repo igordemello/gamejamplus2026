@@ -107,3 +107,7 @@ O script `tests/verificar_npcs.gd` confere os 9 convidados únicos, os recortes 
 ## Verificação de objetos quebráveis
 
 Execute `--headless --path . --fixed-fps 60 --script res://tests/verificar_reaparecimento.gd`. Verifica dois ciclos de quebra e retorno após 30 segundos de um objeto comum e de um levitável segurado pelo mouse, incluindo transformação, grupos, sombra e reativação da interação.
+
+## Créditos
+
+O botão Créditos do menu abre `scene/credito.tscn` (singular). A cena usa `scripts/credito.gd` e tem o botão `voltar`, centralizado na parte inferior, que retorna a `scene/menu.tscn` pelo sinal `pressed`.
