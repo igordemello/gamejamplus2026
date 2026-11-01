@@ -79,6 +79,7 @@ func escolher(nova: Control) -> void:
 	if nova:
 		nova.z_index = 5
 		mover(nova)
+		GameManager.som.tocar_ui("hover_carta")
 
 func sob_mouse(carta: Control, pos: Vector2) -> bool:
 	var local = carta.get_global_transform().affine_inverse() * pos

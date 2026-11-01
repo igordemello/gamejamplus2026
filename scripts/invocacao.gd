@@ -17,6 +17,7 @@ var brilho: float = 1.0
 
 func _ready() -> void:
 	pentagrama.play("desenhar")
+	GameManager.som.tocar("ritual")
 	pentagrama.animation_finished.connect(_on_desenhou)
 	create_tween().tween_property(luz, "energy", 1.4, pentagrama.sprite_frames.get_frame_count("desenhar") / pentagrama.sprite_frames.get_animation_speed("desenhar"))
 	brasas.emitting = true
@@ -55,6 +56,7 @@ func _soltar_fantasma() -> void:
 	house.pos.chutar(3.0)
 	house.piscar_luzes(global_position, 0.3)
 	Onomatopeia.soltar("VUUSH!", global_position + Vector2(0, -90), Color(1, 0.35, 0.3))
+	GameManager.som.tocar("vush")
 	assustar_perto()
 
 # o clarão assusta quem está em volta do pentagrama
@@ -65,4 +67,5 @@ func assustar_perto() -> void:
 			npc.tomar_susto("invocacao", medo_susto, fantasma)
 			assustou = true
 	if assustou:
+		GameManager.som.tocar("buu_invocacao")
 		Onomatopeia.soltar(["BU!", "AAAH!"].pick_random(), global_position + Vector2(randf_range(-70.0, 70.0), -150.0), Color(1, 0.95, 0.6))

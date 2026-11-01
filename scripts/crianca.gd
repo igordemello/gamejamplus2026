@@ -18,6 +18,7 @@ func chorar() -> bool:
 	lagrimas.show()
 	lagrimas.play("chorar")
 	onomatopeia("BUAAA!", Color(0.6, 0.85, 1))
+	GameManager.som.tocar("crianca", duracao_choro, 0.3)
 	get_tree().create_timer(duracao_choro).timeout.connect(lagrimas.hide)
 	perto[0].tomar_susto("choro", medo_choro, self)
 	return true

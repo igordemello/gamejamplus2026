@@ -46,6 +46,7 @@ func parede_adiante(desvio: Vector2) -> bool:
 
 func bater_asas() -> bool:
 	onomatopeia("FLAP FLAP", Color(0.75, 0.6, 1))
+	GameManager.som.tocar("morcego")
 	# duas piscadas brancas, cada uma do tamanho de um quadro do voo
 	piscar(2, 1.0 / sprite.sprite_frames.get_animation_speed(sprite.animation))
 

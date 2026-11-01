@@ -409,6 +409,8 @@ func tomar_susto(susto: String, pontosDeSusto: int, fantasma: Fantasma = null) -
 		# o +1 sai da cabeça e voa até o contador
 		house.ui.voar_susto(get_global_transform_with_canvas() * Vector2(0, -100))
 		mostrar_exclamacao("!!")
+		if nivel_medo < 5:
+			GameManager.som.gritar()
 		Onomatopeia.soltar("SOCORRO!" if nivel_medo >= 5 else ["AAAH!", "EEEK!", "AI AI AI!", "SOCORRO!"].pick_random(),
 			global_position + Vector2(randf_range(-40.0, 40.0), -175.0), Color(1, 0.95, 0.6), 4.0 if nivel_medo >= 5 else 3.0)
 		# peso: tela treme, câmera dá um tranco e o jogo congela um instante (mais forte quando ele foge)
@@ -541,6 +543,7 @@ func fugir() -> void:
 
 	current_estado = Estado.Foge
 	sair_do_ponto()
+	GameManager.som.tocar("socorro", 4.85, 0.8)
 
 	agent.target_position = house.ponto_fuga.global_position
 
@@ -679,6 +682,7 @@ func parar_coracao() -> void:
 	house.ui.focar(self, 0.13)
 	house.camera.tremer(5.0)
 	house.ui.letreiro("INFARTO!", get_global_transform_with_canvas() * Vector2(0, -170))
+	GameManager.som.tocar("infarto")
 
 func bater_no_chao(lado: float) -> void:
 	house.camera.tremer(6.0)

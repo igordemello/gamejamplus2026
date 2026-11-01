@@ -109,6 +109,7 @@ func bafo_do_medo() -> bool:
 		return false
 	sprite.flip_h = perto[0].global_position.x > global_position.x
 	onomatopeia("HUAAAA", Color(0.6, 1, 0.45))
+	GameManager.som.tocar("zumbi_bafo")
 	for npc in perto:
 		npc.tomar_susto("bafo", medo_bafo, self)
 		npc.atordoar(paralisia_bafo)
@@ -164,6 +165,7 @@ func arranhao() -> bool:
 func _on_quadro_mudou() -> void:
 	if sprite.animation == &"arranhao" and sprite.frame == quadro_arranhao and is_instance_valid(alvo):
 		onomatopeia("SCRATCH!", Color(1, 0.35, 0.35))
+		GameManager.som.tocar("zumbi_scratch")
 		alvo.tomar_susto("arranhao", medo_arranhao, self)
 		GameManager.house.camera.tremer(4.0)
 

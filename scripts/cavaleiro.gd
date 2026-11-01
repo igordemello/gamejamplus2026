@@ -20,5 +20,6 @@ func susto_de_espada() -> bool:
 
 	sprite.play("atacar")
 	onomatopeia("SHING!", Color(0.8, 0.9, 1))
+	GameManager.som.tocar("cavaleiro")
 	alvo.tomar_susto("espada", medo_espada, self)
 	return true

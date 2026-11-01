@@ -88,6 +88,7 @@ func quebrar(objeto: Node2D) -> void:
 	)
 	assustados.sort_custom(func(a, b): return objeto.global_position.distance_to(a.global_position) < objeto.global_position.distance_to(b.global_position))
 	Onomatopeia.soltar("CRASH!", objeto.global_position + Vector2(0, -40), Color(1, 0.6, 0.25), 4.0)
+	GameManager.som.tocar("diabrete_quebra")
 	for npc in assustados.slice(0, max_assustados):
 		npc.tomar_susto("quebra", medo_quebra, self)
 

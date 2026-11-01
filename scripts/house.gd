@@ -50,6 +50,7 @@ var ultima_morte: Vector2
 func _ready() -> void:
 	GameManager.house = self
 	GameManager.comecar_partida()
+	GameManager.som.tocar_musica("jogo")
 	for region in house_regions.get_children():
 		if region is NavigationRegion2D:
 			# Cômodos só delimitam área; se ficarem ativos viram ilhas sobrepostas
@@ -133,6 +134,8 @@ func chamar_policia() -> void:
 	ui.letreiro("POLÍCIA!", get_viewport().get_visible_rect().size * Vector2(0.42, 0.3))
 	Onomatopeia.soltar("UIU UIU", ponto_fuga.global_position + Vector2(0, -110), Color(0.5, 0.7, 1.0))
 	camera.tremer(4.0)
+	# some junto com a luz da sirene (10 piscadas de 0,6 s)
+	GameManager.som.tocar("sirene", 6.0, 2.5)
 	var sirene = PointLight2D.new()
 	sirene.texture = preload("res://assets/luz.tres")
 	sirene.texture_scale = 3.0

@@ -163,6 +163,8 @@ func linha(lbl: Label, texto: String, feito: bool, falhou: bool) -> void:
 		estado_linhas[lbl] = estado
 		lbl.add_theme_color_override("font_color", COR_LINHA[estado])
 		avisar_objetivos()
+		if feito:
+			GameManager.som.tocar_ui("objetivo")
 	if feito:
 		lbl.text = texto + " - feito!"
 	elif falhou:

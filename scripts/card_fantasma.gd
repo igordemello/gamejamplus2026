@@ -142,6 +142,7 @@ func _process(_delta: float) -> void:
 
 # chegou nas mortes que faltavam: a carta brilha e a arte e o custo dão um pulinho
 func liberou() -> void:
+	GameManager.som.tocar_ui("carta_liberada")
 	if tween_liberou:
 		tween_liberou.kill()
 	if $brilho.material == null:
@@ -186,6 +187,7 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	preview = Control.new()
 	preview.add_child(imagem)
 	set_drag_preview(preview)
+	GameManager.som.tocar_ui("carta_pegar")
 	return self
 
 # chacoalha de lado quando tenta arrastar sem poder comprar

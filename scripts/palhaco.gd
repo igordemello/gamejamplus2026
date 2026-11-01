@@ -12,7 +12,7 @@ extends Fantasma
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var notas: Node2D = $notas
-# sem arquivo ainda: é só colocar a música no stream desse nó
+# o arquivo e o volume vêm do som.gd
 @onready var musica: AudioStreamPlayer2D = $musica
 @onready var altura_sprite: float = sprite.position.y
 
@@ -24,6 +24,7 @@ var proxima_nota: float = 0.0
 # cada nota é [posição, idade]
 var lista_notas: Array = []
 var alvo: Npc
+var som_inflando: AudioStreamPlayer
 
 func _ready() -> void:
 	escala_sprite = sprite.scale
@@ -49,7 +50,7 @@ func _process(delta: float) -> void:
 			lista_notas.append([Vector2(randf_range(40.0, 130.0) * [-1, 1].pick_random(), randf_range(-110.0, 10.0)), 0.0])
 		if tempo_musica <= 0.0:
 			remove_from_group("musica")
-			musica.stop()
+			create_tween().set_ignore_time_scale().tween_property(musica, "volume_linear", 0.001, 0.4).finished.connect(musica.stop)
 
 	for nota in lista_notas:
 		nota[1] += delta
@@ -62,7 +63,7 @@ func musica_de_circo() -> bool:
 	tempo_musica = duracao_musica
 	proxima_nota = 0.0
 	add_to_group("musica")
-	musica.play()
+	musica.play(GameManager.som.preparar(musica, "musica_palhaco"))
 	onomatopeia("LA LA LA", Color(1, 0.8, 0.4))
 	return true
 
@@ -75,6 +76,7 @@ func balao() -> bool:
 		return false
 	alvo = npc
 	sprite.play("balao")
+	som_inflando = GameManager.som.tocar("balao_inflando")
 	return true
 
 # o susto sai no último quadro, com a boca toda aberta
@@ -85,6 +87,8 @@ func _on_quadro_mudou() -> void:
 		onomatopeia("POP!", Color(1, 0.45, 0.55))
 		alvo.tomar_susto("balao", medo_balao, self)
 	alvo = null
+	GameManager.som.parar(som_inflando, 0.05)
+	GameManager.som.tocar("balao_estourando")
 	GameManager.house.camera.tremer(5.0)
 	var tween = create_tween()
 	tween.tween_property(sprite, "scale", escala_sprite * 1.3, 0.06)
