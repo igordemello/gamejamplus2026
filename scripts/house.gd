@@ -12,6 +12,7 @@ var regionsHouse: Array[NavigationRegion2D] = []
 # pos.gd, o pós-processamento: pos.chutar(forca) dá um tranco de aberração cromática
 @onready var pos = $pos/tela
 @onready var noite: CanvasModulate = $noite
+@onready var tutorial = $tutorial
 
 @export var ponto_fuga: Marker2D
 @export var chao: Sprite2D
@@ -22,9 +23,13 @@ var regionsHouse: Array[NavigationRegion2D] = []
 @export var cor_festa: Color = Color(0.42, 0.38, 0.6)
 @export var cor_vazia: Color = Color(0.3, 0.16, 0.22)
 var npcs_no_comeco: int = 0
+# a partida acaba (vitória) quando não sobra ninguém na casa
+var acabou: bool = false
+var tempo_partida: float = 0.0
 
 func _ready() -> void:
 	GameManager.house = self
+	GameManager.comecar_partida()
 	for region in house_regions.get_children():
 		if region is NavigationRegion2D:
 			# Cômodos só delimitam área; se ficarem ativos viram ilhas sobrepostas
@@ -33,10 +38,26 @@ func _ready() -> void:
 			regionsHouse.append(region)
 	npcs_no_comeco = get_tree().get_nodes_in_group("npc").size()
 	noite.color = cor_festa
+	if not tutorial.ja_viu():
+		tutorial.comecar(self)
 
 func _process(delta: float) -> void:
-	var foram = 1.0 - get_tree().get_nodes_in_group("npc").size() / float(maxi(npcs_no_comeco, 1))
+	var restantes = get_tree().get_nodes_in_group("npc").size()
+	var foram = 1.0 - restantes / float(maxi(npcs_no_comeco, 1))
 	noite.color = noite.color.lerp(cor_festa.lerp(cor_vazia, clampf(foram, 0.0, 1.0)), minf(delta, 1.0))
+	if not acabou:
+		tempo_partida += delta
+		if npcs_no_comeco > 0 and restantes == 0:
+			acabou = true
+			vencer()
+
+# por enquanto a vitória é tirar todo mundo da casa (fugindo ou de infarto)
+func vencer() -> void:
+	# espera quem ainda está saindo pela porta ou caindo duro terminar
+	while y_sort.get_children().any(func(c): return c is Npc):
+		await get_tree().process_frame
+	await get_tree().create_timer(0.8).timeout
+	$vitoria.mostrar(npcs_no_comeco - GameManager.mortes, GameManager.mortes, tempo_partida)
 
 # susto por perto: as luzes do cômodo (ou a até 300 px) piscam
 func piscar_luzes(pos_susto: Vector2, duracao: float) -> void:

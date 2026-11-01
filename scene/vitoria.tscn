@@ -1,0 +1,110 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/vitoria.gd" id="1_vitoria"]
+[ext_resource type="Texture2D" path="res://assets/UI/icon_susto.png" id="2_susto"]
+[ext_resource type="Texture2D" path="res://assets/UI/icon_morte.png" id="3_morte"]
+
+[node name="vitoria" type="CanvasLayer"]
+process_mode = 3
+layer = 11
+script = ExtResource("1_vitoria")
+
+[node name="fundo" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.85)
+
+[node name="caixa" type="VBoxContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -360.0
+offset_top = -300.0
+offset_right = 360.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="titulo" type="Label" parent="caixa"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 110
+theme_override_constants/outline_size = 16
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+text = "Vitória!"
+horizontal_alignment = 1
+
+[node name="subtitulo" type="Label" parent="caixa"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
+text = "A festa acabou: não sobrou ninguém na casa."
+horizontal_alignment = 1
+
+[node name="linha_fugiram" type="HBoxContainer" parent="caixa"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="icone" type="TextureRect" parent="caixa/linha_fugiram"]
+texture_filter = 1
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("2_susto")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="fugiram" type="Label" parent="caixa/linha_fugiram"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "0 fugiram da casa"
+
+[node name="linha_mortes" type="HBoxContainer" parent="caixa"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="icone" type="TextureRect" parent="caixa/linha_mortes"]
+texture_filter = 1
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("3_morte")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="mortes" type="Label" parent="caixa/linha_mortes"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "0 morreram de susto"
+
+[node name="tempo" type="Label" parent="caixa"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Tempo: 0:00"
+horizontal_alignment = 1
+
+[node name="espaco" type="Control" parent="caixa"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="jogar_de_novo" type="Button" parent="caixa"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Jogar de novo"
+
+[node name="menu" type="Button" parent="caixa"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Menu principal"

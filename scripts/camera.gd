@@ -15,6 +15,8 @@ var zoom_alvo: float
 var zoom_atual: float
 var tremida: float = 0.0
 var tranco: float = 0.0
+# quanto o jogador já arrastou com o botão direito (o tutorial usa)
+var arrastado: float = 0.0
 
 func _ready() -> void:
 	var tela = Vector2(ProjectSettings.get_setting("display/window/size/viewport_width"), ProjectSettings.get_setting("display/window/size/viewport_height"))
@@ -55,6 +57,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event is InputEventMouseMotion and event.button_mask & MOUSE_BUTTON_MASK_RIGHT:
 		position -= event.relative / zoom
 		prender()
+		arrastado += event.relative.length()
 
 func prender() -> void:
 	var meio = (get_viewport_rect().size / zoom / 2).min(limite.size / 2)

@@ -7,6 +7,7 @@ func _ready() -> void:
 	hide()
 	config.voltar.connect(botoes.show)
 	%continuar.pressed.connect(despausar)
+	%como_jogar.pressed.connect(_on_como_jogar)
 	%configuracoes.pressed.connect(_on_configuracoes)
 	%menu.pressed.connect(_on_menu)
 	%sair.pressed.connect(get_tree().quit)
@@ -28,6 +29,10 @@ func pausar() -> void:
 func despausar() -> void:
 	get_tree().paused = false
 	hide()
+
+func _on_como_jogar() -> void:
+	despausar()
+	GameManager.house.tutorial.comecar(GameManager.house)
 
 func _on_configuracoes() -> void:
 	botoes.hide()

@@ -41,15 +41,15 @@ alignment = 1
 
 [node name="nome" type="Label" parent="linha/textos" unique_id=1360496232]
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 26
 text = "Nome"
 
 [node name="restricao" type="Label" parent="linha/textos" unique_id=445166619]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 19
 text = "Só na cozinha"
 
 [node name="custo" type="Label" parent="linha/textos" unique_id=2064443064]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 19
 text = "0 sustos"

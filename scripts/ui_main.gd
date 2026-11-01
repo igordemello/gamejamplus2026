@@ -2,10 +2,15 @@ extends CanvasLayer
 
 const FOCO = preload("res://assets/foco.gdshader")
 
-@onready var lbl_sustos: Label = $lbl_sustos
+@onready var lbl_sustos: Label = $contadores/sustos/lbl_sustos
+@onready var lbl_mortes: Label = $contadores/mortes/lbl_mortes
+# o "+1" voa até esse ícone
+@onready var icone_sustos: Control = $contadores/sustos/icone
 
 var sustos_antes: int = 0
+var mortes_antes: int = 0
 var tween_sustos: Tween
+var tween_mortes: Tween
 # sustos que ainda estão voando até o contador (só contam quando chegam)
 var voando: int = 0
 # tela escura em volta de alguém (infarto); criada na primeira vez
@@ -19,6 +24,7 @@ var foco_raio: float = 0.6
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	sustos_antes = GameManager.sustos
+	mortes_antes = GameManager.mortes
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -26,9 +32,13 @@ func _process(delta: float) -> void:
 	var mostrados = GameManager.sustos - voando
 	if mostrados != sustos_antes:
 		# cresce quando ganha, encolhe quando gasta
-		pular_contador(1.4 if mostrados > sustos_antes else 0.8)
+		tween_sustos = pular(lbl_sustos, tween_sustos, 1.4 if mostrados > sustos_antes else 0.8)
 		sustos_antes = mostrados
-	lbl_sustos.text = "Sustos: " + str(mostrados)
+	lbl_sustos.text = str(mostrados)
+	if GameManager.mortes != mortes_antes:
+		tween_mortes = pular(lbl_mortes, tween_mortes, 1.6)
+		mortes_antes = GameManager.mortes
+	lbl_mortes.text = str(GameManager.mortes)
 
 	if foco and foco.visible:
 		foco.material.set_shader_parameter("forca", foco_forca)
@@ -38,12 +48,15 @@ func _process(delta: float) -> void:
 			var centro = foco_alvo.get_global_transform_with_canvas() * Vector2(0, -30)
 			foco.material.set_shader_parameter("centro", centro / foco.size)
 
-func pular_contador(tamanho: float) -> void:
-	if tween_sustos:
-		tween_sustos.kill()
-	tween_sustos = create_tween().set_ignore_time_scale()
-	tween_sustos.tween_property(lbl_sustos, "scale", Vector2.ONE * tamanho, 0.06)
-	tween_sustos.tween_property(lbl_sustos, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+# o número cresce (ou encolhe) do meio e volta
+func pular(lbl: Label, tween: Tween, tamanho: float) -> Tween:
+	if tween:
+		tween.kill()
+	lbl.pivot_offset = lbl.size / 2.0
+	tween = create_tween().set_ignore_time_scale()
+	tween.tween_property(lbl, "scale", Vector2.ONE * tamanho, 0.06)
+	tween.tween_property(lbl, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	return tween
 
 # "+1" que pula da cabeça do npc (posição de tela) e voa em curva até o contador
 func voar_susto(de: Vector2, quantos: int = 1) -> void:
@@ -56,7 +69,7 @@ func voar_susto(de: Vector2, quantos: int = 1) -> void:
 	texto.position = de - Vector2(20, 20)
 	texto.pivot_offset = Vector2(20, 20)
 	add_child(texto)
-	var destino = lbl_sustos.position + Vector2(lbl_sustos.size.x, lbl_sustos.size.y / 2.0) - Vector2(10, 20)
+	var destino = icone_sustos.global_position + icone_sustos.size / 2.0 - Vector2(20, 20)
 	# em tempo real, pra não ficar parado no hitstop
 	var tween = texto.create_tween().set_ignore_time_scale()
 	texto.scale = Vector2(0.3, 0.3)

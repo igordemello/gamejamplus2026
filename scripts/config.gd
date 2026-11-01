@@ -22,6 +22,8 @@ func _on_voltar() -> void:
 
 func salvar() -> void:
 	var cfg = ConfigFile.new()
+	# o arquivo guarda mais coisa (tutorial visto); só troca o que é daqui
+	cfg.load(ARQUIVO)
 	cfg.set_value("config", "volume", volume.value / 100.0)
 	cfg.set_value("config", "tela_cheia", tela_cheia.button_pressed)
 	cfg.save(ARQUIVO)

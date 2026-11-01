@@ -1,0 +1,77 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://v5exrxut14xn"]
+
+[ext_resource type="Texture2D" uid="uid://cmrlygvhy5you" path="res://assets/npc/gordo.png" id="1_sheet"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar0"]
+atlas = ExtResource("1_sheet")
+region = Rect2(14, 7, 32, 64)
+margin = Rect2(12, 0, 32, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar1"]
+atlas = ExtResource("1_sheet")
+region = Rect2(71, 7, 34, 64)
+margin = Rect2(10, 0, 30, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar2"]
+atlas = ExtResource("1_sheet")
+region = Rect2(127, 7, 41, 64)
+margin = Rect2(8, 0, 23, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar3"]
+atlas = ExtResource("1_sheet")
+region = Rect2(184, 7, 39, 64)
+margin = Rect2(7, 0, 25, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar4"]
+atlas = ExtResource("1_sheet")
+region = Rect2(9, 84, 40, 64)
+margin = Rect2(7, 0, 24, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar5"]
+atlas = ExtResource("1_sheet")
+region = Rect2(68, 84, 37, 64)
+margin = Rect2(7, 0, 27, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar6"]
+atlas = ExtResource("1_sheet")
+region = Rect2(130, 84, 34, 64)
+margin = Rect2(11, 0, 30, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar7"]
+atlas = ExtResource("1_sheet")
+region = Rect2(188, 84, 34, 64)
+margin = Rect2(11, 0, 30, 0)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar7")
+}],
+"loop": 1,
+"name": &"andar",
+"speed": 10.0
+}]
+metadata/infarto_tipo = "Poltergeist"
+metadata/infarto_tier = 2

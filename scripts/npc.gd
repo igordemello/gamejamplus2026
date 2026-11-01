@@ -89,6 +89,8 @@ func _ready() -> void:
 		# desenho menor que os outros (psicopata) vem com metadata "escala" no .tres
 		escala_sprite *= visual.get_meta("escala", 1.0)
 		sprite.scale = escala_sprite
+	# o pé fica na base do quadro, seja qual for o tamanho do sheet (o pivô do sprite é o pé)
+	sprite.offset.y = -sprite.sprite_frames.get_frame_texture("andar", 0).get_height() / 2.0
 	infarto_tipo = sprite.sprite_frames.get_meta("infarto_tipo", "")
 	infarto_tier = sprite.sprite_frames.get_meta("infarto_tier", 0)
 	medidor = Node2D.new()
@@ -593,6 +595,7 @@ func bater_no_chao(lado: float) -> void:
 	get_parent().add_child(poeira)
 	# a recompensa sai do corpo caído
 	GameManager.sustos += 1 + bonus_infarto
+	GameManager.mortes += 1
 	house.ui.voar_susto(get_global_transform_with_canvas() * Vector2(lado * 40.0, 0), 1 + bonus_infarto)
 
 # a alma sai do corpo: o mesmo desenho em branco, meio transparente, subindo e balançando
