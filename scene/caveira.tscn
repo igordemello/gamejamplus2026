@@ -259,7 +259,9 @@ animations = [{
 script = ExtResource("2_acao")
 nome = "Risada Maligna"
 icone = SubResource("AtlasTexture_icone_risada")
-descricao = "A caveira começa a rir e todo mundo num círculo em volta se assusta. Medo 10."
+descricao = "A caveira começa a rir e todo mundo num círculo em volta se assusta."
+resumo = "Ri e assusta todo mundo num círculo em volta"
+propriedade_medo = &"medo_risada"
 recarga = 12.0
 metodo = &"risada_maligna"
 
@@ -267,7 +269,9 @@ metodo = &"risada_maligna"
 script = ExtResource("2_acao")
 nome = "Mordida de Fogo"
 icone = SubResource("AtlasTexture_icone_mordida")
-descricao = "Morde até duas pessoas perto, que saem correndo pra outro cômodo. Medo 20."
+descricao = "Morde até duas pessoas perto, que saem correndo pra outro cômodo."
+resumo = "Morde até duas pessoas, que fogem pra outro cômodo"
+propriedade_medo = &"medo_mordida"
 recarga = 18.0
 metodo = &"mordida_de_fogo"
 
@@ -275,7 +279,9 @@ metodo = &"mordida_de_fogo"
 script = ExtResource("2_acao")
 nome = "Cabeçada"
 icone = SubResource("AtlasTexture_icone_cabecada")
-descricao = "Persegue a pessoa mais perto e dá uma cabeçada: ela fica 10 s tonta, parada, com o medo caindo. Medo 30."
+descricao = "Persegue a pessoa mais perto e dá uma cabeçada: ela fica 10 s tonta, parada, com o medo caindo."
+resumo = "Persegue e dá uma cabeçada que deixa a pessoa tonta"
+propriedade_medo = &"medo_cabecada"
 recarga = 26.0
 metodo = &"cabecada"
 

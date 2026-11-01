@@ -13,7 +13,9 @@ script = ExtResource("2_acao")
 nome = "Bater asas"
 recarga = 6.0
 icone = SubResource("AtlasTexture_icone_bater")
-descricao = "Bate as asas com força e o vento empurra pra trás quem estiver na frente dele. Medo 10."
+descricao = "Bate as asas com força e o vento empurra pra trás quem estiver na frente dele."
+resumo = "Bate as asas e o vento empurra quem está na frente"
+propriedade_medo = &"medo_bater_asas"
 metodo = &"bater_asas"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8h54h"]

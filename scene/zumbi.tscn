@@ -14,7 +14,9 @@ region = Rect2(199, 73, 53, 51)
 script = ExtResource("2_acao")
 nome = "Bafo do Medo"
 icone = SubResource("AtlasTexture_icone_bafo")
-descricao = "Solta o bafo num cone virado pra pessoa mais perto: todo mundo dentro se assusta e fica 2 s paralisado. Medo 10."
+descricao = "Solta o bafo num cone virado pra pessoa mais perto: todo mundo dentro se assusta e fica 2 s paralisado."
+resumo = "Bafo num cone que assusta e paralisa quem estiver dentro"
+propriedade_medo = &"medo_bafo"
 recarga = 16.0
 metodo = &"bafo_do_medo"
 
@@ -26,7 +28,9 @@ region = Rect2(69, 6, 51, 48)
 script = ExtResource("2_acao")
 nome = "Arranhão"
 icone = SubResource("AtlasTexture_icone_arranhao")
-descricao = "Vai arrastando os pés, bem devagar, até a pessoa mais perto e dá um arranhão. Medo 20."
+descricao = "Vai arrastando os pés, bem devagar, até a pessoa mais perto e dá um arranhão."
+resumo = "Anda até a pessoa mais perto e dá um arranhão"
+propriedade_medo = &"medo_arranhao"
 recarga = 20.0
 metodo = &"arranhao"
 

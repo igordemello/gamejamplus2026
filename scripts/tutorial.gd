@@ -1,6 +1,6 @@
 extends CanvasLayer
 
-# tutorial do começo: passos curtos num painel embaixo, com o jogo rodando atrás.
+# tutorial do começo: passos curtos num painel no topo, com o jogo rodando atrás.
 # os passos com "feito" passam sozinhos quando o jogador faz o que foi pedido.
 # a casa chama comecar() toda vez que a partida começa; a pausa tem "Como jogar"
 
@@ -34,7 +34,7 @@ func comecar(casa) -> void:
 			"feito": func(): return absf(cam.zoom_alvo - zoom_inicial) > 0.01},
 		{"titulo": "Andar pela casa", "texto": "Com a câmera aproximada, segure o botão direito do mouse e arraste para andar pela casa.",
 			"feito": func(): return cam.arrastado - arrastado_inicial > 150.0},
-		{"titulo": "Chamar fantasmas", "texto": "Arraste um fantasma da loja, à direita, até a casa. Cada um custa sustos, e alguns só podem ficar em certos lugares (está escrito no card).",
+		{"titulo": "Chamar fantasmas", "texto": "Arraste um fantasma do baralho, lá embaixo, até a casa. Cada um custa sustos, e alguns só podem ficar em certos lugares (está escrito na carta).",
 			"destaque": house.ui.get_node("painel_fantasmas"),
 			"feito": func(): return get_tree().get_nodes_in_group("fantasma").size() > fantasmas_inicial},
 		{"titulo": "Usar ações", "texto": "Segure o botão esquerdo em cima de um fantasma: o tempo desacelera e aparecem as ações dele. Arraste até uma e solte. Cada ação tem recarga.",

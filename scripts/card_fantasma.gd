@@ -20,7 +20,6 @@ var silhueta_offset: Vector2
 # o que segue o mouse enquanto arrasta; a área do jogo deixa avermelhado onde não pode soltar
 var preview: Control
 var tween_chacoalho: Tween
-var tween_hover: Tween
 
 func _ready() -> void:
 	var fantasma: Fantasma = cena.instantiate()
@@ -38,24 +37,77 @@ func _ready() -> void:
 	silhueta_posicao = sprite.position * fantasma.scale
 	silhueta_offset = sprite.offset
 
-	var restricao = ""
-	if comodo_spawn != "":
-		restricao = "Só em: %s" % comodo_spawn
-	elif fora_de_casa:
-		restricao = "Só do lado de fora"
-	elif pontos_spawn != &"":
-		restricao = "Só nos pontos de %s" % pontos_spawn
-	elif not comodos_proibidos.is_empty():
-		restricao = "Não entra em %s" % ", ".join(comodos_proibidos)
+	# o que cada texto pode ocupar, antes de mexer na fonte
+	var area_nome = $nome.size
+	var area_custo = $custo.size
 
-	$linha/icone.texture = icone
-	$linha/textos/nome.text = fantasma.name
-	$linha/textos/restricao.text = restricao
-	$linha/textos/restricao.visible = restricao != ""
-	atualizar_custo()
+	$arte.texture = icone
+	# uma palavra por linha ("Geleia / Roxa")
+	$nome.text = fantasma.name.replace(" ", "\n")
+	caber($nome, area_nome, 32)
+	$custo.text = str(custo)
+	caber($custo, area_custo, 40)
+	atualizar_restantes()
+	var textos = rodape()
+	$rodape1.text = textos[0]
+	$rodape2.text = textos[1]
+
+	# uma linha por ação; com 3 cabem só com letras menores
+	var acoes = fantasma.acoes
+	var altura = 114.0 / maxi(acoes.size(), 2)
+	for acao in acoes:
+		criar_habilidade(acao, fantasma, altura, 16 if acoes.size() > 2 else 18, 34 if acoes.size() > 2 else 44)
 	fantasma.free()
-	mouse_entered.connect(crescer.bind(1.04))
-	mouse_exited.connect(crescer.bind(1.0))
+
+# diminui a fonte até o texto caber na área
+func caber(label: Label, area: Vector2, minimo: int) -> void:
+	var tamanho = label.get_theme_font_size("font_size")
+	while tamanho > minimo:
+		var preciso = label.get_minimum_size()
+		if preciso.x <= area.x and preciso.y <= area.y:
+			break
+		tamanho -= 2
+		label.add_theme_font_size_override("font_size", tamanho)
+
+func inicial(texto: String) -> String:
+	return texto.substr(0, 1).to_upper() + texto.substr(1)
+
+# as duas linhas de baixo da carta, conforme onde o fantasma pode ser colocado
+func rodape() -> Array[String]:
+	if comodo_spawn != "":
+		return ["Só pode ser spawnado em:", inicial(comodo_spawn)]
+	if fora_de_casa:
+		return ["Só pode ser spawnado:", "Do lado de fora"]
+	if pontos_spawn != &"":
+		return ["Só pode ser spawnado nos pontos de:", inicial(pontos_spawn)]
+	if not comodos_proibidos.is_empty():
+		return ["Não pode ser spawnado em:", ", ".join(comodos_proibidos.map(inicial))]
+	return ["Pode ser spawnado:", "Em qualquer lugar"]
+
+# resumo da ação à esquerda, medo à direita
+func criar_habilidade(acao: Acao, fantasma: Fantasma, altura: float, fonte_resumo: int, fonte_medo: int) -> void:
+	var linha = HBoxContainer.new()
+	linha.custom_minimum_size.y = altura
+	linha.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	linha.add_theme_constant_override("separation", 8)
+
+	var resumo = Label.new()
+	resumo.text = acao.resumo
+	resumo.autowrap_mode = TextServer.AUTOWRAP_WORD
+	resumo.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	resumo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	resumo.add_theme_font_size_override("font_size", fonte_resumo)
+	linha.add_child(resumo)
+
+	var medo = Label.new()
+	medo.text = acao.texto_medo(fantasma)
+	medo.custom_minimum_size.x = 56
+	medo.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	medo.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	medo.add_theme_font_size_override("font_size", fonte_medo)
+	linha.add_child(medo)
+
+	$habilidades.add_child(linha)
 
 func _process(_delta: float) -> void:
 	disabled = GameManager.sustos < custo or restantes <= 0
@@ -64,10 +116,10 @@ func _process(_delta: float) -> void:
 func comprou() -> void:
 	GameManager.sustos -= custo
 	restantes -= 1
-	atualizar_custo()
+	atualizar_restantes()
 
-func atualizar_custo() -> void:
-	$linha/textos/custo.text = "%d sustos - %s %d" % [custo, "resta" if restantes == 1 else "restam", restantes]
+func atualizar_restantes() -> void:
+	$restam.text = "%s %d" % ["resta" if restantes == 1 else "restam", restantes]
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	if disabled:
@@ -87,14 +139,6 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	preview.add_child(imagem)
 	set_drag_preview(preview)
 	return self
-
-# cresce um tiquinho com o mouse em cima
-func crescer(tamanho: float) -> void:
-	pivot_offset = size / 2.0
-	if tween_hover:
-		tween_hover.kill()
-	tween_hover = create_tween().set_ignore_time_scale()
-	tween_hover.tween_property(self, "scale", Vector2.ONE * tamanho, 0.1)
 
 # chacoalha de lado quando tenta arrastar sem poder comprar
 func chacoalhar() -> void:

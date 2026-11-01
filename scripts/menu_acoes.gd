@@ -92,6 +92,8 @@ func _process(delta: float) -> void:
 	if acao:
 		titulo.text = acao.nome
 		descricao.text = acao.descricao
+		if acao.propriedade_medo != &"":
+			descricao.text += "\nMedo " + acao.texto_medo(fantasma)
 		var borda = (distancia_icones + raio_icone + 14) * sentido
 		painel_descricao.position.x = -painel_descricao.size.x / 2
 		painel_descricao.position.y = borda - painel_descricao.size.y if sentido < 0 else borda

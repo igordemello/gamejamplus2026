@@ -252,7 +252,9 @@ animations = [{
 script = ExtResource("2_acao")
 nome = "Mastigar"
 icone = SubResource("AtlasTexture_icone_mastigar")
-descricao = "Vai até a pessoa mais perto no cômodo e mastiga a perna dela. Só ela se assusta. Medo 15."
+descricao = "Vai até a pessoa mais perto no cômodo e mastiga a perna dela. Só ela se assusta."
+resumo = "Vai até a pessoa mais perto e mastiga a perna dela"
+propriedade_medo = &"medo_mastigar"
 recarga = 14.0
 metodo = &"mastigar"
 
@@ -260,7 +262,9 @@ metodo = &"mastigar"
 script = ExtResource("2_acao")
 nome = "Latido Feral"
 icone = SubResource("AtlasTexture_icone_latido")
-descricao = "Um latido invertido que assusta todo mundo no cômodo. Medo 10."
+descricao = "Um latido invertido que assusta todo mundo no cômodo."
+resumo = "Latido invertido que assusta todo mundo no cômodo"
+propriedade_medo = &"medo_latido"
 recarga = 7.0
 metodo = &"latido_feral"
 

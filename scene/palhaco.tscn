@@ -79,6 +79,8 @@ script = ExtResource("2_acao")
 nome = "Música de Circo"
 icone = ExtResource("3_parado")
 descricao = "Uma música de circo estranha começa a tocar no cômodo do palhaço: por 8 s, todo susto lá dentro fica 50% mais forte."
+resumo = "Por 8 s, todo susto no cômodo fica 50% mais forte"
+propriedade_medo = &"intensidade_musica"
 recarga = 16.0
 metodo = &"musica_de_circo"
 
@@ -86,7 +88,9 @@ metodo = &"musica_de_circo"
 script = ExtResource("2_acao")
 nome = "Balão"
 icone = SubResource("AtlasTexture_icone_balao")
-descricao = "A cabeça do palhaço incha e ele assusta a pessoa mais perto no mesmo cômodo. Medo 15."
+descricao = "A cabeça do palhaço incha e ele assusta a pessoa mais perto no mesmo cômodo."
+resumo = "A cabeça incha e assusta a pessoa mais perto do cômodo"
+propriedade_medo = &"medo_balao"
 recarga = 6.0
 metodo = &"balao"
 

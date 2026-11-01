@@ -13,7 +13,9 @@ region = Rect2(378, 844, 320, 320)
 script = ExtResource("2_acao")
 nome = "Chorar"
 icone = SubResource("AtlasTexture_icone_chorar")
-descricao = "Só funciona com uma única pessoa perto: a criança começa a chorar de um jeito muito bizarro. Medo 15."
+descricao = "Só funciona com uma única pessoa perto: a criança começa a chorar de um jeito muito bizarro."
+resumo = "Chora de um jeito bizarro, só funciona com uma pessoa perto"
+propriedade_medo = &"medo_choro"
 recarga = 10.0
 metodo = &"chorar"
 

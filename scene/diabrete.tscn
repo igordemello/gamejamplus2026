@@ -72,7 +72,9 @@ colors = PackedColorArray(1, 0.95, 0.5, 1, 1, 0.5, 0.1, 0.95, 0.7, 0.1, 0.05, 0)
 script = ExtResource("2_acao")
 nome = "Quebrar Objetos"
 icone = SubResource("AtlasTexture_icone_quebrar")
-descricao = "Pega o objeto do cenário mais perto, ergue e derruba no chão. Quem estiver bem perto se assusta. Medo 10."
+descricao = "Pega o objeto do cenário mais perto, ergue e derruba no chão. Quem estiver bem perto se assusta."
+resumo = "Derruba um objeto do cenário e assusta quem está perto"
+propriedade_medo = &"medo_quebra"
 recarga = 8.0
 metodo = &"quebrar_objetos"
 

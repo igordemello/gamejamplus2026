@@ -196,9 +196,8 @@ func aplicar_susto() -> void:
 
 	for npc in get_tree().get_nodes_in_group("npc"):
 		if npc is Npc:
-			var regiao_npc = get_region_at_position(npc.global_position)
-
-			if regiao_npc == regiao_objeto:
+			# só quem está de fato dentro do cômodo do objeto (no corredor, fora de cômodo, não conta)
+			if GameManager.house.comodo_em(npc.global_position) == regiao_objeto.name:
 				npc.tomar_susto(tipo_susto, pontos_susto)
 
 #func aplicar_susto() -> void:

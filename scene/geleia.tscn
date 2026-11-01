@@ -14,7 +14,9 @@ region = Rect2(208, 10, 43, 43)
 script = ExtResource("5_acao")
 nome = "Comer e regorfar"
 icone = SubResource("AtlasTexture_icone_comer")
-descricao = "Come e regorfa a comida no chão. Quem comer vai vomitar. Medo 15."
+descricao = "Come e regorfa a comida no chão. Quem comer vai vomitar."
+resumo = "Come e regorfa a comida no chão, quem comer vai vomitar"
+propriedade_medo = &"medo_comida"
 recarga = 10.0
 metodo = &"comer_e_regorfar"
 
@@ -26,7 +28,9 @@ region = Rect2(192, 9, 54, 54)
 script = ExtResource("5_acao")
 nome = "Lambidão"
 icone = SubResource("AtlasTexture_icone_lambida")
-descricao = "Vai até a pessoa mais perto no cômodo e dá um lambidão na cara. Ela sai correndo até bater numa parede e fica atordoada. Medo 20."
+descricao = "Vai até a pessoa mais perto no cômodo e dá um lambidão na cara. Ela sai correndo até bater numa parede e fica atordoada."
+resumo = "Vai até a pessoa mais perto no cômodo e dá um lambidão na cara"
+propriedade_medo = &"medo_lambida"
 recarga = 16.0
 metodo = &"lambidao"
 

@@ -89,7 +89,9 @@ animations = [{
 script = ExtResource("2_acao")
 nome = "Susto de Espada"
 icone = SubResource("AtlasTexture_icone_espada")
-descricao = "A estátua ataca com a espada quem estiver passando perto dela. Medo 5."
+descricao = "A estátua ataca com a espada quem estiver passando perto dela."
+resumo = "Ataca com a espada quem passar perto da estátua"
+propriedade_medo = &"medo_espada"
 recarga = 8.0
 metodo = &"susto_de_espada"
 

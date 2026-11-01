@@ -52,6 +52,8 @@ var infarto_tier: int = 0
 # um dos marcados pra morrer (objetivo): caveira vermelha em cima da cabeça
 var marcado: bool = false
 var marca: Sprite2D
+var altura_marca: float = 0.0
+var topo_desenho: float = 0.0
 # cor fixa do desenho; os clarões do infarto voltam pra ela
 var cor_sprite: Color = Color.WHITE
 var sirene: PointLight2D
@@ -101,6 +103,8 @@ func _ready() -> void:
 		sprite.scale = escala_sprite
 	# o pé fica na base do quadro, seja qual for o tamanho do sheet (o pivô do sprite é o pé)
 	sprite.offset.y = -sprite.sprite_frames.get_frame_texture("andar", 0).get_height() / 2.0
+	# topo do quadro do desenho; o medidor de medo e a caveira de marcado ficam em cima dele
+	topo_desenho = sprite.position.y + (sprite.offset.y - sprite.sprite_frames.get_frame_texture("andar", 0).get_height() / 2.0) * escala_sprite.y
 	infarto_tipo = sprite.sprite_frames.get_meta("infarto_tipo", "")
 	infarto_tier = sprite.sprite_frames.get_meta("infarto_tier", 0)
 	if policial:
@@ -116,7 +120,7 @@ func _ready() -> void:
 		add_child(sirene)
 	medidor = Node2D.new()
 	medidor.z_index = 2
-	medidor.position = Vector2(0, -90)
+	medidor.position = Vector2(0, topo_desenho - 8.0)
 	medidor.material = SEM_LUZ
 	add_child(medidor)
 	medidor.draw.connect(_desenhar_medidor)
@@ -143,7 +147,7 @@ func _process(delta: float) -> void:
 	if sirene:
 		sirene.color = Color(1, 0.15, 0.15) if fmod(Time.get_ticks_msec() / 1000.0, 0.6) < 0.3 else Color(0.2, 0.4, 1)
 	if marca:
-		marca.position.y = -128.0 + roundf(sin(Time.get_ticks_msec() / 300.0) * 3.0)
+		marca.position.y = altura_marca + roundf(sin(Time.get_ticks_msec() / 300.0) * 2.0)
 	if current_estado == Estado.Infarta:
 		processar_infarto(delta)
 		return
@@ -519,7 +523,10 @@ func marcar() -> void:
 	marca.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	marca.material = SEM_LUZ
 	marca.modulate = Color(1, 0.25, 0.25)
-	marca.position = Vector2(0, -128)
+	# acima do medidor de medo (a barra e os quadradinhos de nível ocupam uns 14 px)
+	altura_marca = medidor.position.y - 20.0
+	marca.scale = Vector2(0.6, 0.6)
+	marca.position = Vector2(0, altura_marca)
 	marca.z_index = 2
 	add_child(marca)
 

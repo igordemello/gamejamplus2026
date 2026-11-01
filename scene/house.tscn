@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://b2c6tvgflw0e7" path="res://scripts/ui_main.gd" id="7_qg36w"]
 [ext_resource type="PackedScene" uid="uid://cbgvi56ugb03g" path="res://scene/morcego.tscn" id="8_66jkb"]
 [ext_resource type="Script" uid="uid://bjju5au0p8vg3" path="res://scripts/area_jogo.gd" id="9_area"]
+[ext_resource type="Script" uid="uid://b6cshrshcjpw4" path="res://scripts/baralho.gd" id="78_baralho"]
 [ext_resource type="PackedScene" uid="uid://bh02vgl1cqea2" path="res://scene/card_fantasma.tscn" id="10_card"]
 [ext_resource type="Texture2D" uid="uid://qmpjsyiljvbw" path="res://assets/cenario em partes/Casa_gramachao.png" id="11_2iacw"]
 [ext_resource type="Texture2D" uid="uid://podf650q6wdv" path="res://assets/bat-Sheet.png" id="11_morc"]
@@ -304,62 +305,69 @@ text = "Assustar em todos os cômodos juntos"
 layout_mode = 2
 text = "Matar um policial"
 
-[node name="painel_fantasmas" type="PanelContainer" parent="UI_main" unique_id=2048188518]
-anchors_preset = 1
-anchor_left = 1.0
+[node name="painel_fantasmas" type="Control" parent="UI_main" unique_id=2048188518]
+layout_mode = 3
+anchors_preset = 12
+anchor_top = 1.0
 anchor_right = 1.0
-offset_left = -316.0
-offset_top = 16.0
-offset_right = -16.0
-offset_bottom = 16.0
-grow_horizontal = 0
+anchor_bottom = 1.0
+offset_top = -300.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
 
-[node name="lista" type="VBoxContainer" parent="UI_main/painel_fantasmas" unique_id=1479472140]
-layout_mode = 2
-theme_override_constants/separation = 10
+[node name="lista" type="Control" parent="UI_main/painel_fantasmas" unique_id=1479472140]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("78_baralho")
 
 [node name="card_morcego" parent="UI_main/painel_fantasmas/lista" unique_id=514541539 instance=ExtResource("10_card")]
-layout_mode = 2
+layout_mode = 0
 cena = ExtResource("8_66jkb")
 icone = SubResource("AtlasTexture_morc0")
 
 [node name="card_geleia" parent="UI_main/painel_fantasmas/lista" unique_id=2032382898 instance=ExtResource("10_card")]
-layout_mode = 2
+layout_mode = 0
 cena = ExtResource("12_geleia")
 icone = SubResource("AtlasTexture_geleia0")
 
 [node name="card_crianca" parent="UI_main/painel_fantasmas/lista" unique_id=948504173 instance=ExtResource("10_card")]
-layout_mode = 2
+layout_mode = 0
 cena = ExtResource("40_crianca")
 icone = SubResource("AtlasTexture_icone_crianca")
 
 [node name="card_cavaleiro" parent="UI_main/painel_fantasmas/lista" unique_id=1834857916 instance=ExtResource("10_card")]
-layout_mode = 2
+layout_mode = 0
 cena = ExtResource("41_cavaleiro")
 icone = SubResource("AtlasTexture_icone_cavaleiro")
 
 [node name="card_cao" parent="UI_main/painel_fantasmas/lista" unique_id=1922704704 instance=ExtResource("10_card")]
-layout_mode = 2
+layout_mode = 0
 cena = ExtResource("42_cao")
 icone = SubResource("AtlasTexture_icone_cao")
 
 [node name="card_diabrete" parent="UI_main/painel_fantasmas/lista" unique_id=319544632 instance=ExtResource("10_card")]
-layout_mode = 2
+layout_mode = 0
 cena = ExtResource("50_diabrete")
 icone = SubResource("AtlasTexture_icone_diabrete")
 
 [node name="card_caveira" parent="UI_main/painel_fantasmas/lista" unique_id=1009804634 instance=ExtResource("10_card")]
-layout_mode = 2
+layout_mode = 0
 cena = ExtResource("51_caveira")
 icone = SubResource("AtlasTexture_icone_caveira")
 
 [node name="card_palhaco" parent="UI_main/painel_fantasmas/lista" unique_id=1442087356 instance=ExtResource("10_card")]
-layout_mode = 2
+layout_mode = 0
 cena = ExtResource("55_palhaco")
 icone = ExtResource("56_palhaco_tex")
 
 [node name="card_zumbi" parent="UI_main/painel_fantasmas/lista" unique_id=1366094218 instance=ExtResource("10_card")]
-layout_mode = 2
+layout_mode = 0
 cena = ExtResource("58_zumbi")
 icone = SubResource("AtlasTexture_icone_zumbi")
 

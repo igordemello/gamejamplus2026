@@ -7,17 +7,14 @@ layer = 3
 script = ExtResource("1_tutorial")
 
 [node name="painel" type="PanelContainer" parent="."]
-anchors_preset = 7
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = 1.0
 anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -556.0
-offset_top = -210.0
-offset_right = 224.0
-offset_bottom = -20.0
+offset_left = -390.0
+offset_top = 16.0
+offset_right = 390.0
+offset_bottom = 206.0
 grow_horizontal = 2
-grow_vertical = 0
 
 [node name="margem" type="MarginContainer" parent="painel"]
 layout_mode = 2

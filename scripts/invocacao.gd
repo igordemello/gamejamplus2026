@@ -16,6 +16,12 @@ func _ready() -> void:
 	pentagrama.animation_finished.connect(_on_desenhou)
 	create_tween().tween_property(luz, "energy", 1.4, pentagrama.sprite_frames.get_frame_count("desenhar") / pentagrama.sprite_frames.get_animation_speed("desenhar"))
 	brasas.emitting = true
+	# o pentagrama vai pra base do desenho do fantasma (cada um tem a origem num lugar), centralizado nele
+	var sprite: AnimatedSprite2D = fantasma.get_node("AnimatedSprite2D")
+	var quadro = sprite.sprite_frames.get_frame_texture(sprite.animation, 0)
+	var pe = (sprite.position + (sprite.offset + Vector2(0, quadro.get_height() / 2.0)) * sprite.scale) * fantasma.scale
+	for filho in [pentagrama, luz, brasas]:
+		filho.position += pe
 
 func _process(delta: float) -> void:
 	tempo += delta
