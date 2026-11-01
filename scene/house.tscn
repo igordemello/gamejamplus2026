@@ -28,6 +28,7 @@
 [ext_resource type="SpriteFrames" uid="uid://oc0jshojn1tu" path="res://assets/npc/cheerleader.tres" id="32_cheer"]
 [ext_resource type="SpriteFrames" path="res://assets/npc/hippie.tres" id="33_hippie"]
 [ext_resource type="SpriteFrames" path="res://assets/npc/psicopata.tres" id="34_psicopata"]
+[ext_resource type="SpriteFrames" path="res://assets/npc/advogado.tres" id="35_advogado"]
 [ext_resource type="PackedScene" uid="uid://smibflxwsbi4" path="res://scene/crianca.tscn" id="40_crianca"]
 [ext_resource type="PackedScene" path="res://scene/cavaleiro.tscn" id="41_cavaleiro"]
 [ext_resource type="PackedScene" path="res://scene/cao.tscn" id="42_cao"]
@@ -357,12 +358,14 @@ preferencia = "dançar"
 position = Vector2(1453, 639)
 collision_layer = 2
 house = NodePath("../..")
-visual = ExtResource("34_psicopata")
+visual = ExtResource("35_advogado")
+preferencia = "conversar"
 
 [node name="npc9" parent="Y-sort" unique_id=1190665817 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
 position = Vector2(1318, 224)
 collision_layer = 2
 house = NodePath("../..")
+visual = ExtResource("35_advogado")
 preferencia = "beber"
 
 [node name="npc10" parent="Y-sort" unique_id=1115174982 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
@@ -376,7 +379,7 @@ preferencia = "dançar"
 position = Vector2(1325, 431)
 collision_layer = 2
 house = NodePath("../..")
-visual = ExtResource("33_hippie")
+visual = ExtResource("35_advogado")
 preferencia = "conversar"
 
 [node name="npc12" parent="Y-sort" unique_id=1833456704 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]

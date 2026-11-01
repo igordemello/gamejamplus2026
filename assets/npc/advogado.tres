@@ -1,0 +1,62 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" uid="uid://btttqjcjn34pm" path="res://assets/npc/adv.png" id="1_sheet"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar0"]
+atlas = ExtResource("1_sheet")
+region = Rect2(11, 20, 17, 64)
+margin = Rect2(7, 0, 15, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar1"]
+atlas = ExtResource("1_sheet")
+region = Rect2(40, 20, 18, 64)
+margin = Rect2(6, 0, 14, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar2"]
+atlas = ExtResource("1_sheet")
+region = Rect2(71, 20, 17, 64)
+margin = Rect2(6, 0, 15, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar3"]
+atlas = ExtResource("1_sheet")
+region = Rect2(104, 20, 15, 64)
+margin = Rect2(8, 0, 17, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar4"]
+atlas = ExtResource("1_sheet")
+region = Rect2(142, 20, 14, 64)
+margin = Rect2(9, 0, 18, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar5"]
+atlas = ExtResource("1_sheet")
+region = Rect2(176, 20, 19, 64)
+margin = Rect2(8, 0, 13, 0)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar5")
+}],
+"loop": 1,
+"name": &"andar",
+"speed": 8.0
+}]
+metadata/escala = 2.0
+metadata/infarto_tipo = "Aparicao"
+metadata/infarto_tier = 3
