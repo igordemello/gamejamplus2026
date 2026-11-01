@@ -25,11 +25,10 @@
 [ext_resource type="Texture2D" uid="uid://e0rs76m23lwf" path="res://assets/cenario em partes/sombras.png" id="20_si276"]
 [ext_resource type="Script" uid="uid://b4deurdln0fr8" path="res://scripts/camera.gd" id="30_camera"]
 [ext_resource type="PackedScene" path="res://scene/pausa.tscn" id="31_pausa"]
-[ext_resource type="SpriteFrames" uid="uid://oc0jshojn1tu" path="res://assets/npc/cheerleader.tres" id="32_cheer"]
+[ext_resource type="SpriteFrames" path="res://assets/npc/atleta.tres" id="32_cheer"]
 [ext_resource type="SpriteFrames" uid="uid://dgx33l351u2" path="res://assets/npc/hippie.tres" id="33_hippie"]
 [ext_resource type="SpriteFrames" uid="uid://bqkofi0uvl1ic" path="res://assets/npc/psicopata.tres" id="34_psicopata"]
 [ext_resource type="SpriteFrames" uid="uid://tajn12nb78nh" path="res://assets/npc/advogado.tres" id="35_advogado"]
-[ext_resource type="SpriteFrames" uid="uid://v5exrxut14xn" path="res://assets/npc/gordo.tres" id="36_gordo"]
 [ext_resource type="PackedScene" uid="uid://smibflxwsbi4" path="res://scene/crianca.tscn" id="40_crianca"]
 [ext_resource type="PackedScene" path="res://scene/cavaleiro.tscn" id="41_cavaleiro"]
 [ext_resource type="PackedScene" path="res://scene/cao.tscn" id="42_cao"]
@@ -66,6 +65,11 @@
 [ext_resource type="PackedScene" path="res://scene/policial.tscn" id="77_policial"]
 [ext_resource type="Script" uid="uid://b6cshrshcjpw4" path="res://scripts/baralho.gd" id="78_baralho"]
 [ext_resource type="PackedScene" path="res://scene/lore.tscn" id="79_lore"]
+
+[ext_resource type="SpriteFrames" path="res://assets/npc/cientista.tres" id="npc_cientista"]
+[ext_resource type="SpriteFrames" path="res://assets/npc/crianca_catarrenta.tres" id="npc_crianca_catarrenta"]
+[ext_resource type="SpriteFrames" path="res://assets/npc/idoso.tres" id="npc_idoso"]
+[ext_resource type="SpriteFrames" path="res://assets/npc/religioso.tres" id="npc_religioso"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_morc0"]
 atlas = ExtResource("11_morc")
@@ -636,20 +640,21 @@ preferencia = "beber"
 position = Vector2(906, 796)
 collision_layer = 2
 house = NodePath("../..")
+visual = ExtResource("npc_crianca_catarrenta")
 preferencia = "descansar"
 
 [node name="npc6" parent="Y-sort" unique_id=560872406 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
 position = Vector2(991, 820)
 collision_layer = 2
 house = NodePath("../..")
-visual = ExtResource("32_cheer")
+visual = ExtResource("npc_cientista")
 preferencia = "dançar"
 
 [node name="npc7" parent="Y-sort" unique_id=821055622 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
 position = Vector2(620, 931)
 collision_layer = 2
 house = NodePath("../..")
-visual = ExtResource("33_hippie")
+visual = ExtResource("npc_idoso")
 preferencia = "dançar"
 
 [node name="npc8" parent="Y-sort" unique_id=1532609554 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
@@ -663,29 +668,8 @@ preferencia = "conversar"
 position = Vector2(1318, 224)
 collision_layer = 2
 house = NodePath("../..")
-visual = ExtResource("35_advogado")
+visual = ExtResource("npc_religioso")
 preferencia = "beber"
-
-[node name="npc10" parent="Y-sort" unique_id=1115174982 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
-position = Vector2(1610, 397)
-collision_layer = 2
-house = NodePath("../..")
-visual = ExtResource("36_gordo")
-preferencia = "beber"
-
-[node name="npc11" parent="Y-sort" unique_id=253180521 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
-position = Vector2(1325, 431)
-collision_layer = 2
-house = NodePath("../..")
-visual = ExtResource("36_gordo")
-preferencia = "descansar"
-
-[node name="npc12" parent="Y-sort" unique_id=1833456704 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
-position = Vector2(1065, 609)
-collision_layer = 2
-house = NodePath("../..")
-visual = ExtResource("34_psicopata")
-preferencia = "descansar"
 
 [node name="abobora1" parent="Y-sort" unique_id=2098279457 instance=ExtResource("66_abobora")]
 position = Vector2(865, 1135)

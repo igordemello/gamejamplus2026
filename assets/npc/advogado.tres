@@ -1,36 +1,30 @@
 [gd_resource type="SpriteFrames" format=3 uid="uid://tajn12nb78nh"]
 
-[ext_resource type="Texture2D" uid="uid://btttqjcjn34pm" path="res://assets/npc/adv.png" id="1_sheet"]
+[ext_resource type="Texture2D" path="res://assets/REFACTOR NPCs/Advogado_spritesheet.png" id="1_sheet"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_andar0"]
 atlas = ExtResource("1_sheet")
-region = Rect2(35, 0, 129, 347)
-margin = Rect2(25, 0, 71, 0)
+region = Rect2(0, 0, 32, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_andar1"]
 atlas = ExtResource("1_sheet")
-region = Rect2(344, 0, 166, 347)
-margin = Rect2(14, 0, 34, 0)
+region = Rect2(32, 0, 32, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_andar2"]
 atlas = ExtResource("1_sheet")
-region = Rect2(694, 0, 134, 347)
-margin = Rect2(26, 0, 66, 0)
+region = Rect2(64, 0, 32, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_andar3"]
 atlas = ExtResource("1_sheet")
-region = Rect2(1062, 0, 88, 347)
-margin = Rect2(55, 0, 112, 0)
+region = Rect2(96, 0, 32, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_andar4"]
 atlas = ExtResource("1_sheet")
-region = Rect2(1480, 0, 90, 347)
-margin = Rect2(63, 0, 110, 0)
+region = Rect2(128, 0, 32, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_andar5"]
 atlas = ExtResource("1_sheet")
-region = Rect2(1822, 0, 172, 347)
-margin = Rect2(25, 0, 28, 0)
+region = Rect2(160, 0, 32, 64)
 
 [resource]
 animations = [{
@@ -53,11 +47,10 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_andar5")
 }],
-"loop": 1,
+"loop": true,
 "name": &"andar",
 "speed": 8.0
 }]
-metadata/escala = 0.18
 metadata/infarto_tipo = "Aparicao"
 metadata/infarto_tier = 3
 metadata/lore = ["", "", ""]

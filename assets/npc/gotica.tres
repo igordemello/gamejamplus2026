@@ -1,22 +1,30 @@
 [gd_resource type="SpriteFrames" format=3 uid="uid://cj0axhg677v7v"]
 
-[ext_resource type="Texture2D" uid="uid://c02y3jacr5xf1" path="res://assets/npc/got.png" id="1_sheet"]
+[ext_resource type="Texture2D" path="res://assets/REFACTOR NPCs/Gotica_spritesheet.png" id="1_sheet"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_andar0"]
 atlas = ExtResource("1_sheet")
-region = Rect2(0, 0, 64, 64)
+region = Rect2(0, 0, 32, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_andar1"]
 atlas = ExtResource("1_sheet")
-region = Rect2(64, 0, 64, 64)
+region = Rect2(32, 0, 32, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_andar2"]
 atlas = ExtResource("1_sheet")
-region = Rect2(128, 0, 64, 64)
+region = Rect2(64, 0, 32, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_andar3"]
 atlas = ExtResource("1_sheet")
-region = Rect2(192, 0, 64, 64)
+region = Rect2(96, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar4"]
+atlas = ExtResource("1_sheet")
+region = Rect2(128, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar5"]
+atlas = ExtResource("1_sheet")
+region = Rect2(160, 0, 32, 64)
 
 [resource]
 animations = [{
@@ -32,8 +40,14 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_andar3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar5")
 }],
-"loop": 1,
+"loop": true,
 "name": &"andar",
 "speed": 8.0
 }]

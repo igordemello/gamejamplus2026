@@ -12,7 +12,7 @@ const NIVEIS_LORE = [1, 3, 4]
 # animações desse npc (gotica.tres, cheerleader.tres...), precisa ter "andar" desenhada virada pra direita
 @export var visual: SpriteFrames
 # nome do tipo e lore (um texto por NIVEIS_LORE) vêm do visual (metadata nome_tipo e lore);
-# se estiverem preenchidos aqui, valem no lugar (o policial usa o visual do advogado)
+# se estiverem preenchidos aqui, valem no lugar (o policial tem visual próprio)
 @export var nome_tipo: String = ""
 @export var lore: PackedStringArray = PackedStringArray()
 
@@ -113,8 +113,8 @@ func _ready() -> void:
 		# desenho menor que os outros (psicopata) vem com metadata "escala" no .tres
 		escala_sprite *= visual.get_meta("escala", 1.0)
 		sprite.scale = escala_sprite
-	# o pé fica na base do quadro, seja qual for o tamanho do sheet (o pivô do sprite é o pé)
-	sprite.offset.y = -sprite.sprite_frames.get_frame_texture("andar", 0).get_height() / 2.0
+	# os sheets atuais têm 8 pixels vazios embaixo dos pés; compensa para encostar na sombra
+	sprite.offset.y = 8.0 - sprite.sprite_frames.get_frame_texture("andar", 0).get_height() / 2.0
 	# topo do quadro do desenho; o medidor de medo e a caveira de marcado ficam em cima dele
 	topo_desenho = sprite.position.y + (sprite.offset.y - sprite.sprite_frames.get_frame_texture("andar", 0).get_height() / 2.0) * escala_sprite.y
 	infarto_tipo = sprite.sprite_frames.get_meta("infarto_tipo", "")
