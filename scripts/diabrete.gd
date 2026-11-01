@@ -78,7 +78,7 @@ func quebrar(objeto: Node2D) -> void:
 	)
 	assustados.sort_custom(func(a, b): return objeto.global_position.distance_to(a.global_position) < objeto.global_position.distance_to(b.global_position))
 	for npc in assustados.slice(0, max_assustados):
-		npc.tomar_susto("quebra", medo_quebra)
+		npc.tomar_susto("quebra", medo_quebra, self)
 
 	# posição antes do add_child: os cacos já saem no _ready, e sairiam no canto da casa
 	var cacos = ESTILHACOS.instantiate()

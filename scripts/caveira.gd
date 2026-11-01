@@ -37,7 +37,7 @@ func _physics_process(delta: float) -> void:
 		casa = global_position
 
 	tempo_perseguindo += delta
-	if tempo_perseguindo > tempo_max_perseguindo:
+	if tempo_perseguindo > tempo_max_perseguindo or not alvo.is_in_group("npc"):
 		alvo = null
 		voltar_pra_casa()
 		return
@@ -67,7 +67,7 @@ func risada_maligna() -> bool:
 		return false
 	sprite.play("rir")
 	for npc in npcs_perto(raio_risada):
-		npc.tomar_susto("risada", medo_risada)
+		npc.tomar_susto("risada", medo_risada, self)
 	return true
 
 # morde até duas pessoas perto, que saem correndo pra outro cômodo
@@ -79,7 +79,7 @@ func mordida_de_fogo() -> bool:
 		return false
 	for npc in mordidos:
 		mostrar_dentes(npc)
-		npc.tomar_susto("mordida", medo_mordida)
+		npc.tomar_susto("mordida", medo_mordida, self)
 		npc.correr_para_outro_comodo(tempo_fugindo)
 	return true
 
@@ -116,7 +116,7 @@ func voltar_pra_casa() -> void:
 
 func _on_animacao_acabou() -> void:
 	if sprite.animation == &"cabecada" and is_instance_valid(alvo):
-		alvo.tomar_susto("cabecada", medo_cabecada)
+		alvo.tomar_susto("cabecada", medo_cabecada, self)
 		alvo.atordoar(duracao_stun_cabecada, dreno_cabecada)
 		GameManager.house.camera.tremer(6.0)
 		alvo = null

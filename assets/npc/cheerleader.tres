@@ -2,19 +2,19 @@
 
 [ext_resource type="Texture2D" uid="uid://4ol4obh0i654" path="res://assets/npc/cheer-Sheet.png" id="1_sheet"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_andar0"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_pvo3l"]
 atlas = ExtResource("1_sheet")
 region = Rect2(0, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_andar1"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_a8lls"]
 atlas = ExtResource("1_sheet")
 region = Rect2(64, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_andar2"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_ygw05"]
 atlas = ExtResource("1_sheet")
 region = Rect2(128, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_andar3"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_wg865"]
 atlas = ExtResource("1_sheet")
 region = Rect2(192, 0, 64, 64)
 
@@ -22,18 +22,20 @@ region = Rect2(192, 0, 64, 64)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_andar0")
+"texture": SubResource("AtlasTexture_pvo3l")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_andar1")
+"texture": SubResource("AtlasTexture_a8lls")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_andar2")
+"texture": SubResource("AtlasTexture_ygw05")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_andar3")
+"texture": SubResource("AtlasTexture_wg865")
 }],
 "loop": 1,
 "name": &"andar",
 "speed": 8.0
 }]
+metadata/infarto_tipo = "Espectro"
+metadata/infarto_tier = 3

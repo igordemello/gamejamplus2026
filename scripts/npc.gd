@@ -19,13 +19,11 @@ var ponto
 var ultimo_ponto
 # quanto tempo ainda fica fazendo o que está fazendo depois de chegar
 var tempo_atividade: float = 0.0
-var tempo_danca: float = randf() * 2.0
 
 @onready var agent: NavigationAgent2D = $NavigationAgent2D
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var altura_sprite: float = sprite.position.y
 @onready var escala_sprite: Vector2 = sprite.scale
-@onready var pe_sprite: float = sprite.offset.y
 var tween_pulo: Tween
 # estica/amassa do susto, multiplica a escala do desenho
 var deformacao: Vector2 = Vector2.ONE
@@ -37,6 +35,12 @@ var barra_mostrada: float = 0.0
 var alfa_medidor: float = 0.0
 # chegou na saída e está sumindo
 var saindo: bool = false
+
+# o fantasma que mata esse npc do coração: vem do visual (metadata infarto_tipo e infarto_tier)
+var infarto_tipo: String = ""
+var infarto_tier: int = 0
+# sustos a mais (além do +1 do nível) quando ele infarta
+@export var bonus_infarto: int = 2
 
 # respiração parado: quantos pixels de tela o desenho cresce e a velocidade (assustado fica ofegante)
 @export var pixels_respiracao: int = 4
@@ -81,6 +85,8 @@ func _ready() -> void:
 		# desenho menor que os outros (psicopata) vem com metadata "escala" no .tres
 		escala_sprite *= visual.get_meta("escala", 1.0)
 		sprite.scale = escala_sprite
+	infarto_tipo = sprite.sprite_frames.get_meta("infarto_tipo", "")
+	infarto_tier = sprite.sprite_frames.get_meta("infarto_tier", 0)
 	medidor = Node2D.new()
 	medidor.z_index = 2
 	medidor.position = Vector2(0, -90)
@@ -98,6 +104,9 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	$Label.text = str(nivel_medo) +" - "+ str(roundi(barra_susto)) + "/100"
+	if current_estado == Estado.Infarta:
+		processar_infarto(delta)
+		return
 
 	# a barra enche e esvazia suave; o medidor aparece quando tem algum medo
 	barra_mostrada = lerpf(barra_mostrada, barra_susto, minf(12.0 * delta, 1.0))
@@ -111,16 +120,15 @@ func _process(delta: float) -> void:
 		# correndo ou fugindo as pernas vão no dobro
 		sprite.speed_scale = 2.0 if tempo_correndo > 0.0 or current_estado == Estado.Foge else 1.0
 		sprite.scale = escala_sprite * deformacao
-		sprite.offset.y = pe_sprite
 		if absf(velocity.x) > 5.0:
 			sprite.flip_h = velocity.x < 0.0
 	else:
 		sprite.stop()
 		respirar(delta)
-		fazer_atividade(delta)
+		olhar_pro_ponto()
 
 func _physics_process(delta: float) -> void:
-	if not navigation_ready:
+	if not navigation_ready or current_estado == Estado.Infarta:
 		return
 
 	# STUN / CORRENDO
@@ -241,18 +249,13 @@ func sair_do_ponto() -> void:
 		ultimo_ponto = ponto
 		ponto = null
 
-# parado no ponto: na pista pula no ritmo virando de lado; nos outros, vira pro meio da roda
-func fazer_atividade(delta: float) -> void:
-	sprite.offset.y = pe_sprite
+# parado no ponto: vira pro meio da roda (com folga, pra não ficar virando quando está bem no meio)
+func olhar_pro_ponto() -> void:
 	if ponto == null or not agent.is_navigation_finished():
 		return
-	if ponto.atividade == "dançar" and current_estado != Estado.Assustado:
-		tempo_danca += delta
-		# 2 batidas por segundo; o pulo anda de 2 em 2 pixels da arte (3 px de tela, sem tremer)
-		sprite.offset.y = pe_sprite - 2.0 * roundf(absf(sin(tempo_danca * TAU)) * 2.0)
-		sprite.flip_h = fmod(tempo_danca, 2.0) < 1.0
-	else:
-		sprite.flip_h = ponto.global_position.x < global_position.x
+	var dx = ponto.global_position.x - global_position.x
+	if absf(dx) > 8.0:
+		sprite.flip_h = dx < 0.0
 
 func get_random_point_in_region(region: NavigationRegion2D) -> Vector2:
 	var nav_polygon = region.navigation_polygon
@@ -310,7 +313,11 @@ func get_random_point_in_region(region: NavigationRegion2D) -> Vector2:
 
 	return region.global_position
 
-func tomar_susto(susto: String, pontosDeSusto: int) -> void:
+# fantasma = quem assustou (null no objeto levitável). se ele chegar no nível 5 pelo
+# fantasma do tipo e do tier que matam ele do coração, infarta em vez de fugir
+func tomar_susto(susto: String, pontosDeSusto: int, fantasma: Fantasma = null) -> void:
+	if current_estado == Estado.Infarta:
+		return
 	# TEM QUE LEMBRAR DE TIRAR ESSA PORRA HEIN
 	if susto == last_susto:
 		return
@@ -333,6 +340,9 @@ func tomar_susto(susto: String, pontosDeSusto: int) -> void:
 	if barra_susto >= 100.0:
 		barra_susto = 0.0
 		nivel_medo += 1
+		if nivel_medo == 5 and mata_do_coracao(fantasma):
+			infartar()
+			return
 		GameManager.sustos += 1
 		# o +1 sai da cabeça e voa até o contador
 		house.ui.voar_susto(get_global_transform_with_canvas() * Vector2(0, -100))
@@ -395,6 +405,9 @@ func mostrar_exclamacao(texto: String) -> void:
 func _desenhar_medidor() -> void:
 	if alfa_medidor <= 0.01:
 		return
+	if current_estado == Estado.Infarta:
+		desenhar_monitor()
+		return
 	var a = alfa_medidor
 	var largura = 40.0
 	var barra = Rect2(-largura / 2.0, 0, largura, 5)
@@ -416,12 +429,16 @@ func respirar(delta: float) -> void:
 	sprite.scale = Vector2(escala_sprite.x, escala_sprite.y + pixels / altura) * deformacao
 
 func atordoar(tempo: float, dreno: float = 0.0) -> void:
+	if current_estado == Estado.Infarta:
+		return
 	tempo_stun = tempo
 	dreno_medo = dreno
 	velocity = Vector2.ZERO
 
 # sai correndo pra algum outro cômodo
 func correr_para_outro_comodo(tempo: float) -> void:
+	if current_estado == Estado.Infarta:
+		return
 	escolher_atividade(true)
 	tempo_correndo = tempo
 
@@ -447,3 +464,189 @@ func sair_da_festa() -> void:
 	var tween = create_tween()
 	tween.tween_property(self, "modulate:a", 0.0, 0.4)
 	tween.tween_callback(queue_free)
+
+# ---------- infarto ----------
+# não tem arte pra isso, então é tudo no código: monitor cardíaco disparando em cima da cabeça,
+# tela escurecendo em volta, linha reta, ele cai duro e a alma sobe
+
+# o coração dispara até INFARTO_FIBRILA, treme sem ritmo até INFARTO_PARA e aí para
+const INFARTO_FIBRILA = 1.6
+const INFARTO_PARA = 2.1
+# uma batida no monitor: x = fração da batida, y = altura
+const BATIDA = [Vector2(0.0, 0.0), Vector2(0.15, -0.2), Vector2(0.35, 1.0), Vector2(0.55, -0.5), Vector2(0.75, 0.0)]
+const DURACAO_BATIDA = 0.1
+# quantos segundos de linha cabem no monitor
+const JANELA_MONITOR = 1.2
+# rachadura do coração partido, de baixo pra cima
+const RACHADURA = [Vector2(0.5, 12.0), Vector2(2.0, 7.0), Vector2(-2.0, 2.0)]
+
+var tempo_infarto: float = 0.0
+var batidas: Array[float] = []
+var proxima_batida: int = 0
+# 1 na hora da batida e cai rápido: o desenho e o coraçãozinho pulsam junto
+var pulso: float = 0.0
+# 0 a 1: as metades do coração partido se afastando
+var quebra: float = 0.0
+
+func mata_do_coracao(fantasma: Fantasma) -> bool:
+	return fantasma != null and Fantasma.Tipo.find_key(fantasma.tipo) == infarto_tipo and fantasma.tier == infarto_tier
+
+func infartar() -> void:
+	current_estado = Estado.Infarta
+	# já não conta como npc: nenhum fantasma mira nele nem assusta mais
+	remove_from_group("npc")
+	sair_do_ponto()
+	velocity = Vector2.ZERO
+	$CollisionShape2D.set_deferred("disabled", true)
+	sprite.stop()
+	alfa_medidor = 1.0
+	medidor.scale = Vector2(1.5, 1.5)
+
+	# batidas cada vez mais perto uma da outra
+	var t = 0.1
+	var intervalo = 0.4
+	while t < INFARTO_FIBRILA:
+		batidas.append(t)
+		t += intervalo
+		intervalo = maxf(intervalo * 0.78, 0.12)
+
+	house.ui.focar(self, 0.22)
+	house.camera.tremer(8.0)
+	house.camera.chutar(0.1)
+	GameManager.hitstop(0.25)
+
+	var lado = -1.0 if sprite.flip_h else 1.0
+	var tween = create_tween()
+	# passado o clarão do susto, vai ficando pálido
+	tween.tween_interval(0.2)
+	tween.tween_property(sprite, "modulate", Color(0.72, 0.76, 0.86), INFARTO_PARA - 0.2)
+	tween.tween_callback(parar_coracao)
+	# linha reta: tudo parado um instante antes de cair
+	tween.tween_interval(0.45)
+	# cai duro pra frente (o pivô do desenho é nos pés), quica uma vez e fica
+	tween.tween_property(sprite, "rotation", lado * PI / 2.0, 0.28).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tween.tween_callback(bater_no_chao.bind(lado))
+	tween.tween_property(sprite, "rotation", lado * PI * 0.42, 0.07).set_ease(Tween.EASE_OUT)
+	tween.tween_property(sprite, "rotation", lado * PI / 2.0, 0.1).set_ease(Tween.EASE_IN)
+	tween.tween_callback(soltar_alma)
+	tween.tween_property(self, "alfa_medidor", 0.0, 0.3)
+	tween.tween_interval(0.5)
+	tween.tween_callback(house.ui.desfocar)
+	tween.tween_interval(0.8)
+	tween.tween_property(self, "modulate:a", 0.0, 0.6)
+	tween.tween_callback(queue_free)
+
+func processar_infarto(delta: float) -> void:
+	tempo_infarto += delta
+	while proxima_batida < batidas.size() and tempo_infarto >= batidas[proxima_batida]:
+		proxima_batida += 1
+		pulso = 1.0
+	pulso = move_toward(pulso, 0.0, 5.0 * delta)
+	medidor.scale = medidor.scale.lerp(Vector2.ONE, minf(10.0 * delta, 1.0))
+	medidor.queue_redraw()
+	if tempo_infarto >= INFARTO_PARA:
+		return
+	# curva pra frente e treme cada vez mais (de pixel em pixel da arte); a cada batida dá um tranco
+	var lado = -1.0 if sprite.flip_h else 1.0
+	sprite.rotation = lado * 0.15 * tempo_infarto / INFARTO_PARA
+	var tremor = 1.0 if tempo_infarto < INFARTO_FIBRILA else 2.0
+	sprite.offset.x = roundf(sin(tempo_infarto * 60.0) * tremor)
+	sprite.scale = escala_sprite * deformacao * Vector2(1.0 + pulso * 0.08, 1.0 - pulso * 0.05)
+	sprite.self_modulate = Color.WHITE.lerp(Color(1.6, 1.6, 1.6), pulso)
+
+# linha reta: o coração parte, a tela fecha nele e aparece o letreiro
+func parar_coracao() -> void:
+	sprite.offset.x = 0.0
+	sprite.scale = escala_sprite
+	sprite.self_modulate = Color.WHITE
+	pulso = 0.0
+	create_tween().tween_property(self, "quebra", 1.0, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	house.ui.focar(self, 0.13)
+	house.camera.tremer(5.0)
+	house.ui.letreiro("INFARTO!", get_global_transform_with_canvas() * Vector2(0, -170))
+
+func bater_no_chao(lado: float) -> void:
+	house.camera.tremer(6.0)
+	house.camera.chutar(0.05)
+	GameManager.hitstop(0.08)
+	var poeira = Fantasma.FUMACA.instantiate()
+	poeira.position = get_parent().to_local(global_position + Vector2(lado * 40.0, 25.0))
+	get_parent().add_child(poeira)
+	# a recompensa sai do corpo caído
+	GameManager.sustos += 1 + bonus_infarto
+	house.ui.voar_susto(get_global_transform_with_canvas() * Vector2(lado * 40.0, 0), 1 + bonus_infarto)
+
+# a alma sai do corpo: o mesmo desenho em branco, meio transparente, subindo e balançando
+func soltar_alma() -> void:
+	var alma = Sprite2D.new()
+	alma.texture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame)
+	alma.offset = Vector2(0.0, sprite.offset.y)
+	alma.flip_h = sprite.flip_h
+	alma.scale = escala_sprite
+	alma.position = sprite.position
+	alma.z_index = 1
+	alma.material = Fantasma.CONTORNO.duplicate()
+	alma.material.set_shader_parameter("brilho", 1.0)
+	alma.modulate.a = 0.0
+	add_child(alma)
+	var tween = alma.create_tween().set_parallel()
+	tween.tween_property(alma, "position:y", alma.position.y - 110.0, 1.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.tween_property(alma, "modulate:a", 0.7, 0.3)
+	tween.tween_property(alma, "modulate:a", 0.0, 0.9).set_delay(0.7)
+	var balanco = alma.create_tween().set_loops(2)
+	balanco.tween_property(alma, "position:x", 8.0, 0.4).set_trans(Tween.TRANS_SINE)
+	balanco.tween_property(alma, "position:x", -8.0, 0.4).set_trans(Tween.TRANS_SINE)
+
+# monitor cardíaco no lugar do medidor de medo: a linha com as batidas passando e o coraçãozinho do lado
+func desenhar_monitor() -> void:
+	var a = alfa_medidor
+	var tela = Rect2(-22, -14, 56, 24)
+	medidor.draw_rect(tela.grow(1.0), Color(0, 0, 0, a))
+	medidor.draw_rect(tela, Color(0.1, 0.1, 0.1, a))
+	var meio = tela.get_center().y
+	var inicio = tempo_infarto - JANELA_MONITOR
+	var linha = PackedVector2Array([Vector2(tela.position.x, meio)])
+	for b in batidas:
+		for p in BATIDA:
+			var quando = b + p.x * DURACAO_BATIDA
+			if quando > inicio and quando < tempo_infarto:
+				linha.append(Vector2(tela.position.x + (quando - inicio) / JANELA_MONITOR * tela.size.x, meio - p.y * 9.0))
+	# fibrilação: tremido sem ritmo nenhum
+	var t = maxf(INFARTO_FIBRILA, inicio)
+	while t < minf(INFARTO_PARA, tempo_infarto):
+		var x = tela.position.x + (t - inicio) / JANELA_MONITOR * tela.size.x
+		linha.append(Vector2(x, meio - (sin(t * 47.0) * 0.4 + sin(t * 113.0) * 0.3) * 9.0))
+		t += JANELA_MONITOR / tela.size.x
+	linha.append(Vector2(tela.end.x, meio))
+	for i in linha.size():
+		linha[i] = linha[i].round()
+	medidor.draw_polyline(linha, Color(1, 1, 1, a), 2.0)
+	desenhar_coracao(Vector2(tela.position.x - 10.0, meio), a)
+
+func desenhar_coracao(centro: Vector2, a: float) -> void:
+	var cor = Color(0.85, 0.12, 0.16).lerp(Color.WHITE, pulso * 0.4) if quebra == 0.0 else Color(0.4, 0.4, 0.4)
+	cor.a = a
+	var tamanho = 0.4 * (1.0 + pulso * 0.4)
+	var metades = []
+	for lado in [-1.0, 1.0]:
+		var pontos = PackedVector2Array()
+		var lugar = centro + Vector2(lado * quebra * 3.0, quebra * 2.0)
+		for p in metade_coracao(lado):
+			pontos.append(lugar + p.rotated(lado * quebra * 0.3) * tamanho)
+		metades.append(pontos)
+	# borda preta: o mesmo desenho 1 px pra cada lado, por baixo das duas metades
+	for pontos in metades:
+		for d in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
+			medidor.draw_colored_polygon(Transform2D(0.0, d) * pontos, Color(0, 0, 0, a))
+	for pontos in metades:
+		medidor.draw_colored_polygon(pontos, cor)
+
+# metade do coração (x = 16 sen³t), fechando pela rachadura no meio; as duas metades se encaixam
+func metade_coracao(lado: float) -> PackedVector2Array:
+	var pontos = PackedVector2Array()
+	for i in 13:
+		var t = PI * i / 12.0
+		pontos.append(Vector2(lado * 16.0 * pow(sin(t), 3.0), -(13.0 * cos(t) - 5.0 * cos(2.0 * t) - 2.0 * cos(3.0 * t) - cos(4.0 * t))))
+	for p in RACHADURA:
+		pontos.append(p)
+	return pontos

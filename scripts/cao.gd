@@ -42,14 +42,14 @@ func latido_feral() -> bool:
 	var meu_comodo = GameManager.house.comodo_em(global_position)
 	for npc in get_tree().get_nodes_in_group("npc"):
 		if GameManager.house.comodo_em(npc.global_position) == meu_comodo:
-			npc.tomar_susto("latido", medo_latido)
+			npc.tomar_susto("latido", medo_latido, self)
 	return true
 
 func ir_ate_alvo(delta: float) -> void:
 	var house = GameManager.house
 	var proximo = global_position.move_toward(alvo.global_position, velocidade * delta)
 	# não segue pra outro cômodo, não entra em cômodo proibido nem atravessa parede
-	if house.comodo_em(alvo.global_position) != house.comodo_em(global_position) \
+	if not alvo.is_in_group("npc") or house.comodo_em(alvo.global_position) != house.comodo_em(global_position) \
 			or house.comodo_proibido(proximo, comodos_proibidos) or house.eh_parede(proximo):
 		alvo = null
 		return
@@ -68,7 +68,7 @@ func ir_ate_alvo(delta: float) -> void:
 
 func _on_animacao_acabou() -> void:
 	if sprite.animation == &"agarrar" and is_instance_valid(alvo):
-		alvo.tomar_susto("mastigar", medo_mastigar)
+		alvo.tomar_susto("mastigar", medo_mastigar, self)
 		alvo = null
 		sprite.play("mastigar")
 		get_tree().create_timer(duracao_mastigar).timeout.connect(sprite.play.bind("parado"))

@@ -37,3 +37,5 @@ animations = [{
 "name": &"andar",
 "speed": 8.0
 }]
+metadata/infarto_tipo = "Poltergeist"
+metadata/infarto_tier = 1

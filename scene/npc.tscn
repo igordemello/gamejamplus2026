@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bvro6fjibueab"]
 
 [ext_resource type="Script" uid="uid://b5ra8fdddq376" path="res://scripts/npc.gd" id="1_np5a4"]
-[ext_resource type="SpriteFrames" path="res://assets/npc/gotica.tres" id="2_gotica"]
+[ext_resource type="SpriteFrames" uid="uid://cj0axhg677v7v" path="res://assets/npc/gotica.tres" id="2_gotica"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g4v7s"]
 size = Vector2(30, 30)

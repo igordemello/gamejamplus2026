@@ -5,11 +5,13 @@ extends Sprite2D
 @export var textura_vomito: Texture2D
 
 var medo: int = 15
+# a geleia que soltou a comida (conta como susto dela)
+var fantasma: Fantasma
 
 func _physics_process(_delta: float) -> void:
 	for npc in get_tree().get_nodes_in_group("npc"):
 		if global_position.distance_to(npc.global_position) <= raio:
-			npc.tomar_susto("comida", medo)
+			npc.tomar_susto("comida", medo, fantasma)
 			npc.atordoar(tempo_vomitando)
 			# vira a poça de vômito e some quando ele termina de vomitar
 			texture = textura_vomito

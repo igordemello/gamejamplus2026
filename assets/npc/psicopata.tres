@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" format=3]
+[gd_resource type="SpriteFrames" format=3 uid="uid://bqkofi0uvl1ic"]
 
 [ext_resource type="Texture2D" uid="uid://bfkgcjbe5v6ak" path="res://assets/npc/psicopata.png" id="1_sheet"]
 
@@ -38,7 +38,6 @@ region = Rect2(174, 32, 25, 64)
 margin = Rect2(3, 0, 7, 0)
 
 [resource]
-metadata/escala = 1.33333333
 animations = [{
 "frames": [{
 "duration": 1.0,
@@ -62,7 +61,10 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_andar6")
 }],
-"loop": true,
+"loop": 1,
 "name": &"andar",
 "speed": 9.0
 }]
+metadata/escala = 1.33333333
+metadata/infarto_tipo = "Poltergeist"
+metadata/infarto_tier = 3

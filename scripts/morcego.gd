@@ -45,6 +45,6 @@ func bater_asas() -> bool:
 		var pos_local = (npc.global_position - global_position).rotated(-direcao.angle())
 		if area_bater_asas.has_point(pos_local):
 			npc.velocity += direcao * forca_empurrao
-			npc.tomar_susto("morcego", medo_bater_asas)
+			npc.tomar_susto("morcego", medo_bater_asas, self)
 
 	return true

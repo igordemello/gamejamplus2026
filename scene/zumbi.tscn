@@ -289,7 +289,7 @@ animation = &"parado"
 autoplay = "parado"
 offset = Vector2(0, -24)
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=120780350]
 path_desired_distance = 8.0
 target_desired_distance = 8.0
 navigation_layers = 3

@@ -81,7 +81,7 @@ func _on_quadro_mudou() -> void:
 	if sprite.animation != &"balao" or sprite.frame != sprite.sprite_frames.get_frame_count("balao") - 1:
 		return
 	if is_instance_valid(alvo):
-		alvo.tomar_susto("balao", medo_balao)
+		alvo.tomar_susto("balao", medo_balao, self)
 	alvo = null
 	GameManager.house.camera.tremer(5.0)
 	var tween = create_tween()

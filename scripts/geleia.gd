@@ -45,7 +45,7 @@ func lambidao() -> bool:
 func ir_ate_alvo(delta: float) -> void:
 	var house = GameManager.house
 	# saiu do cômodo, desiste
-	if house.comodo_em(alvo.global_position) != house.comodo_em(global_position):
+	if not alvo.is_in_group("npc") or house.comodo_em(alvo.global_position) != house.comodo_em(global_position):
 		alvo = null
 		return
 
@@ -58,7 +58,7 @@ func ir_ate_alvo(delta: float) -> void:
 
 func lamber() -> void:
 	sprite.play("lambida")
-	alvo.tomar_susto("lambida", medo_lambida)
+	alvo.tomar_susto("lambida", medo_lambida, self)
 	alvo.direcao_correr = global_position.direction_to(alvo.global_position)
 	alvo = null
 
@@ -66,6 +66,7 @@ func _on_animacao_acabou() -> void:
 	if sprite.animation == &"mordida":
 		var comida = cena_comida.instantiate()
 		comida.medo = medo_comida
+		comida.fantasma = self
 		GameManager.house.y_sort.add_child(comida)
 		comida.global_position = global_position
 	sprite.play("parada")

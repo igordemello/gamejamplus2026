@@ -19,5 +19,5 @@ func susto_de_espada() -> bool:
 		return false
 
 	sprite.play("atacar")
-	alvo.tomar_susto("espada", medo_espada)
+	alvo.tomar_susto("espada", medo_espada, self)
 	return true

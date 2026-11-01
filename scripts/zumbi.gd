@@ -53,7 +53,7 @@ func _physics_process(delta: float) -> void:
 
 func perseguir(delta: float) -> void:
 	tempo_perseguindo += delta
-	if not is_instance_valid(alvo) or tempo_perseguindo > tempo_max_perseguindo:
+	if not is_instance_valid(alvo) or not alvo.is_in_group("npc") or tempo_perseguindo > tempo_max_perseguindo:
 		perseguindo = false
 		voltando = true
 		return
@@ -112,7 +112,7 @@ func bafo_do_medo() -> bool:
 	sprite.flip_h = direcao.x > 0.0
 	for npc in perto:
 		if absf(rad_to_deg(direcao.angle_to(global_position.direction_to(npc.global_position)))) <= abertura_bafo:
-			npc.tomar_susto("bafo", medo_bafo)
+			npc.tomar_susto("bafo", medo_bafo, self)
 			npc.atordoar(paralisia_bafo)
 	soltar_nuvens(direcao)
 	return true
@@ -164,7 +164,7 @@ func arranhao() -> bool:
 
 func _on_quadro_mudou() -> void:
 	if sprite.animation == &"arranhao" and sprite.frame == quadro_arranhao and is_instance_valid(alvo):
-		alvo.tomar_susto("arranhao", medo_arranhao)
+		alvo.tomar_susto("arranhao", medo_arranhao, self)
 		GameManager.house.camera.tremer(4.0)
 
 func _on_animacao_acabou() -> void:
