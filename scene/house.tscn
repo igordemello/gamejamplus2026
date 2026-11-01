@@ -1078,6 +1078,6 @@ script = ExtResource("30_camera")
 
 [node name="tutorial" parent="." unique_id=2092929995 instance=ExtResource("76_tutorial")]
 
-[node name="lore" parent="." instance=ExtResource("79_lore")]
+[node name="lore" parent="." unique_id=298655840 instance=ExtResource("79_lore")]
 
 [node name="vitoria" parent="." unique_id=117613190 instance=ExtResource("75_vitoria")]
