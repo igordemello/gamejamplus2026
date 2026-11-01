@@ -9,16 +9,10 @@ const ESTILHACOS = preload("res://scene/estilhacos.tscn")
 @export var peito: Vector2 = Vector2(0, 3)
 @export var altura_levantar: float = 40.0
 
-<<<<<<< Updated upstream
-@export var medo_quebra: int = 50
-@export var raio_quebra: float = 280.0
-@export var max_assustados: int = 5
-=======
 @export var medo_quebra: int = 25
 @export var raio_quebra: float = 180.0
 @export var max_assustados: int = 3
 @export var tempo_reaparecer: float = 30.0
->>>>>>> Stashed changes
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var brasas: CPUParticles2D = $brasas
