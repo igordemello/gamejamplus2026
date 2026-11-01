@@ -112,7 +112,11 @@ func soltar() -> void:
 # para de levitar e de receber clique. quem pegou cuida do resto
 func ser_pego() -> void:
 	segurando = false
+<<<<<<< Updated upstream
 	GameManager.som.parar(som_levitando)
+=======
+	remove_from_group("levitavel")
+>>>>>>> Stashed changes
 	for tween in [tween_queda, tween_escala]:
 		if tween:
 			tween.kill()
@@ -122,6 +126,12 @@ func ser_pego() -> void:
 	sombra.hide()
 	set_process(false)
 	set_process_input(false)
+
+func reaparecer() -> void:
+	add_to_group("levitavel")
+	sombra.show()
+	set_process(true)
+	set_process_input(true)
 
 # a cada susto: incha, pisca claro e a tela dá uma tremidinha
 func pulsar() -> void:

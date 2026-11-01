@@ -2,7 +2,6 @@
 
 [ext_resource type="PackedScene" uid="uid://bvro6fjibueab" path="res://scene/npc.tscn" id="1_atexv"]
 [ext_resource type="Script" uid="uid://c630bbcoty01m" path="res://scripts/house.gd" id="1_vjqwo"]
-[ext_resource type="Texture2D" uid="uid://drhgefhoyih0l" path="res://assets/objeto placeholder.png" id="4_3bjdp"]
 [ext_resource type="Script" uid="uid://cl8fiy8r766f2" path="res://scripts/objeto_levitavel.gd" id="5_52fq0"]
 [ext_resource type="Script" uid="uid://b2c6tvgflw0e7" path="res://scripts/ui_main.gd" id="7_qg36w"]
 [ext_resource type="PackedScene" uid="uid://cbgvi56ugb03g" path="res://scene/morcego.tscn" id="8_66jkb"]
@@ -25,31 +24,50 @@
 [ext_resource type="Texture2D" uid="uid://e0rs76m23lwf" path="res://assets/cenario em partes/sombras.png" id="20_si276"]
 [ext_resource type="Script" uid="uid://b4deurdln0fr8" path="res://scripts/camera.gd" id="30_camera"]
 [ext_resource type="PackedScene" path="res://scene/pausa.tscn" id="31_pausa"]
-[ext_resource type="SpriteFrames" path="res://assets/npc/atleta.tres" id="32_cheer"]
+[ext_resource type="SpriteFrames" uid="uid://by3mtajcqbmgp" path="res://assets/npc/atleta.tres" id="32_cheer"]
 [ext_resource type="SpriteFrames" uid="uid://dgx33l351u2" path="res://assets/npc/hippie.tres" id="33_hippie"]
 [ext_resource type="SpriteFrames" uid="uid://bqkofi0uvl1ic" path="res://assets/npc/psicopata.tres" id="34_psicopata"]
 [ext_resource type="SpriteFrames" uid="uid://tajn12nb78nh" path="res://assets/npc/advogado.tres" id="35_advogado"]
 [ext_resource type="PackedScene" uid="uid://smibflxwsbi4" path="res://scene/crianca.tscn" id="40_crianca"]
 [ext_resource type="PackedScene" path="res://scene/cavaleiro.tscn" id="41_cavaleiro"]
 [ext_resource type="PackedScene" path="res://scene/cao.tscn" id="42_cao"]
+[ext_resource type="Texture2D" uid="uid://nlklpo7gmnhf" path="res://assets/PROPS/PORTAS.png" id="43_ihe6e"]
 [ext_resource type="Script" uid="uid://1ycno03slfgr" path="res://scripts/ponto_spawn.gd" id="43_ponto"]
 [ext_resource type="Texture2D" uid="uid://8tjqsgm1j18h" path="res://assets/criança medonha/criança.png" id="44_crianca_tex"]
 [ext_resource type="Texture2D" uid="uid://dx3pcar65i4b6" path="res://assets/cavaleiro/Estatua_parada.png" id="45_estatua_tex"]
 [ext_resource type="Texture2D" uid="uid://bjh5h408ujc34" path="res://assets/cao possuido/loboIdle128x128.png" id="46_cao_tex"]
+[ext_resource type="Texture2D" uid="uid://dohej111kditl" path="res://assets/PROPS/TAPETE.png" id="46_mikqm"]
+[ext_resource type="Texture2D" uid="uid://b7vcby70cu5e3" path="res://assets/PROPS/LAREIRA.png" id="47_f6gw7"]
+[ext_resource type="Texture2D" uid="uid://bdqp6u2sqyx57" path="res://assets/PROPS/MESA.png" id="48_q2wo2"]
+[ext_resource type="Texture2D" uid="uid://4bciw0c0iqmk" path="res://assets/PROPS/PIA.png" id="49_jsx3b"]
 [ext_resource type="PackedScene" path="res://scene/diabrete.tscn" id="50_diabrete"]
+[ext_resource type="Texture2D" uid="uid://bxmlx1dwvv01m" path="res://assets/PROPS/PRIVADA.png" id="50_wneqp"]
 [ext_resource type="PackedScene" path="res://scene/caveira.tscn" id="51_caveira"]
-[ext_resource type="PackedScene" path="res://scene/objeto_quebravel.tscn" id="52_quebravel"]
+[ext_resource type="Texture2D" uid="uid://oacsoh0o2vm8" path="res://assets/PROPS/fogão.png" id="51_wneqp"]
+[ext_resource type="Texture2D" uid="uid://42fqw8n8nm0u" path="res://assets/PROPS/geladeira.png" id="52_drius"]
 [ext_resource type="Texture2D" uid="uid://dc2aiwxoxv0nv" path="res://assets/diabrete/diabrete_spritesheet.png" id="53_diabrete_tex"]
+[ext_resource type="Texture2D" uid="uid://chg3yt3crja7n" path="res://assets/PROPS/ESTANTE.png" id="53_ot6di"]
 [ext_resource type="Texture2D" uid="uid://caorr4lm2csj1" path="res://assets/caveira/idleCaveira 64x112.png" id="54_caveira_tex"]
+[ext_resource type="Texture2D" uid="uid://diotrfteacnu" path="res://assets/PROPS/l1.png" id="54_cwgim"]
+[ext_resource type="Texture2D" uid="uid://c3qyatnhoecam" path="res://assets/PROPS/l2.png" id="55_lrg3j"]
 [ext_resource type="PackedScene" path="res://scene/palhaco.tscn" id="55_palhaco"]
 [ext_resource type="Texture2D" uid="uid://tgih8d8habk3" path="res://assets/palhaço/palhaço.png" id="56_palhaco_tex"]
+[ext_resource type="Texture2D" uid="uid://2ambjiwlx7bq" path="res://assets/PROPS/l3.png" id="56_xhm3f"]
 [ext_resource type="Script" uid="uid://dchblcsglwm1i" path="res://scripts/ponto_festa.gd" id="57_festa"]
+[ext_resource type="Texture2D" uid="uid://cj75fgxlfkdbj" path="res://assets/PROPS/vela1-8705.png" id="57_lrg3j"]
+[ext_resource type="Texture2D" uid="uid://d1mwmwe78rly6" path="res://assets/PROPS/vela4-870b.png" id="58_so784"]
 [ext_resource type="PackedScene" uid="uid://cx2f26uhoalyf" path="res://scene/zumbi.tscn" id="58_zumbi"]
+[ext_resource type="Texture2D" uid="uid://bvor6ahqs6y2v" path="res://assets/PROPS/vela3-8709.png" id="59_0j7ji"]
 [ext_resource type="Texture2D" uid="uid://o4v2hb2ed3or" path="res://assets/zumbie/zumbiIdle64x64.png" id="59_zumbi_tex"]
+[ext_resource type="Texture2D" uid="uid://cc7yu2yu4n4h3" path="res://assets/PROPS/vela2-8706.png" id="60_0j7ji"]
 [ext_resource type="NavigationPolygon" uid="uid://bxj8f55y1bvtg" path="res://assets/navegacao_fora.tres" id="60_nav_fora"]
+[ext_resource type="Texture2D" uid="uid://dil33ichqbsi" path="res://assets/PROPS/CAMA.png" id="61_4itfr"]
 [ext_resource type="Script" uid="uid://cyy25g11keopn" path="res://scripts/luz.gd" id="61_luz"]
+[ext_resource type="Texture2D" uid="uid://li7fed8avs1x" path="res://assets/PROPS/armario.png" id="61_n4uk7"]
 [ext_resource type="Texture2D" uid="uid://bjdqxsq72odh3" path="res://assets/luz.tres" id="62_luz_tex"]
+[ext_resource type="Texture2D" uid="uid://ctetij5cgt53g" path="res://assets/PROPS/CACTO 1.png" id="63_apy6t"]
 [ext_resource type="Shader" uid="uid://bo6qi60mj0v2y" path="res://assets/neblina.gdshader" id="63_neblina"]
+[ext_resource type="Texture2D" uid="uid://dd717l1o242kn" path="res://assets/PROPS/flor.png" id="64_o622m"]
 [ext_resource type="Shader" uid="uid://bd6y804bpplm4" path="res://assets/pos.gdshader" id="64_pos"]
 [ext_resource type="Script" uid="uid://cppofi6aqxbco" path="res://scripts/pos.gd" id="65_pos_script"]
 [ext_resource type="PackedScene" path="res://scene/abobora.tscn" id="66_abobora"]
@@ -65,11 +83,10 @@
 [ext_resource type="PackedScene" path="res://scene/policial.tscn" id="77_policial"]
 [ext_resource type="Script" uid="uid://b6cshrshcjpw4" path="res://scripts/baralho.gd" id="78_baralho"]
 [ext_resource type="PackedScene" path="res://scene/lore.tscn" id="79_lore"]
-
-[ext_resource type="SpriteFrames" path="res://assets/npc/cientista.tres" id="npc_cientista"]
-[ext_resource type="SpriteFrames" path="res://assets/npc/crianca_catarrenta.tres" id="npc_crianca_catarrenta"]
-[ext_resource type="SpriteFrames" path="res://assets/npc/idoso.tres" id="npc_idoso"]
-[ext_resource type="SpriteFrames" path="res://assets/npc/religioso.tres" id="npc_religioso"]
+[ext_resource type="SpriteFrames" uid="uid://ryiviy1w12ku" path="res://assets/npc/cientista.tres" id="npc_cientista"]
+[ext_resource type="SpriteFrames" uid="uid://b6uf8awim6umn" path="res://assets/npc/crianca_catarrenta.tres" id="npc_crianca_catarrenta"]
+[ext_resource type="SpriteFrames" uid="uid://cusyb1q5jcg1p" path="res://assets/npc/idoso.tres" id="npc_idoso"]
+[ext_resource type="SpriteFrames" uid="uid://ts4girjdxpvk" path="res://assets/npc/religioso.tres" id="npc_religioso"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_morc0"]
 atlas = ExtResource("11_morc")
@@ -511,6 +528,10 @@ texture_filter = 1
 position = Vector2(959.99994, 540)
 texture = ExtResource("12_55q24")
 
+[node name="tapete" type="Sprite2D" parent="." unique_id=2143294567]
+position = Vector2(879, 267)
+texture = ExtResource("46_mikqm")
+
 [node name="sombas" type="Sprite2D" parent="." unique_id=2140932617]
 texture_filter = 1
 position = Vector2(943, 1190)
@@ -530,22 +551,6 @@ material = ExtResource("71_brilho")
 position = Vector2(880, 260)
 script = ExtResource("70_globo")
 
-[node name="fogo_lareira" type="CPUParticles2D" parent="." unique_id=815584450]
-material = ExtResource("71_brilho")
-position = Vector2(861, 133)
-amount = 30
-lifetime = 0.7
-emission_shape = 3
-emission_rect_extents = Vector2(13, 2)
-direction = Vector2(0, -1)
-spread = 12.0
-gravity = Vector2(0, -60)
-initial_velocity_min = 10.0
-initial_velocity_max = 40.0
-scale_amount_min = 4.0
-scale_amount_max = 6.0
-color_ramp = SubResource("Gradient_fogo")
-
 [node name="efeitos_chao" type="Node2D" parent="." unique_id=1590873098]
 
 [node name="paredes2" type="Sprite2D" parent="." unique_id=267741825 groups=["parede"]]
@@ -560,18 +565,6 @@ texture = ExtResource("19_wlb85")
 
 [node name="Y-sort" type="Node2D" parent="." unique_id=1688193088]
 y_sort_enabled = true
-
-[node name="objeto_quebravel1" parent="Y-sort" unique_id=1154880673 instance=ExtResource("52_quebravel")]
-position = Vector2(760, 330)
-
-[node name="objeto_quebravel2" parent="Y-sort" unique_id=757516077 instance=ExtResource("52_quebravel")]
-position = Vector2(1300, 400)
-
-[node name="objeto_quebravel3" parent="Y-sort" unique_id=606486248 instance=ExtResource("52_quebravel")]
-position = Vector2(420, 420)
-
-[node name="objeto_quebravel4" parent="Y-sort" unique_id=1879414630 instance=ExtResource("52_quebravel")]
-position = Vector2(1330, 950)
 
 [node name="paredes4" type="Sprite2D" parent="Y-sort" unique_id=1849567217 groups=["parede"]]
 texture_filter = 1
@@ -609,6 +602,196 @@ position = Vector2(1586, 836)
 texture = ExtResource("18_7jo04")
 offset = Vector2(-626.00006, -296)
 
+[node name="paredes8" type="Sprite2D" parent="Y-sort" unique_id=1945839136 groups=["parede"]]
+texture_filter = 1
+position = Vector2(1586, 836)
+texture = ExtResource("43_ihe6e")
+offset = Vector2(-626.00006, -296)
+
+[node name="Sprite2D2" type="Sprite2D" parent="Y-sort" unique_id=1756773224 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(879, 267)
+
+[node name="Sprite2D3" type="Sprite2D" parent="Y-sort" unique_id=1828273965]
+texture_filter = 1
+position = Vector2(872, 47)
+texture = ExtResource("47_f6gw7")
+
+[node name="Sprite2D4" type="Sprite2D" parent="Y-sort" unique_id=406286221]
+texture_filter = 1
+position = Vector2(1356, 237)
+texture = ExtResource("48_q2wo2")
+offset = Vector2(0, 43)
+
+[node name="Sprite2D5" type="Sprite2D" parent="Y-sort" unique_id=1697815559]
+texture_filter = 1
+position = Vector2(1653, 325)
+texture = ExtResource("49_jsx3b")
+
+[node name="Sprite2D6" type="Sprite2D" parent="Y-sort" unique_id=1159096629]
+texture_filter = 1
+position = Vector2(1579, 321)
+texture = ExtResource("50_wneqp")
+
+[node name="Sprite2D7" type="Sprite2D" parent="Y-sort" unique_id=1094918961 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(1314, 789)
+texture = ExtResource("51_wneqp")
+offset = Vector2(2, -27)
+
+[node name="Sprite2D8" type="Sprite2D" parent="Y-sort" unique_id=1366979769 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(1377, 792)
+texture = ExtResource("52_drius")
+offset = Vector2(5, -32)
+
+[node name="Sprite2D9" type="Sprite2D" parent="Y-sort" unique_id=713878309]
+texture_filter = 1
+position = Vector2(1357, 111)
+texture = ExtResource("53_ot6di")
+
+[node name="Sprite2D10" type="Sprite2D" parent="Y-sort" unique_id=984082203 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(1437, 265)
+texture = ExtResource("54_cwgim")
+
+[node name="Sprite2D11" type="Sprite2D" parent="Y-sort" unique_id=19255223 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(1283, 265)
+texture = ExtResource("55_lrg3j")
+
+[node name="Sprite2D12" type="Sprite2D" parent="Y-sort" unique_id=495725363 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(1391, 275)
+texture = ExtResource("56_xhm3f")
+
+[node name="Sprite2D13" type="Sprite2D" parent="Y-sort" unique_id=1022694058 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(1324, 263)
+texture = ExtResource("57_lrg3j")
+
+[node name="Sprite2D14" type="Sprite2D" parent="Y-sort" unique_id=1991038149 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(984, 77)
+texture = ExtResource("58_so784")
+
+[node name="Sprite2D15" type="Sprite2D" parent="Y-sort" unique_id=319712464 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(1015, 78)
+texture = ExtResource("59_0j7ji")
+
+[node name="Sprite2D16" type="Sprite2D" parent="Y-sort" unique_id=353849971 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(371, 202)
+texture = ExtResource("58_so784")
+
+[node name="Sprite2D23" type="Sprite2D" parent="Y-sort" unique_id=924815808 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(305, 204)
+texture = ExtResource("58_so784")
+
+[node name="Sprite2D17" type="Sprite2D" parent="Y-sort" unique_id=1087985194 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(402, 203)
+texture = ExtResource("59_0j7ji")
+
+[node name="Sprite2D18" type="Sprite2D" parent="Y-sort" unique_id=1108353117 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(339, 201)
+texture = ExtResource("59_0j7ji")
+
+[node name="Sprite2D19" type="Sprite2D" parent="Y-sort" unique_id=713298010 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(347, 216)
+texture = ExtResource("60_0j7ji")
+
+[node name="Sprite2D24" type="Sprite2D" parent="Y-sort" unique_id=606517307 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(347, 216)
+texture = ExtResource("60_0j7ji")
+
+[node name="Sprite2D26" type="Sprite2D" parent="Y-sort" unique_id=366651124 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(767, 800)
+texture = ExtResource("61_4itfr")
+
+[node name="Sprite2D25" type="Sprite2D" parent="Y-sort" unique_id=1530769041 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(329, 218)
+texture = ExtResource("60_0j7ji")
+
+[node name="Sprite2D20" type="Sprite2D" parent="Y-sort" unique_id=1265627023 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(390, 219)
+texture = ExtResource("57_lrg3j")
+
+[node name="Sprite2D21" type="Sprite2D" parent="Y-sort" unique_id=2095328763 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(427, 204)
+texture = ExtResource("57_lrg3j")
+
+[node name="Sprite2D22" type="Sprite2D" parent="Y-sort" unique_id=1167194819 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(512, 798)
+texture = ExtResource("61_n4uk7")
+offset = Vector2(1, -32)
+
+[node name="Sprite2D27" type="Sprite2D" parent="Y-sort" unique_id=322167262]
+texture_filter = 1
+position = Vector2(767, 800)
+texture = ExtResource("61_4itfr")
+
+[node name="Sprite2D28" type="Sprite2D" parent="Y-sort" unique_id=1622678561 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(1045, 1042)
+texture = ExtResource("63_apy6t")
+
+[node name="Sprite2D29" type="Sprite2D" parent="Y-sort" unique_id=806373843 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(851, 1048)
+texture = ExtResource("63_apy6t")
+
+[node name="Sprite2D30" type="Sprite2D" parent="Y-sort" unique_id=290248021 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(513, 376)
+texture = ExtResource("64_o622m")
+script = ExtResource("5_52fq0")
+
+[node name="Sprite2D36" type="Sprite2D" parent="Y-sort" unique_id=1607851343 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(1659, 473)
+texture = ExtResource("64_o622m")
+script = ExtResource("5_52fq0")
+
+[node name="Sprite2D33" type="Sprite2D" parent="Y-sort" unique_id=1207043935 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(767, 79)
+texture = ExtResource("64_o622m")
+script = ExtResource("5_52fq0")
+
+[node name="Sprite2D34" type="Sprite2D" parent="Y-sort" unique_id=1785566728 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(1119, 786)
+texture = ExtResource("64_o622m")
+script = ExtResource("5_52fq0")
+
+[node name="Sprite2D35" type="Sprite2D" parent="Y-sort" unique_id=1842136900 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(521, 906)
+texture = ExtResource("64_o622m")
+script = ExtResource("5_52fq0")
+
+[node name="Sprite2D31" type="Sprite2D" parent="Y-sort" unique_id=2119392761 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(1232, 158)
+texture = ExtResource("64_o622m")
+script = ExtResource("5_52fq0")
+
+[node name="Sprite2D32" type="Sprite2D" parent="Y-sort" unique_id=1460113600 groups=["quebravel"]]
+texture_filter = 1
+position = Vector2(1662, 593)
+texture = ExtResource("64_o622m")
+
 [node name="npc" parent="Y-sort" unique_id=815893788 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
 position = Vector2(308, 282)
 collision_layer = 2
@@ -616,7 +799,7 @@ house = NodePath("../..")
 preferencia = "conversar"
 
 [node name="npc2" parent="Y-sort" unique_id=997912080 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
-position = Vector2(319, 428)
+position = Vector2(894, 366)
 collision_layer = 2
 house = NodePath("../..")
 visual = ExtResource("32_cheer")
@@ -644,7 +827,7 @@ visual = ExtResource("npc_crianca_catarrenta")
 preferencia = "descansar"
 
 [node name="npc6" parent="Y-sort" unique_id=560872406 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
-position = Vector2(991, 820)
+position = Vector2(1219, 909)
 collision_layer = 2
 house = NodePath("../..")
 visual = ExtResource("npc_cientista")
@@ -665,35 +848,32 @@ visual = ExtResource("35_advogado")
 preferencia = "conversar"
 
 [node name="npc9" parent="Y-sort" unique_id=1190665817 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
-position = Vector2(1318, 224)
+position = Vector2(1233, 344)
 collision_layer = 2
 house = NodePath("../..")
 visual = ExtResource("npc_religioso")
 preferencia = "beber"
 
-[node name="abobora1" parent="Y-sort" unique_id=2098279457 instance=ExtResource("66_abobora")]
-position = Vector2(865, 1135)
+[node name="abobora1" parent="Y-sort" unique_id=2098279457 groups=["quebravel"] instance=ExtResource("66_abobora")]
+position = Vector2(850, 1005)
 
-[node name="abobora2" parent="Y-sort" unique_id=1554601587 instance=ExtResource("66_abobora")]
-position = Vector2(1025, 1135)
+[node name="abobora2" parent="Y-sort" unique_id=1554601587 groups=["quebravel"] instance=ExtResource("66_abobora")]
+position = Vector2(1041, 1004)
 
-[node name="abobora3" parent="Y-sort" unique_id=356275542 instance=ExtResource("66_abobora")]
-position = Vector2(300, 830)
+[node name="abobora3" parent="Y-sort" unique_id=356275542 groups=["quebravel"] instance=ExtResource("66_abobora")]
+position = Vector2(389, 858)
 
-[node name="abobora4" parent="Y-sort" unique_id=1363656805 instance=ExtResource("66_abobora")]
-position = Vector2(1640, 880)
+[node name="abobora4" parent="Y-sort" unique_id=1363656805 groups=["quebravel"] instance=ExtResource("66_abobora")]
+position = Vector2(1574, 926)
 
-[node name="abobora5" parent="Y-sort" unique_id=1356549775 instance=ExtResource("66_abobora")]
-position = Vector2(705, 100)
+[node name="abobora5" parent="Y-sort" unique_id=1356549775 groups=["quebravel"] instance=ExtResource("66_abobora")]
+position = Vector2(618, 113)
 
-[node name="abobora6" parent="Y-sort" unique_id=446341505 instance=ExtResource("66_abobora")]
-position = Vector2(1035, 100)
+[node name="abobora6" parent="Y-sort" unique_id=446341505 groups=["quebravel"] instance=ExtResource("66_abobora")]
+position = Vector2(1128, 109)
 
-[node name="abobora7" parent="Y-sort" unique_id=1993512672 instance=ExtResource("66_abobora")]
-position = Vector2(1180, 792)
-
-[node name="abobora8" parent="Y-sort" unique_id=1600116655 instance=ExtResource("66_abobora")]
-position = Vector2(1455, 160)
+[node name="abobora8" parent="Y-sort" unique_id=1600116655 groups=["quebravel"] instance=ExtResource("66_abobora")]
+position = Vector2(1472, 180)
 
 [node name="lapide1" parent="Y-sort" unique_id=1337280467 instance=ExtResource("67_lapide")]
 position = Vector2(70, 280)
@@ -713,12 +893,6 @@ position = Vector2(640, 1170)
 [node name="lapide6" parent="Y-sort" unique_id=568834696 instance=ExtResource("67_lapide")]
 position = Vector2(1500, 1120)
 
-[node name="objeto_levitavel" type="Sprite2D" parent="." unique_id=1605782649]
-position = Vector2(1482, 251)
-scale = Vector2(0.085, 0.085)
-texture = ExtResource("4_3bjdp")
-script = ExtResource("5_52fq0")
-
 [node name="decoracao" type="Node2D" parent="." unique_id=1124829277]
 
 [node name="varal1" type="Node2D" parent="decoracao" unique_id=34211832]
@@ -728,6 +902,22 @@ script = ExtResource("69_varal")
 fim = Vector2(590, 0)
 caida = 45.0
 lampadas = 16
+
+[node name="fogo_lareira" type="CPUParticles2D" parent="." unique_id=815584450]
+material = ExtResource("71_brilho")
+position = Vector2(875, 76)
+amount = 30
+lifetime = 0.7
+emission_shape = 3
+emission_rect_extents = Vector2(13, 2)
+direction = Vector2(0, -1)
+spread = 12.0
+gravity = Vector2(0, -60)
+initial_velocity_min = 10.0
+initial_velocity_max = 40.0
+scale_amount_min = 4.0
+scale_amount_max = 6.0
+color_ramp = SubResource("Gradient_fogo")
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=2079252784]
 navigation_polygon = SubResource("NavigationPolygon_6hm8r")
@@ -1060,8 +1250,9 @@ script = ExtResource("30_camera")
 
 [node name="pausa" parent="." unique_id=1771912377 instance=ExtResource("31_pausa")]
 
-[node name="tutorial" parent="." unique_id=2092929995 instance=ExtResource("76_tutorial")]
-
-[node name="lore" parent="." unique_id=298655840 instance=ExtResource("79_lore")]
+[node name="tutorial" parent="." unique_id=2092929995 node_paths=PackedStringArray("objeto_levitavel") instance=ExtResource("76_tutorial")]
+objeto_levitavel = NodePath("../Y-sort/Sprite2D30")
 
 [node name="vitoria" parent="." unique_id=117613190 instance=ExtResource("75_vitoria")]
+
+[node name="lore" parent="." unique_id=298655840 instance=ExtResource("79_lore")]
