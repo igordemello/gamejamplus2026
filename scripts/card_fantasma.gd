@@ -10,6 +10,13 @@ var comodo_spawn: String = ""
 var comodos_proibidos: Array[String] = []
 var pontos_spawn: StringName = &""
 var fora_de_casa: bool = false
+var tipo: int = 0
+var tier: int = 1
+# o desenho do fantasma, pros pontos fixos mostrarem onde ele vai ficar
+var silhueta: Texture2D
+var silhueta_escala: Vector2
+var silhueta_posicao: Vector2
+var silhueta_offset: Vector2
 # o que segue o mouse enquanto arrasta; a área do jogo deixa avermelhado onde não pode soltar
 var preview: Control
 var tween_chacoalho: Tween
@@ -23,6 +30,13 @@ func _ready() -> void:
 	comodos_proibidos = fantasma.comodos_proibidos
 	pontos_spawn = fantasma.pontos_spawn
 	fora_de_casa = fantasma.fora_de_casa
+	tipo = fantasma.tipo
+	tier = fantasma.tier
+	var sprite: AnimatedSprite2D = fantasma.get_node("AnimatedSprite2D")
+	silhueta = sprite.sprite_frames.get_frame_texture(sprite.animation, 0)
+	silhueta_escala = sprite.scale * fantasma.scale
+	silhueta_posicao = sprite.position * fantasma.scale
+	silhueta_offset = sprite.offset
 
 	var restricao = ""
 	if comodo_spawn != "":

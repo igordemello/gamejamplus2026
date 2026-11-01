@@ -175,7 +175,7 @@ animations = [{
 
 [node name="Criança Medonha" type="Node2D" unique_id=120000610]
 script = ExtResource("1_script")
-custo = 7
+custo = 8
 tipo = 1
 acoes = Array[ExtResource("2_acao")]([SubResource("Resource_chorar")])
 raio_clique = 40.0

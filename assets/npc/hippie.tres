@@ -1,37 +1,51 @@
 [gd_resource type="SpriteFrames" format=3 uid="uid://dgx33l351u2"]
 
-[ext_resource type="Texture2D" uid="uid://c0c3iwalh6hsn" path="res://assets/npc/hippie.png" id="1_sheet"]
+[ext_resource type="Texture2D" uid="uid://qtat7jic3hlg" path="res://assets/sacanagem.png" id="1_721ro"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_andar0"]
-atlas = ExtResource("1_sheet")
-region = Rect2(0, 0, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_o0358"]
+atlas = ExtResource("1_721ro")
+region = Rect2(0, 0, 32, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_andar1"]
-atlas = ExtResource("1_sheet")
-region = Rect2(64, 0, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_vc0aw"]
+atlas = ExtResource("1_721ro")
+region = Rect2(32, 0, 32, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_andar2"]
-atlas = ExtResource("1_sheet")
-region = Rect2(128, 0, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_g3m3a"]
+atlas = ExtResource("1_721ro")
+region = Rect2(64, 0, 32, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_andar3"]
-atlas = ExtResource("1_sheet")
-region = Rect2(192, 0, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_y643j"]
+atlas = ExtResource("1_721ro")
+region = Rect2(96, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ebq5w"]
+atlas = ExtResource("1_721ro")
+region = Rect2(128, 0, 32, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a3u12"]
+atlas = ExtResource("1_721ro")
+region = Rect2(160, 0, 32, 64)
 
 [resource]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_andar0")
+"texture": SubResource("AtlasTexture_o0358")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_andar1")
+"texture": SubResource("AtlasTexture_vc0aw")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_andar2")
+"texture": SubResource("AtlasTexture_g3m3a")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_andar3")
+"texture": SubResource("AtlasTexture_y643j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ebq5w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a3u12")
 }],
 "loop": 1,
 "name": &"andar",

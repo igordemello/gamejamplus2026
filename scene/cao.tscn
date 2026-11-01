@@ -253,7 +253,7 @@ script = ExtResource("2_acao")
 nome = "Mastigar"
 icone = SubResource("AtlasTexture_icone_mastigar")
 descricao = "Vai até a pessoa mais perto no cômodo e mastiga a perna dela. Só ela se assusta. Medo 15."
-recarga = 15.0
+recarga = 14.0
 metodo = &"mastigar"
 
 [sub_resource type="Resource" id="Resource_latido"]
@@ -261,7 +261,7 @@ script = ExtResource("2_acao")
 nome = "Latido Feral"
 icone = SubResource("AtlasTexture_icone_latido")
 descricao = "Um latido invertido que assusta todo mundo no cômodo. Medo 10."
-recarga = 5.0
+recarga = 7.0
 metodo = &"latido_feral"
 
 [node name="Cão Possuído" type="Node2D"]

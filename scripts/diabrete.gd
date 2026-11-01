@@ -9,7 +9,7 @@ const ESTILHACOS = preload("res://scene/estilhacos.tscn")
 @export var peito: Vector2 = Vector2(0, 3)
 @export var altura_levantar: float = 40.0
 
-@export var medo_quebra: int = 10
+@export var medo_quebra: int = 18
 @export var raio_quebra: float = 180.0
 @export var max_assustados: int = 3
 
@@ -77,6 +77,7 @@ func quebrar(objeto: Node2D) -> void:
 		func(npc): return objeto.global_position.distance_to(npc.global_position) <= raio_quebra
 	)
 	assustados.sort_custom(func(a, b): return objeto.global_position.distance_to(a.global_position) < objeto.global_position.distance_to(b.global_position))
+	Onomatopeia.soltar("CRASH!", objeto.global_position + Vector2(0, -40), Color(1, 0.6, 0.25), 4.0)
 	for npc in assustados.slice(0, max_assustados):
 		npc.tomar_susto("quebra", medo_quebra, self)
 

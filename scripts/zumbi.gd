@@ -3,7 +3,7 @@ extends Fantasma
 @export var alcance_bafo: float = 350.0
 # metade da abertura do cone, em graus
 @export var abertura_bafo: float = 35.0
-@export var medo_bafo: int = 10
+@export var medo_bafo: int = 14
 @export var paralisia_bafo: float = 2.0
 @export var nuvens_bafo: int = 6
 
@@ -14,7 +14,7 @@ extends Fantasma
 @export var alcance_arranhao: float = 2500.0
 @export var tempo_max_perseguindo: float = 30.0
 @export var distancia_arranhao: float = 30.0
-@export var medo_arranhao: int = 20
+@export var medo_arranhao: int = 32
 # quadro da animação em que a garra desce
 @export var quadro_arranhao: int = 4
 
@@ -110,6 +110,7 @@ func bafo_do_medo() -> bool:
 		return false
 	var direcao = global_position.direction_to(perto[0].global_position)
 	sprite.flip_h = direcao.x > 0.0
+	onomatopeia("HUAAAA", Color(0.6, 1, 0.45))
 	for npc in perto:
 		if absf(rad_to_deg(direcao.angle_to(global_position.direction_to(npc.global_position)))) <= abertura_bafo:
 			npc.tomar_susto("bafo", medo_bafo, self)
@@ -164,6 +165,7 @@ func arranhao() -> bool:
 
 func _on_quadro_mudou() -> void:
 	if sprite.animation == &"arranhao" and sprite.frame == quadro_arranhao and is_instance_valid(alvo):
+		onomatopeia("SCRATCH!", Color(1, 0.35, 0.35))
 		alvo.tomar_susto("arranhao", medo_arranhao, self)
 		GameManager.house.camera.tremer(4.0)
 

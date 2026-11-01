@@ -1,0 +1,136 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/invocacao.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dx4o3ndwfgpui" path="res://assets/pentagrama.png" id="2_penta"]
+[ext_resource type="Material" path="res://assets/brilho.tres" id="3_brilho"]
+[ext_resource type="Texture2D" path="res://assets/luz.tres" id="4_luz"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta0"]
+atlas = ExtResource("2_penta")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta1"]
+atlas = ExtResource("2_penta")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta2"]
+atlas = ExtResource("2_penta")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta3"]
+atlas = ExtResource("2_penta")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta4"]
+atlas = ExtResource("2_penta")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta5"]
+atlas = ExtResource("2_penta")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta6"]
+atlas = ExtResource("2_penta")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta7"]
+atlas = ExtResource("2_penta")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta8"]
+atlas = ExtResource("2_penta")
+region = Rect2(512, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta9"]
+atlas = ExtResource("2_penta")
+region = Rect2(576, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta10"]
+atlas = ExtResource("2_penta")
+region = Rect2(640, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta11"]
+atlas = ExtResource("2_penta")
+region = Rect2(704, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_penta"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta9")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta10")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta11")
+}],
+"loop": false,
+"name": &"desenhar",
+"speed": 16.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_brasas"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(1, 0.85, 0.4, 1, 1, 0.3, 0.1, 0.9, 0.5, 0.05, 0.05, 0)
+
+[node name="invocacao" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="pentagrama" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+material = ExtResource("3_brilho")
+scale = Vector2(1.6, 1.6)
+sprite_frames = SubResource("SpriteFrames_penta")
+animation = &"desenhar"
+offset = Vector2(0, -10)
+
+[node name="luz" type="PointLight2D" parent="."]
+position = Vector2(0, -10)
+color = Color(1, 0.2, 0.15, 1)
+energy = 0.0
+texture = ExtResource("4_luz")
+texture_scale = 1.4
+
+[node name="brasas" type="CPUParticles2D" parent="."]
+material = ExtResource("3_brilho")
+emitting = false
+amount = 30
+lifetime = 0.9
+emission_shape = 3
+emission_rect_extents = Vector2(40, 14)
+direction = Vector2(0, -1)
+spread = 15.0
+gravity = Vector2(0, -50)
+initial_velocity_min = 20.0
+initial_velocity_max = 60.0
+scale_amount_min = 2.0
+scale_amount_max = 4.0
+color_ramp = SubResource("Gradient_brasas")

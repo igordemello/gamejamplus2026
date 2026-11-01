@@ -63,6 +63,7 @@
 [ext_resource type="Texture2D" uid="uid://cjnxau6qt84j8" path="res://assets/UI/icon_morte.png" id="74_icone_morte"]
 [ext_resource type="PackedScene" path="res://scene/vitoria.tscn" id="75_vitoria"]
 [ext_resource type="PackedScene" path="res://scene/tutorial.tscn" id="76_tutorial"]
+[ext_resource type="PackedScene" path="res://scene/policial.tscn" id="77_policial"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_morc0"]
 atlas = ExtResource("11_morc")
@@ -187,6 +188,7 @@ script = ExtResource("1_vjqwo")
 ponto_fuga = NodePath("PontoFuga")
 chao = NodePath("chao")
 y_sort = NodePath("Y-sort")
+cena_policial = ExtResource("77_policial")
 metadata/_edit_vertical_guides_ = [960.0]
 metadata/_edit_horizontal_guides_ = [540.0]
 
@@ -204,33 +206,21 @@ grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("9_area")
 
-[node name="contadores" type="VBoxContainer" parent="UI_main" unique_id=192914988]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -600.0
+[node name="contadores" type="VBoxContainer" parent="UI_main" unique_id=256585518]
+offset_left = 16.0
 offset_top = 10.0
-offset_right = -336.0
-offset_bottom = 130.0
-grow_horizontal = 0
-theme_override_constants/separation = 0
+offset_right = 300.0
+offset_bottom = 124.0
+theme_override_constants/separation = 6
 
-[node name="sustos" type="HBoxContainer" parent="UI_main/contadores" unique_id=1198594264]
+[node name="sustos" type="HBoxContainer" parent="UI_main/contadores" unique_id=1693541514]
 layout_mode = 2
 tooltip_text = "Sustos
 Sua moeda. Toda vez que alguém sobe um nível de medo, você ganha 1.
 Gaste na loja para chamar fantasmas."
 theme_override_constants/separation = 10
-alignment = 2
 
-[node name="lbl_sustos" type="Label" parent="UI_main/contadores/sustos" unique_id=700093600]
-layout_mode = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 60
-text = "100"
-
-[node name="icone" type="TextureRect" parent="UI_main/contadores/sustos" unique_id=206200754]
+[node name="icone" type="TextureRect" parent="UI_main/contadores/sustos" unique_id=1966020292]
 texture_filter = 1
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
@@ -239,21 +229,17 @@ texture = ExtResource("73_icone_susto")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="mortes" type="HBoxContainer" parent="UI_main/contadores" unique_id=236054324]
+[node name="lbl_sustos" type="Label" parent="UI_main/contadores/sustos" unique_id=410184512]
 layout_mode = 2
-tooltip_text = "Mortes
-Quantas pessoas morreram de susto. Cada infarto vale 3 sustos."
+theme_override_font_sizes/font_size = 60
+text = "25"
+
+[node name="mortes" type="HBoxContainer" parent="UI_main/contadores" unique_id=57193233]
+layout_mode = 2
+tooltip_text = "Mortes"
 theme_override_constants/separation = 10
-alignment = 2
 
-[node name="lbl_mortes" type="Label" parent="UI_main/contadores/mortes" unique_id=223232515]
-layout_mode = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_font_sizes/font_size = 40
-text = "0"
-
-[node name="icone" type="TextureRect" parent="UI_main/contadores/mortes" unique_id=379104683]
+[node name="icone" type="TextureRect" parent="UI_main/contadores/mortes" unique_id=1353899061]
 texture_filter = 1
 custom_minimum_size = Vector2(64, 40)
 layout_mode = 2
@@ -261,6 +247,62 @@ mouse_filter = 2
 texture = ExtResource("74_icone_morte")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="lbl_mortes" type="Label" parent="UI_main/contadores/mortes" unique_id=707831205]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "0"
+
+[node name="objetivos" type="PanelContainer" parent="UI_main" unique_id=331926869]
+offset_left = 16.0
+offset_top = 132.0
+offset_right = 340.0
+offset_bottom = 340.0
+mouse_filter = 2
+
+[node name="margem" type="MarginContainer" parent="UI_main/objetivos" unique_id=871964330]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="coluna" type="VBoxContainer" parent="UI_main/objetivos/margem" unique_id=1441197807]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="titulo" type="Label" parent="UI_main/objetivos/margem/coluna" unique_id=686167761]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Para vencer"
+
+[node name="casa" type="Label" parent="UI_main/objetivos/margem/coluna" unique_id=1602806740]
+layout_mode = 2
+text = "Tirar todo mundo da casa"
+
+[node name="um_destes" type="Label" parent="UI_main/objetivos/margem/coluna" unique_id=414424472]
+modulate = Color(0.75, 0.75, 0.75, 1)
+layout_mode = 2
+text = "e cumprir um destes:"
+
+[node name="marcados" type="Label" parent="UI_main/objetivos/margem/coluna" unique_id=709234385]
+layout_mode = 2
+text = "Matar os marcados"
+
+[node name="retratos" type="HBoxContainer" parent="UI_main/objetivos/margem/coluna" unique_id=1486088368]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="comodos" type="Label" parent="UI_main/objetivos/margem/coluna" unique_id=880667902]
+layout_mode = 2
+text = "Assustar em todos os cômodos juntos"
+
+[node name="policial" type="Label" parent="UI_main/objetivos/margem/coluna" unique_id=230750829]
+layout_mode = 2
+text = "Matar um policial"
 
 [node name="painel_fantasmas" type="PanelContainer" parent="UI_main" unique_id=2048188518]
 anchors_preset = 1
@@ -441,6 +483,8 @@ initial_velocity_max = 40.0
 scale_amount_min = 4.0
 scale_amount_max = 6.0
 color_ramp = SubResource("Gradient_fogo")
+
+[node name="efeitos_chao" type="Node2D" parent="." unique_id=1590873098]
 
 [node name="paredes2" type="Sprite2D" parent="." unique_id=267741825 groups=["parede"]]
 texture_filter = 1

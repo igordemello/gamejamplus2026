@@ -1,10 +1,10 @@
 extends Fantasma
 
 @export var raio_risada: float = 220.0
-@export var medo_risada: int = 10
+@export var medo_risada: int = 14
 
 @export var raio_mordida: float = 160.0
-@export var medo_mordida: int = 20
+@export var medo_mordida: int = 24
 @export var max_mordidos: int = 2
 @export var tempo_fugindo: float = 4.0
 # onde e de que tamanho os dentes aparecem no npc mordido
@@ -14,7 +14,7 @@ extends Fantasma
 @export var velocidade: float = 260.0
 @export var alcance_cabecada: float = 30.0
 @export var tempo_max_perseguindo: float = 6.0
-@export var medo_cabecada: int = 30
+@export var medo_cabecada: int = 40
 @export var duracao_stun_cabecada: float = 10.0
 # quanto do medo a pessoa perde por segundo enquanto está tonta da cabeçada
 @export var dreno_cabecada: float = 1.5
@@ -66,6 +66,7 @@ func risada_maligna() -> bool:
 	if ocupada():
 		return false
 	sprite.play("rir")
+	onomatopeia("HAHAHA!", Color(0.85, 0.5, 1))
 	for npc in npcs_perto(raio_risada):
 		npc.tomar_susto("risada", medo_risada, self)
 	return true
@@ -77,6 +78,7 @@ func mordida_de_fogo() -> bool:
 	var mordidos = npcs_perto(raio_mordida).slice(0, max_mordidos)
 	if mordidos.is_empty():
 		return false
+	onomatopeia("NHAC!", Color(1, 0.55, 0.2))
 	for npc in mordidos:
 		mostrar_dentes(npc)
 		npc.tomar_susto("mordida", medo_mordida, self)
@@ -116,6 +118,7 @@ func voltar_pra_casa() -> void:
 
 func _on_animacao_acabou() -> void:
 	if sprite.animation == &"cabecada" and is_instance_valid(alvo):
+		onomatopeia("POW!", Color(1, 0.9, 0.3))
 		alvo.tomar_susto("cabecada", medo_cabecada, self)
 		alvo.atordoar(duracao_stun_cabecada, dreno_cabecada)
 		GameManager.house.camera.tremer(6.0)

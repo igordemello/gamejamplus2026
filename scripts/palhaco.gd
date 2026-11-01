@@ -8,7 +8,7 @@ extends Fantasma
 @export var duracao_nota: float = 1.4
 
 @export var raio_balao: float = 250.0
-@export var medo_balao: int = 15
+@export var medo_balao: int = 22
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var notas: Node2D = $notas
@@ -63,6 +63,7 @@ func musica_de_circo() -> bool:
 	proxima_nota = 0.0
 	add_to_group("musica")
 	musica.play()
+	onomatopeia("LA LA LA", Color(1, 0.8, 0.4))
 	return true
 
 # a cabeça incha até virar aquela boca enorme e assusta quem está mais perto
@@ -81,6 +82,7 @@ func _on_quadro_mudou() -> void:
 	if sprite.animation != &"balao" or sprite.frame != sprite.sprite_frames.get_frame_count("balao") - 1:
 		return
 	if is_instance_valid(alvo):
+		onomatopeia("POP!", Color(1, 0.45, 0.55))
 		alvo.tomar_susto("balao", medo_balao, self)
 	alvo = null
 	GameManager.house.camera.tremer(5.0)

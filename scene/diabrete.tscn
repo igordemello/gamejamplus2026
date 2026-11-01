@@ -73,12 +73,12 @@ script = ExtResource("2_acao")
 nome = "Quebrar Objetos"
 icone = SubResource("AtlasTexture_icone_quebrar")
 descricao = "Pega o objeto do cenário mais perto, ergue e derruba no chão. Quem estiver bem perto se assusta. Medo 10."
-recarga = 5.0
+recarga = 8.0
 metodo = &"quebrar_objetos"
 
 [node name="Diabrete" type="Node2D"]
 script = ExtResource("1_script")
-custo = 7
+custo = 8
 tipo = 3
 acoes = Array[ExtResource("2_acao")]([SubResource("Resource_quebrar")])
 raio_clique = 36.0

@@ -80,6 +80,10 @@ func _process(delta: float) -> void:
 		var real = minf(delta / maxf(Engine.time_scale, 0.01), 0.05)
 		scale = scale.lerp(escala_raiz * (1.08 if destaque else 1.0), minf(15.0 * real, 1.0))
 
+# onomatopeia em cima do desenho (a luz fica no meio dele)
+func onomatopeia(texto: String, cor: Color) -> void:
+	Onomatopeia.soltar(texto, global_position + luz.position * scale - Vector2(0, 55), cor)
+
 # fica branco rapidinho algumas vezes
 func piscar(vezes: int, duracao: float) -> void:
 	var tween = create_tween()

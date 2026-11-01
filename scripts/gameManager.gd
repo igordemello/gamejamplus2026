@@ -2,7 +2,7 @@ extends Node
 
 var wander_radius: float = 200.0
 
-const SUSTOS_INICIAIS = 100
+const SUSTOS_INICIAIS = 25
 var sustos: int = SUSTOS_INICIAIS
 # quantos npcs infartaram nesta partida
 var mortes: int = 0

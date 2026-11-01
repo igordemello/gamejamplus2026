@@ -1,7 +1,7 @@
 extends Fantasma
 
 @export var raio_choro: float = 150.0
-@export var medo_choro: int = 15
+@export var medo_choro: int = 22
 @export var duracao_choro: float = 1.5
 
 @onready var lagrimas: AnimatedSprite2D = $lagrimas
@@ -17,6 +17,7 @@ func chorar() -> bool:
 	# some por tempo, assim funciona com a animação em loop ou não
 	lagrimas.show()
 	lagrimas.play("chorar")
+	onomatopeia("BUAAA!", Color(0.6, 0.85, 1))
 	get_tree().create_timer(duracao_choro).timeout.connect(lagrimas.hide)
 	perto[0].tomar_susto("choro", medo_choro, self)
 	return true

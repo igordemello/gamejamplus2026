@@ -6,6 +6,9 @@ const FOCO = preload("res://assets/foco.gdshader")
 @onready var lbl_mortes: Label = $contadores/mortes/lbl_mortes
 # o "+1" voa até esse ícone
 @onready var icone_sustos: Control = $contadores/sustos/icone
+@onready var objetivos: VBoxContainer = $objetivos/margem/coluna
+# retrato de cada marcado no painel de objetivos
+var retratos: Dictionary = {}
 
 var sustos_antes: int = 0
 var mortes_antes: int = 0
@@ -25,6 +28,7 @@ var foco_raio: float = 0.6
 func _ready() -> void:
 	sustos_antes = GameManager.sustos
 	mortes_antes = GameManager.mortes
+	$contadores/mortes.tooltip_text = "Mortes\nQuantas pessoas morreram de susto. Quem chega no medo máximo pelo fantasma\ncerto (o tipo e o tier que matam aquele tipo de pessoa) infarta em vez de fugir.\nCada infarto vale 3 sustos. Com %d mortes a polícia é chamada." % get_parent().limite_mortes
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -39,6 +43,9 @@ func _process(delta: float) -> void:
 		tween_mortes = pular(lbl_mortes, tween_mortes, 1.6)
 		mortes_antes = GameManager.mortes
 	lbl_mortes.text = str(GameManager.mortes)
+	# fica mais vermelho conforme chega perto do limite (a polícia)
+	lbl_mortes.add_theme_color_override("font_color", Color.WHITE.lerp(Color(1, 0.15, 0.15), clampf(GameManager.mortes / float(get_parent().limite_mortes), 0.0, 1.0)))
+	atualizar_objetivos()
 
 	if foco and foco.visible:
 		foco.material.set_shader_parameter("forca", foco_forca)
@@ -47,6 +54,44 @@ func _process(delta: float) -> void:
 		if is_instance_valid(foco_alvo):
 			var centro = foco_alvo.get_global_transform_with_canvas() * Vector2(0, -30)
 			foco.material.set_shader_parameter("centro", centro / foco.size)
+
+func mostrar_marcados(marcados: Array) -> void:
+	for npc in marcados:
+		var retrato = TextureRect.new()
+		retrato.texture = npc.sprite.sprite_frames.get_frame_texture("andar", 0)
+		retrato.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		retrato.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		retrato.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		retrato.custom_minimum_size = Vector2(40, 52)
+		retrato.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		objetivos.get_node("retratos").add_child(retrato)
+		retratos[npc] = retrato
+
+# marcado morreu (vermelho) ou fugiu vivo (apagado)
+func marcar_retrato(npc, morreu: bool) -> void:
+	if retratos.has(npc):
+		retratos[npc].modulate = Color(1, 0.25, 0.25, 0.7) if morreu else Color(0.4, 0.4, 0.4, 0.4)
+
+func atualizar_objetivos() -> void:
+	var h = get_parent()
+	objetivos.get_node("casa").text = "Tirar todo mundo da casa (restam %d)" % get_tree().get_nodes_in_group("npc").size()
+	linha(objetivos.get_node("marcados"), "Matar os %d marcados (%d/%d)" % [h.marcados.size(), h.marcados_mortos, h.marcados.size()],
+		h.objetivo_marcados, h.marcado_escapou)
+	linha(objetivos.get_node("comodos"), "Assustar em todos os cômodos juntos (%d/%d)" % [h.comodos_assustados(), h.regionsHouse.size()],
+		h.objetivo_comodos, false)
+	linha(objetivos.get_node("policial"), "Matar um policial" + ("" if h.policia_chamada else " (vem com %d mortes)" % h.limite_mortes),
+		h.objetivo_policial, false)
+
+func linha(lbl: Label, texto: String, feito: bool, falhou: bool) -> void:
+	if feito:
+		lbl.text = texto + " - feito!"
+		lbl.modulate = Color(0.6, 1, 0.6)
+	elif falhou:
+		lbl.text = texto + " - falhou"
+		lbl.modulate = Color(0.5, 0.5, 0.5)
+	else:
+		lbl.text = texto
+		lbl.modulate = Color.WHITE
 
 # o número cresce (ou encolhe) do meio e volta
 func pular(lbl: Label, tween: Tween, tamanho: float) -> Tween:
@@ -64,8 +109,6 @@ func voar_susto(de: Vector2, quantos: int = 1) -> void:
 	var texto = Label.new()
 	texto.text = "+%d" % quantos
 	texto.add_theme_font_size_override("font_size", 34)
-	texto.add_theme_constant_override("outline_size", 10)
-	texto.add_theme_color_override("font_outline_color", Color.BLACK)
 	texto.position = de - Vector2(20, 20)
 	texto.pivot_offset = Vector2(20, 20)
 	add_child(texto)
@@ -90,8 +133,6 @@ func letreiro(texto: String, de: Vector2) -> void:
 	var label = Label.new()
 	label.text = texto
 	label.add_theme_font_size_override("font_size", 52)
-	label.add_theme_constant_override("outline_size", 14)
-	label.add_theme_color_override("font_outline_color", Color.BLACK)
 	add_child(label)
 	label.size = label.get_minimum_size()
 	label.pivot_offset = label.size / 2.0

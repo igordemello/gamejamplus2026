@@ -1,5 +1,7 @@
 extends Control
 
+const INVOCACAO = preload("res://scene/invocacao.tscn")
+
 @onready var menu_acoes = $"../menu_acoes"
 
 # clicar e segurar num fantasma abre o menu de ações, soltar executa a que estiver no mouse
@@ -32,17 +34,20 @@ func pode_soltar(card: Variant) -> bool:
 	# o cômodo vale como prefixo: "quarto" pega quarto, quarto2...
 	return card.comodo_spawn == "" or house.comodo_em(pos).begins_with(card.comodo_spawn)
 
+# o fantasma não aparece na hora: sai de um pentagrama que se desenha no chão (invocacao.gd)
 func _drop_data(_at_position: Vector2, card: Variant) -> void:
 	card.comprou()
 	var fantasma: Fantasma = card.cena.instantiate()
 	var ponto = ponto_livre_perto(card.pontos_spawn) if card.pontos_spawn != &"" else null
-	GameManager.house.y_sort.add_child(fantasma)
+	var invocacao = INVOCACAO.instantiate()
+	invocacao.fantasma = fantasma
 	if ponto:
+		# o ponto já fica ocupado durante a invocação
 		ponto.ocupante = fantasma
-		fantasma.global_position = ponto.global_position
+		invocacao.position = ponto.global_position
 	else:
-		fantasma.global_position = GameManager.house.get_global_mouse_position()
-	fantasma.aparecer()
+		invocacao.position = GameManager.house.get_global_mouse_position()
+	GameManager.house.efeitos_chao.add_child(invocacao)
 
 # ponto livre do grupo mais perto do mouse, se tiver algum perto o bastante
 func ponto_livre_perto(grupo: StringName) -> Node2D:

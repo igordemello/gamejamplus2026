@@ -13,6 +13,8 @@ var regionsHouse: Array[NavigationRegion2D] = []
 @onready var pos = $pos/tela
 @onready var noite: CanvasModulate = $noite
 @onready var tutorial = $tutorial
+# pentagrama da invocação e outros efeitos no chão (por baixo de todo mundo)
+@onready var efeitos_chao: Node2D = $efeitos_chao
 
 @export var ponto_fuga: Marker2D
 @export var chao: Sprite2D
@@ -22,10 +24,28 @@ var regionsHouse: Array[NavigationRegion2D] = []
 # cor da noite com a festa cheia e com todo mundo já ido embora: a casa escurece e avermelha
 @export var cor_festa: Color = Color(0.42, 0.38, 0.6)
 @export var cor_vazia: Color = Color(0.3, 0.16, 0.22)
+
+# quantos infartos até chamarem a polícia
+@export var limite_mortes: int = 5
+@export var cena_policial: PackedScene
+# objetivos: além de esvaziar a casa, precisa cumprir um deles
+@export var quantos_marcados: int = 3
+# "todos os cômodos ao mesmo tempo" = todos com susto dentro dessa janela, em segundos
+@export var janela_comodos: float = 4.0
+
 var npcs_no_comeco: int = 0
-# a partida acaba (vitória) quando não sobra ninguém na casa
 var acabou: bool = false
 var tempo_partida: float = 0.0
+var marcados: Array = []
+var marcados_mortos: int = 0
+var marcado_escapou: bool = false
+var objetivo_marcados: bool = false
+var objetivo_comodos: bool = false
+var objetivo_policial: bool = false
+var policia_chamada: bool = false
+# nome do cômodo -> tempo_partida do último susto nele
+var ultimo_susto_comodo: Dictionary = {}
+var ultima_morte: Vector2
 
 func _ready() -> void:
 	GameManager.house = self
@@ -38,8 +58,8 @@ func _ready() -> void:
 			regionsHouse.append(region)
 	npcs_no_comeco = get_tree().get_nodes_in_group("npc").size()
 	noite.color = cor_festa
-	if not tutorial.ja_viu():
-		tutorial.comecar(self)
+	marcar_alvos()
+	tutorial.comecar(self)
 
 func _process(delta: float) -> void:
 	var restantes = get_tree().get_nodes_in_group("npc").size()
@@ -49,15 +69,87 @@ func _process(delta: float) -> void:
 		tempo_partida += delta
 		if npcs_no_comeco > 0 and restantes == 0:
 			acabou = true
-			vencer()
+			terminar()
 
-# por enquanto a vitória é tirar todo mundo da casa (fugindo ou de infarto)
-func vencer() -> void:
-	# espera quem ainda está saindo pela porta ou caindo duro terminar
+func objetivo_cumprido() -> bool:
+	return objetivo_marcados or objetivo_comodos or objetivo_policial
+
+# casa vazia: vitória se cumpriu algum objetivo, senão fim de festa
+func terminar() -> void:
+	# espera quem ainda está saindo pela porta ou caindo duro (e o policial, se chegou agora)
 	while y_sort.get_children().any(func(c): return c is Npc):
 		await get_tree().process_frame
 	await get_tree().create_timer(0.8).timeout
-	$vitoria.mostrar(npcs_no_comeco - GameManager.mortes, GameManager.mortes, tempo_partida)
+	$vitoria.mostrar(npcs_no_comeco - GameManager.mortes, GameManager.mortes, tempo_partida, objetivo_cumprido())
+
+# sorteia quem tem que morrer, só entre quem algum fantasma da loja consegue matar do coração
+func marcar_alvos() -> void:
+	var matadores = {}
+	for card in ui.get_node("painel_fantasmas/lista").get_children():
+		matadores["%s %d" % [Fantasma.Tipo.find_key(card.tipo), card.tier]] = true
+	var candidatos = get_tree().get_nodes_in_group("npc").filter(func(n): return matadores.has("%s %d" % [n.infarto_tipo, n.infarto_tier]))
+	candidatos.shuffle()
+	for npc in candidatos.slice(0, quantos_marcados):
+		npc.marcar()
+		marcados.append(npc)
+	ui.mostrar_marcados(marcados)
+
+# todo susto que pegou em alguém passa aqui (objetivo dos cômodos)
+func registrar_susto(pos_susto: Vector2) -> void:
+	var comodo = comodo_em(pos_susto)
+	if comodo == "":
+		return
+	ultimo_susto_comodo[comodo] = tempo_partida
+	if comodos_assustados() == regionsHouse.size():
+		objetivo_comodos = true
+
+func comodos_assustados() -> int:
+	return ultimo_susto_comodo.values().filter(func(t): return tempo_partida - t <= janela_comodos).size()
+
+func registrar_morte(npc) -> void:
+	ultima_morte = npc.global_position
+	if npc.marcado:
+		marcados_mortos += 1
+		ui.marcar_retrato(npc, true)
+		if marcados_mortos == marcados.size():
+			objetivo_marcados = true
+	if npc.policial:
+		objetivo_policial = true
+	if GameManager.mortes == limite_mortes and not policia_chamada:
+		chamar_policia()
+
+func marcado_fugiu(npc) -> void:
+	marcado_escapou = true
+	ui.marcar_retrato(npc, false)
+
+# a polícia chega pela porta da frente com sirene e vai olhar onde foi a última morte
+func chamar_policia() -> void:
+	policia_chamada = true
+	var policial = cena_policial.instantiate()
+	policial.house = self
+	y_sort.add_child(policial)
+	policial.global_position = ponto_fuga.global_position
+	npcs_no_comeco += 1
+	ui.letreiro("POLÍCIA!", get_viewport().get_visible_rect().size * Vector2(0.42, 0.3))
+	Onomatopeia.soltar("UIU UIU", ponto_fuga.global_position + Vector2(0, -110), Color(0.5, 0.7, 1.0))
+	camera.tremer(4.0)
+	var sirene = PointLight2D.new()
+	sirene.texture = preload("res://assets/luz.tres")
+	sirene.texture_scale = 3.0
+	sirene.energy = 1.6
+	sirene.position = ponto_fuga.position + Vector2(0, -80)
+	add_child(sirene)
+	var pisca = sirene.create_tween().set_loops(10)
+	pisca.tween_callback(func(): sirene.color = Color(1, 0.15, 0.15))
+	pisca.tween_interval(0.3)
+	pisca.tween_callback(func(): sirene.color = Color(0.2, 0.4, 1))
+	pisca.tween_interval(0.3)
+	pisca.finished.connect(sirene.queue_free)
+	while is_instance_valid(policial) and not policial.navigation_ready:
+		await get_tree().physics_frame
+	if is_instance_valid(policial):
+		policial.agent.target_position = ultima_morte
+		policial.tempo_atividade = 6.0
 
 # susto por perto: as luzes do cômodo (ou a até 300 px) piscam
 func piscar_luzes(pos_susto: Vector2, duracao: float) -> void:

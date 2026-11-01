@@ -27,7 +27,7 @@ script = ExtResource("5_acao")
 nome = "Lambidão"
 icone = SubResource("AtlasTexture_icone_lambida")
 descricao = "Vai até a pessoa mais perto no cômodo e dá um lambidão na cara. Ela sai correndo até bater numa parede e fica atordoada. Medo 20."
-recarga = 20.0
+recarga = 16.0
 metodo = &"lambidao"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lambida0"]
@@ -173,7 +173,7 @@ animations = [{
 [node name="Geleia Roxa" type="Node2D" unique_id=1509536684]
 script = ExtResource("1_geleia")
 cena_comida = ExtResource("4_comida")
-custo = 15
+custo = 14
 tier = 2
 comodo_spawn = "cozinha"
 acoes = Array[ExtResource("5_acao")]([SubResource("Resource_comer"), SubResource("Resource_lambidao")])

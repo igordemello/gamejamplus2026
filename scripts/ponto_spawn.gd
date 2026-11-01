@@ -10,21 +10,36 @@ var tempo: float = 0.0
 func livre() -> bool:
 	return not is_instance_valid(ocupante)
 
+# enquanto arrasta um card que só cabe nesses pontos, mostra o desenho do fantasma
+# em branco e meio transparente onde ele vai ficar
+var silhueta: Sprite2D
+
 func _process(delta: float) -> void:
 	tempo += delta
-	queue_redraw()
+	var card = card_que_serve()
+	if card == null:
+		if silhueta:
+			silhueta.hide()
+		return
+	if silhueta == null:
+		silhueta = Sprite2D.new()
+		silhueta.material = ShaderMaterial.new()
+		silhueta.material.shader = preload("res://assets/alma.gdshader")
+		silhueta.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		silhueta.z_index = 1
+		add_child(silhueta)
+	silhueta.texture = card.silhueta
+	silhueta.scale = card.silhueta_escala
+	silhueta.position = card.silhueta_posicao
+	silhueta.offset = card.silhueta_offset
+	silhueta.modulate.a = 0.3 + 0.15 * sin(tempo * 5.0)
+	silhueta.show()
 
-# brilha enquanto o jogador arrasta um card de fantasma que só pode ficar nesses pontos
-func deve_brilhar() -> bool:
+func card_que_serve():
 	var viewport = get_viewport()
 	if not viewport.gui_is_dragging() or not livre():
-		return false
+		return null
 	var card = viewport.gui_get_drag_data()
-	return card is Object and "pontos_spawn" in card and card.pontos_spawn != &"" and is_in_group(card.pontos_spawn)
-
-func _draw() -> void:
-	if not deve_brilhar():
-		return
-	var brilho = 0.6 + 0.3 * sin(tempo * 6.0)
-	draw_circle(Vector2.ZERO, 30, Color(1, 1, 1, brilho * 0.3), true, -1.0, true)
-	draw_arc(Vector2.ZERO, 30, 0, TAU, 48, Color(1, 1, 1, brilho), 3.0, true)
+	if card is Object and "pontos_spawn" in card and card.pontos_spawn != &"" and is_in_group(card.pontos_spawn):
+		return card
+	return null

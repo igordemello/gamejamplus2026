@@ -260,7 +260,7 @@ script = ExtResource("2_acao")
 nome = "Risada Maligna"
 icone = SubResource("AtlasTexture_icone_risada")
 descricao = "A caveira começa a rir e todo mundo num círculo em volta se assusta. Medo 10."
-recarga = 15.0
+recarga = 12.0
 metodo = &"risada_maligna"
 
 [sub_resource type="Resource" id="Resource_mordida"]
@@ -268,7 +268,7 @@ script = ExtResource("2_acao")
 nome = "Mordida de Fogo"
 icone = SubResource("AtlasTexture_icone_mordida")
 descricao = "Morde até duas pessoas perto, que saem correndo pra outro cômodo. Medo 20."
-recarga = 20.0
+recarga = 18.0
 metodo = &"mordida_de_fogo"
 
 [sub_resource type="Resource" id="Resource_cabecada"]
@@ -276,7 +276,7 @@ script = ExtResource("2_acao")
 nome = "Cabeçada"
 icone = SubResource("AtlasTexture_icone_cabecada")
 descricao = "Persegue a pessoa mais perto e dá uma cabeçada: ela fica 10 s tonta, parada, com o medo caindo. Medo 30."
-recarga = 30.0
+recarga = 26.0
 metodo = &"cabecada"
 
 [node name="Caveira" type="Node2D"]

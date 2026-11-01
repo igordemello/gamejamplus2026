@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://bvro6fjibueab" path="res://scene/npc.tscn" id="1_npc"]
+[ext_resource type="SpriteFrames" uid="uid://tajn12nb78nh" path="res://assets/npc/advogado.tres" id="2_visual"]
+
+[node name="policial" instance=ExtResource("1_npc")]
+collision_layer = 2
+visual = ExtResource("2_visual")
+resistencia = 2.0
+policial = true

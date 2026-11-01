@@ -1,0 +1,47 @@
+extends Node2D
+
+# invocação de fantasma comprado na loja: o pentagrama se desenha no chão, brilha,
+# solta brasas e, no clarão, o fantasma sai do meio dele. a area_jogo cria isso no lugar do spawn
+
+var fantasma: Fantasma
+var tempo: float = 0.0
+var brilho: float = 1.0
+
+@onready var pentagrama: AnimatedSprite2D = $pentagrama
+@onready var luz: PointLight2D = $luz
+@onready var brasas: CPUParticles2D = $brasas
+
+func _ready() -> void:
+	pentagrama.play("desenhar")
+	pentagrama.animation_finished.connect(_on_desenhou)
+	create_tween().tween_property(luz, "energy", 1.4, pentagrama.sprite_frames.get_frame_count("desenhar") / pentagrama.sprite_frames.get_animation_speed("desenhar"))
+	brasas.emitting = true
+
+func _process(delta: float) -> void:
+	tempo += delta
+	# vai pulsando cada vez mais rápido enquanto se desenha
+	pentagrama.modulate = Color.WHITE * (brilho + 0.35 * sin(tempo * (8.0 + tempo * 10.0)))
+	pentagrama.modulate.a = 1.0
+
+func _on_desenhou() -> void:
+	# segura um instante aceso no máximo e solta o fantasma no clarão
+	var tween = create_tween()
+	tween.tween_property(self, "brilho", 2.2, 0.25)
+	tween.tween_callback(_soltar_fantasma)
+	tween.tween_property(self, "brilho", 1.0, 0.3)
+	tween.tween_interval(0.5)
+	tween.tween_property(self, "modulate:a", 0.0, 0.6)
+	tween.parallel().tween_property(luz, "energy", 0.0, 0.6)
+	tween.tween_callback(queue_free)
+
+func _soltar_fantasma() -> void:
+	var house = GameManager.house
+	house.y_sort.add_child(fantasma)
+	fantasma.global_position = global_position
+	fantasma.aparecer()
+	luz.energy = 3.0
+	brasas.emitting = false
+	house.camera.tremer(4.0)
+	house.pos.chutar(3.0)
+	house.piscar_luzes(global_position, 0.3)
+	Onomatopeia.soltar("VUUSH!", global_position + Vector2(0, -90), Color(1, 0.35, 0.3))

@@ -14,9 +14,11 @@ var escala_original: Vector2
 var tempo: float = 0.0
 
 var segurando : bool = false
+# o primeiro susto de cada vez que pega solta um "BUUU!"
+var primeiro_susto: bool = false
 
 @export var tipo_susto: String = "objeto"
-@export var pontos_susto: int = 100
+@export var pontos_susto: int = 5
 @export var intervalo_susto: float = 1.0
 
 var tempo_susto: float = 0.0
@@ -85,6 +87,7 @@ func mouse_em_cima() -> bool:
 
 func levantar() -> void:
 	segurando = true
+	primeiro_susto = true
 	tempo = 0.0
 	tempo_susto = 0.0
 	if tween_queda:
@@ -107,6 +110,9 @@ func pulsar() -> void:
 	self_modulate = Color(2.0, 2.0, 2.0)
 	create_tween().tween_property(self, "self_modulate", Color.WHITE, 0.25)
 	GameManager.house.camera.tremer(2.0)
+	if primeiro_susto:
+		primeiro_susto = false
+		Onomatopeia.soltar("BUUU!", global_position + Vector2(0, -40), Color(0.8, 1, 1))
 
 # deforma rapidinho e volta pro tamanho normal com um pulinho
 func esticar(forma: Vector2) -> void:

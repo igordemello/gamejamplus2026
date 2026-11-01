@@ -90,11 +90,12 @@ script = ExtResource("2_acao")
 nome = "Susto de Espada"
 icone = SubResource("AtlasTexture_icone_espada")
 descricao = "A estátua ataca com a espada quem estiver passando perto dela. Medo 5."
-recarga = 10.0
+recarga = 8.0
 metodo = &"susto_de_espada"
 
 [node name="Cavaleiro" type="Node2D"]
 script = ExtResource("1_script")
+custo = 6
 tipo = 2
 pontos_spawn = &"armadura"
 acoes = Array[ExtResource("2_acao")]([SubResource("Resource_espada")])

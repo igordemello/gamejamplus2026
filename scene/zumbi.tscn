@@ -15,7 +15,7 @@ script = ExtResource("2_acao")
 nome = "Bafo do Medo"
 icone = SubResource("AtlasTexture_icone_bafo")
 descricao = "Solta o bafo num cone virado pra pessoa mais perto: todo mundo dentro se assusta e fica 2 s paralisado. Medo 10."
-recarga = 20.0
+recarga = 16.0
 metodo = &"bafo_do_medo"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_icone_arranhao"]
@@ -27,7 +27,7 @@ script = ExtResource("2_acao")
 nome = "Arranhão"
 icone = SubResource("AtlasTexture_icone_arranhao")
 descricao = "Vai arrastando os pés, bem devagar, até a pessoa mais perto e dá um arranhão. Medo 20."
-recarga = 25.0
+recarga = 20.0
 metodo = &"arranhao"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_arranhao0"]
@@ -274,7 +274,7 @@ animations = [{
 
 [node name="Zumbi" type="Node2D" unique_id=1550264278]
 script = ExtResource("1_script")
-custo = 18
+custo = 15
 tier = 2
 tipo = 3
 fora_de_casa = true

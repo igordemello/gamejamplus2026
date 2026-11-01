@@ -2,10 +2,10 @@ extends Fantasma
 
 @export var velocidade: float = 200.0
 
-@export var medo_comida: int = 15
+@export var medo_comida: int = 18
 @export var cena_comida: PackedScene
 
-@export var medo_lambida: int = 20
+@export var medo_lambida: int = 26
 @export var alcance_lambida: float = 40.0
 
 @export var amplitude_balanco: float = 1.0
@@ -34,6 +34,7 @@ func comer_e_regorfar() -> bool:
 	if ocupada():
 		return false
 	sprite.play("mordida")
+	onomatopeia("NHAC!", Color(0.8, 0.5, 1))
 	return true
 
 func lambidao() -> bool:
@@ -58,6 +59,7 @@ func ir_ate_alvo(delta: float) -> void:
 
 func lamber() -> void:
 	sprite.play("lambida")
+	onomatopeia("SLURP!", Color(1, 0.5, 0.8))
 	alvo.tomar_susto("lambida", medo_lambida, self)
 	alvo.direcao_correr = global_position.direction_to(alvo.global_position)
 	alvo = null

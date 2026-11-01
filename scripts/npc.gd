@@ -45,6 +45,16 @@ var infarto_tipo: String = ""
 var infarto_tier: int = 0
 # sustos a mais (além do +1 do nível) quando ele infarta
 @export var bonus_infarto: int = 2
+# os pontos de susto são divididos por isso (o policial tem 2)
+@export var resistencia: float = 1.0
+# chamado quando as mortes chegam no limite: azulado, com sirene, e qualquer fantasma mata ele do coração
+@export var policial: bool = false
+# um dos marcados pra morrer (objetivo): caveira vermelha em cima da cabeça
+var marcado: bool = false
+var marca: Sprite2D
+# cor fixa do desenho; os clarões do infarto voltam pra ela
+var cor_sprite: Color = Color.WHITE
+var sirene: PointLight2D
 
 # respiração parado: quantos pixels de tela o desenho cresce e a velocidade (assustado fica ofegante)
 @export var pixels_respiracao: int = 4
@@ -93,6 +103,17 @@ func _ready() -> void:
 	sprite.offset.y = -sprite.sprite_frames.get_frame_texture("andar", 0).get_height() / 2.0
 	infarto_tipo = sprite.sprite_frames.get_meta("infarto_tipo", "")
 	infarto_tier = sprite.sprite_frames.get_meta("infarto_tier", 0)
+	if policial:
+		add_to_group("policial")
+		infarto_tipo = "qualquer"
+		cor_sprite = Color(0.55, 0.7, 1.3)
+		sprite.self_modulate = cor_sprite
+		sirene = PointLight2D.new()
+		sirene.texture = preload("res://assets/luz.tres")
+		sirene.texture_scale = 1.3
+		sirene.energy = 1.4
+		sirene.position = Vector2(0, -60)
+		add_child(sirene)
 	medidor = Node2D.new()
 	medidor.z_index = 2
 	medidor.position = Vector2(0, -90)
@@ -119,6 +140,10 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	$Label.text = str(nivel_medo) +" - "+ str(roundi(barra_susto)) + "/100"
+	if sirene:
+		sirene.color = Color(1, 0.15, 0.15) if fmod(Time.get_ticks_msec() / 1000.0, 0.6) < 0.3 else Color(0.2, 0.4, 1)
+	if marca:
+		marca.position.y = -128.0 + roundf(sin(Time.get_ticks_msec() / 300.0) * 3.0)
 	if current_estado == Estado.Infarta:
 		processar_infarto(delta)
 		return
@@ -343,12 +368,13 @@ func tomar_susto(susto: String, pontosDeSusto: int, fantasma: Fantasma = null) -
 		1.0 + nivel_medo * reducao_por_nivel
 	)
 
-	var pontos_recebidos = pontosDeSusto * multiplicador_nivel * house.intensidade_susto(global_position)
+	var pontos_recebidos = pontosDeSusto * multiplicador_nivel * house.intensidade_susto(global_position) / resistencia
 
 	if susto != "objeto":
 		last_susto = susto
 
 	pular_de_susto()
+	house.registrar_susto(global_position)
 
 	barra_susto = minf(barra_susto + pontos_recebidos, 100.0)
 
@@ -362,6 +388,8 @@ func tomar_susto(susto: String, pontosDeSusto: int, fantasma: Fantasma = null) -
 		# o +1 sai da cabeça e voa até o contador
 		house.ui.voar_susto(get_global_transform_with_canvas() * Vector2(0, -100))
 		mostrar_exclamacao("!!")
+		Onomatopeia.soltar("SOCORRO!" if nivel_medo >= 5 else ["AAAH!", "EEEK!", "AI AI AI!", "SOCORRO!"].pick_random(),
+			global_position + Vector2(randf_range(-40.0, 40.0), -175.0), Color(1, 0.95, 0.6), 4.0 if nivel_medo >= 5 else 3.0)
 		# peso: tela treme, câmera dá um tranco e o jogo congela um instante (mais forte quando ele foge)
 		var foge = nivel_medo >= 5
 		house.camera.tremer(7.0 if foge else 3.0)
@@ -402,8 +430,6 @@ func mostrar_exclamacao(texto: String) -> void:
 		exclamacao.material = SEM_LUZ
 		exclamacao.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		exclamacao.add_theme_font_size_override("font_size", 40)
-		exclamacao.add_theme_constant_override("outline_size", 10)
-		exclamacao.add_theme_color_override("font_outline_color", Color.BLACK)
 		exclamacao.size = Vector2(60, 56)
 		exclamacao.pivot_offset = Vector2(30, 56)
 		exclamacao.position = Vector2(-30, -160)
@@ -479,9 +505,23 @@ func sair_da_festa() -> void:
 		return
 	saindo = true
 	remove_from_group("npc")
+	if marcado:
+		house.marcado_fugiu(self)
 	var tween = create_tween()
 	tween.tween_property(self, "modulate:a", 0.0, 0.4)
 	tween.tween_callback(queue_free)
+
+# marcado pra morrer (objetivo): caveira vermelha balançando em cima da cabeça
+func marcar() -> void:
+	marcado = true
+	marca = Sprite2D.new()
+	marca.texture = preload("res://assets/UI/icon_morte.png")
+	marca.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	marca.material = SEM_LUZ
+	marca.modulate = Color(1, 0.25, 0.25)
+	marca.position = Vector2(0, -128)
+	marca.z_index = 2
+	add_child(marca)
 
 # ---------- infarto ----------
 # não tem arte pra isso, então é tudo no código: monitor cardíaco disparando em cima da cabeça,
@@ -507,7 +547,9 @@ var pulso: float = 0.0
 var quebra: float = 0.0
 
 func mata_do_coracao(fantasma: Fantasma) -> bool:
-	return fantasma != null and Fantasma.Tipo.find_key(fantasma.tipo) == infarto_tipo and fantasma.tier == infarto_tier
+	if fantasma == null:
+		return false
+	return infarto_tipo == "qualquer" or (Fantasma.Tipo.find_key(fantasma.tipo) == infarto_tipo and fantasma.tier == infarto_tier)
 
 func infartar() -> void:
 	current_estado = Estado.Infarta
@@ -519,6 +561,8 @@ func infartar() -> void:
 	sprite.stop()
 	alfa_medidor = 1.0
 	medidor.scale = Vector2(1.5, 1.5)
+	if marca:
+		marca.hide()
 
 	# batidas cada vez mais perto uma da outra
 	var t = 0.1
@@ -534,6 +578,7 @@ func infartar() -> void:
 	GameManager.hitstop(0.25)
 	house.pos.chutar(7.0)
 	house.piscar_luzes(global_position, INFARTO_PARA)
+	Onomatopeia.soltar("TUM TUM", global_position + Vector2(60, -110), Color(1, 0.3, 0.3))
 
 	var lado = -1.0 if sprite.flip_h else 1.0
 	var tween = create_tween()
@@ -572,13 +617,13 @@ func processar_infarto(delta: float) -> void:
 	var tremor = 1.0 if tempo_infarto < INFARTO_FIBRILA else 2.0
 	sprite.offset.x = roundf(sin(tempo_infarto * 60.0) * tremor)
 	sprite.scale = escala_sprite * deformacao * Vector2(1.0 + pulso * 0.08, 1.0 - pulso * 0.05)
-	sprite.self_modulate = Color.WHITE.lerp(Color(1.6, 1.6, 1.6), pulso)
+	sprite.self_modulate = cor_sprite.lerp(Color(1.6, 1.6, 1.6), pulso)
 
 # linha reta: o coração parte, a tela fecha nele e aparece o letreiro
 func parar_coracao() -> void:
 	sprite.offset.x = 0.0
 	sprite.scale = escala_sprite
-	sprite.self_modulate = Color.WHITE
+	sprite.self_modulate = cor_sprite
 	pulso = 0.0
 	create_tween().tween_property(self, "quebra", 1.0, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	house.ui.focar(self, 0.13)
@@ -590,12 +635,14 @@ func bater_no_chao(lado: float) -> void:
 	house.camera.chutar(0.05)
 	GameManager.hitstop(0.08)
 	house.pos.chutar(4.0)
+	Onomatopeia.soltar("PLOFT!", global_position + Vector2(lado * 50.0, -10.0), Color(0.85, 0.85, 0.9), 4.0)
 	var poeira = Fantasma.FUMACA.instantiate()
 	poeira.position = get_parent().to_local(global_position + Vector2(lado * 40.0, 25.0))
 	get_parent().add_child(poeira)
 	# a recompensa sai do corpo caído
 	GameManager.sustos += 1 + bonus_infarto
 	GameManager.mortes += 1
+	house.registrar_morte(self)
 	house.ui.voar_susto(get_global_transform_with_canvas() * Vector2(lado * 40.0, 0), 1 + bonus_infarto)
 
 # a alma sai do corpo: o mesmo desenho em branco, meio transparente, subindo e balançando

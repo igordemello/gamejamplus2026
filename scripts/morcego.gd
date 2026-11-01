@@ -3,7 +3,7 @@ extends Fantasma
 @export var velocidade: float = 120.0
 @export var raio_colisao: float = 20.0
 
-@export var medo_bater_asas: int = 10
+@export var medo_bater_asas: int = 14
 @export var forca_empurrao: float = 250.0
 # retangulo na frente do morcego, o x positivo aponta pra onde ele ta voando
 @export var area_bater_asas: Rect2 = Rect2(0, -48, 160, 96)
@@ -38,6 +38,7 @@ func _physics_process(delta: float) -> void:
 	global_position += direcao * velocidade * delta
 
 func bater_asas() -> bool:
+	onomatopeia("FLAP FLAP", Color(0.75, 0.6, 1))
 	# duas piscadas brancas, cada uma do tamanho de um quadro do voo
 	piscar(2, 1.0 / sprite.sprite_frames.get_animation_speed(sprite.animation))
 

@@ -1,6 +1,7 @@
 extends CanvasLayer
 
-# tela de vitória: aparece quando não sobra ninguém na casa (House.vencer)
+# tela do fim: aparece quando não sobra ninguém na casa (House.terminar). vitória se cumpriu
+# algum objetivo, senão "fim de festa"
 
 @onready var fundo: ColorRect = $fundo
 @onready var caixa: VBoxContainer = $caixa
@@ -16,7 +17,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if visible and event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 
-func mostrar(fugiram: int, mortes: int, tempo: float) -> void:
+func mostrar(fugiram: int, mortes: int, tempo: float, venceu: bool) -> void:
+	titulo.text = "Vitória!" if venceu else "Fim de festa"
+	$caixa/subtitulo.text = "A casa esvaziou e você cumpriu um objetivo." if venceu else "A casa esvaziou, mas nenhum objetivo foi cumprido."
+	%jogar_de_novo.text = "Jogar de novo" if venceu else "Tentar de novo"
 	%fugiram.text = "%d fugiram da casa" % fugiram
 	%mortes.text = "%d morreram de susto" % mortes
 	%tempo.text = "Tempo: %d:%02d" % [int(tempo) / 60, int(tempo) % 60]
