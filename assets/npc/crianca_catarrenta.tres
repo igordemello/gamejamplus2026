@@ -1,6 +1,6 @@
-[gd_resource type="SpriteFrames" format=3]
+[gd_resource type="SpriteFrames" format=3 uid="uid://b6uf8awim6umn"]
 
-[ext_resource type="Texture2D" path="res://assets/REFACTOR NPCs/Criança_Catarrenta.png" id="1_sheet"]
+[ext_resource type="Texture2D" uid="uid://cdk7miow3yp05" path="res://assets/REFACTOR NPCs/Criança_Catarrenta.png" id="1_sheet"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_andar0"]
 atlas = ExtResource("1_sheet")
@@ -47,7 +47,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_andar5")
 }],
-"loop": true,
+"loop": 1,
 "name": &"andar",
 "speed": 8.0
 }]

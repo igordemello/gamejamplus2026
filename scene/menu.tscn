@@ -4,6 +4,13 @@
 [ext_resource type="PackedScene" path="res://scene/config.tscn" id="2_config"]
 [ext_resource type="FontFile" uid="uid://bw8xfuto4kao2" path="res://fonts/Halloween Spooky.otf" id="3_15se8"]
 [ext_resource type="Shader" uid="uid://bo6qi60mj0v2y" path="res://assets/neblina.gdshader" id="3_neblina"]
+[ext_resource type="Texture2D" uid="uid://dlbnsxp16pdrn" path="res://assets/menu/7fundo.png" id="5_xs5te"]
+[ext_resource type="Texture2D" uid="uid://cumfttmjy5a6m" path="res://assets/menu/6nuvens.png" id="6_6fejx"]
+[ext_resource type="Texture2D" uid="uid://dxqf2bvdkt1qo" path="res://assets/menu/5lua.png" id="7_akoio"]
+[ext_resource type="Texture2D" uid="uid://c0322g73ftmsu" path="res://assets/menu/4estrelas.png" id="8_ho73k"]
+[ext_resource type="Texture2D" uid="uid://bo8l8fhjk7etr" path="res://assets/menu/3chao.png" id="9_dyuxe"]
+[ext_resource type="Texture2D" uid="uid://chofpnvu0t1j6" path="res://assets/menu/2detalhes.png" id="10_8of67"]
+[ext_resource type="Texture2D" uid="uid://bcnno0ewke5un" path="res://assets/menu/1casa.png" id="11_pgh6j"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_neblina"]
 frequency = 0.012
@@ -29,7 +36,9 @@ shader_parameter/borda = 0.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_5qp21"]
 font = ExtResource("3_15se8")
-font_size = 167
+font_size = 251
+outline_size = 15
+outline_color = Color(0, 0, 0, 1)
 
 [node name="Menu" type="Control" unique_id=1065229293]
 layout_mode = 3
@@ -40,11 +49,65 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_e5g8k")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=821887918]
-layout_mode = 0
-offset_right = 1920.0
-offset_bottom = 1080.0
-color = Color(0, 0, 0, 1)
+[node name="1" type="TextureRect" parent="." unique_id=648783289]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_xs5te")
+
+[node name="2" type="TextureRect" parent="." unique_id=1630196376]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_6fejx")
+
+[node name="3" type="TextureRect" parent="." unique_id=178128209]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_akoio")
+
+[node name="4" type="TextureRect" parent="." unique_id=306862710]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_ho73k")
+
+[node name="5" type="TextureRect" parent="." unique_id=838681678]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_dyuxe")
+
+[node name="6" type="TextureRect" parent="." unique_id=1850654916]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("10_8of67")
 
 [node name="neblina" type="ColorRect" parent="." unique_id=205563591]
 material = SubResource("ShaderMaterial_neblina")
@@ -56,6 +119,16 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
+[node name="7" type="TextureRect" parent="." unique_id=1906998099]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("11_pgh6j")
+
 [node name="Label" type="Label" parent="." unique_id=635670435]
 layout_mode = 1
 anchors_preset = 8
@@ -63,68 +136,49 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -461.5
-offset_top = -318.0
-offset_right = 461.5
-offset_bottom = -150.0
+offset_left = -936.0
+offset_top = -473.0
+offset_right = 450.0
+offset_bottom = -221.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 63
 text = "Resident Haunter"
 label_settings = SubResource("LabelSettings_5qp21")
 
-[node name="btn_play" type="Button" parent="." unique_id=177721819]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -112.0
-offset_top = -73.0
-offset_right = 112.0
-offset_bottom = -6.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 43
-text = "Jogar"
-
-[node name="btn_config" type="Button" parent="." unique_id=1173738203]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -112.0
-offset_top = 31.0
-offset_right = 112.0
-offset_bottom = 98.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 43
-text = "Configurar"
-
-[node name="btn_sair" type="Button" parent="." unique_id=1619859515]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -112.0
-offset_top = 136.0
-offset_right = 112.0
-offset_bottom = 203.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 43
-text = "Sair"
-
 [node name="config" parent="." unique_id=1624511279 instance=ExtResource("2_config")]
 visible = false
 layout_mode = 1
 
-[connection signal="button_down" from="btn_play" to="." method="_on_btn_play_button_down"]
-[connection signal="button_down" from="btn_config" to="." method="_on_btn_config_button_down"]
-[connection signal="button_down" from="btn_sair" to="." method="_on_btn_sair_button_down"]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=574837830]
+layout_mode = 0
+offset_left = 1417.0
+offset_top = 563.0
+offset_right = 1647.0
+offset_bottom = 996.0
+theme_override_constants/separation = 55
+
+[node name="btn_play" type="Button" parent="VBoxContainer" unique_id=177721819]
+layout_mode = 2
+theme_override_font_sizes/font_size = 43
+text = "Jogar"
+
+[node name="btn_config" type="Button" parent="VBoxContainer" unique_id=1173738203]
+layout_mode = 2
+theme_override_font_sizes/font_size = 43
+text = "Configurar"
+
+[node name="btn_credits" type="Button" parent="VBoxContainer" unique_id=1148833506]
+layout_mode = 2
+theme_override_font_sizes/font_size = 43
+text = "Créditos"
+
+[node name="btn_sair" type="Button" parent="VBoxContainer" unique_id=1619859515]
+layout_mode = 2
+theme_override_font_sizes/font_size = 43
+text = "Sair"
+
+[connection signal="button_down" from="VBoxContainer/btn_play" to="." method="_on_btn_play_button_down"]
+[connection signal="button_down" from="VBoxContainer/btn_config" to="." method="_on_btn_config_button_down"]
+[connection signal="button_down" from="VBoxContainer/btn_credits" to="." method="_on_btn_config_button_down"]
+[connection signal="button_down" from="VBoxContainer/btn_sair" to="." method="_on_btn_sair_button_down"]

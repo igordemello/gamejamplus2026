@@ -4,7 +4,7 @@
 [ext_resource type="SpriteFrames" uid="uid://cj0axhg677v7v" path="res://assets/npc/gotica.tres" id="2_gotica"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g4v7s"]
-size = Vector2(30, 30)
+size = Vector2(30, 42)
 
 [sub_resource type="LabelSettings" id="LabelSettings_54ctn"]
 font_color = Color(1, 0, 0, 1)
@@ -14,6 +14,7 @@ script = ExtResource("1_np5a4")
 visual = ExtResource("2_gotica")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=855655254]
+position = Vector2(0, -6)
 shape = SubResource("RectangleShape2D_g4v7s")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1879952820]
@@ -21,7 +22,7 @@ shape = SubResource("RectangleShape2D_g4v7s")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=125246978]
 texture_filter = 1
 position = Vector2(0, 44)
-scale = Vector2(1.5, 1.5)
+scale = Vector2(1.75, 1.75)
 sprite_frames = ExtResource("2_gotica")
 animation = &"andar"
 offset = Vector2(0, -32)
