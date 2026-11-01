@@ -14,6 +14,8 @@ extends Fantasma
 var alvo: Npc
 # o desenho é visto de cima com a cabeça pra cima, então ele gira pra encarar onde vai
 var giro_alvo: float = 0.0
+# segundos tentando chegar no alvo sem conseguir andar
+var tempo_travado: float = 0.0
 
 func _ready() -> void:
 	sprite.animation_finished.connect(_on_animacao_acabou)
@@ -49,24 +51,44 @@ func latido_feral() -> bool:
 
 func ir_ate_alvo(delta: float) -> void:
 	var house = GameManager.house
-	var proximo = global_position.move_toward(alvo.global_position, velocidade * delta)
-	# não segue pra outro cômodo, não entra em cômodo proibido nem atravessa parede
-	if not alvo.is_in_group("npc") or house.comodo_em(alvo.global_position) != house.comodo_em(global_position) \
-			or house.comodo_proibido(proximo, comodos_proibidos) or house.eh_parede(proximo):
-		alvo = null
+	# não segue pra outro cômodo
+	if not alvo.is_in_group("npc") or house.comodo_em(alvo.global_position) != house.comodo_em(global_position):
+		desistir()
 		return
 
-	giro_alvo = global_position.direction_to(alvo.global_position).angle() + PI / 2
 	if global_position.distance_to(alvo.global_position) <= alcance_mordida:
+		giro_alvo = global_position.direction_to(alvo.global_position).angle() + PI / 2
 		# segura a pessoa desde a agarrada até o fim da mastigada
 		var frames = sprite.sprite_frames
 		alvo.atordoar(frames.get_frame_count("agarrar") / frames.get_animation_speed("agarrar") + duracao_mastigar)
 		sprite.play("agarrar")
 		return
 
-	global_position = proximo
+	# pelo caminho da casa, contornando parede; cômodo proibido e caminho travado fazem ele desistir
+	var antes = global_position
+	andar_pelo_caminho(alvo.global_position, velocidade * delta)
+	if house.comodo_proibido(global_position, comodos_proibidos):
+		global_position = antes
+		desistir()
+		return
+	if global_position == antes:
+		tempo_travado += delta
+		if tempo_travado > 1.5:
+			desistir()
+		return
+	tempo_travado = 0.0
+	virar_para(antes.direction_to(global_position))
 	# anda mexendo os braços mais rápido
 	sprite.speed_scale = 1.8
+
+# não mordeu ninguém: a recarga não conta
+func desistir() -> void:
+	alvo = null
+	tempo_travado = 0.0
+	liberar_recarga(&"mastigar")
+
+func virar_para(direcao: Vector2) -> void:
+	giro_alvo = direcao.angle() + PI / 2
 
 func _on_animacao_acabou() -> void:
 	if sprite.animation == &"agarrar" and is_instance_valid(alvo):

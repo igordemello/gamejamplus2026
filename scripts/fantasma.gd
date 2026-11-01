@@ -36,6 +36,10 @@ const NOME_TIPO = {
 @export var raio_clique: float = 32.0
 # só aparece na loja depois dessa quantidade de infartos (GameManager.mortes)
 @export var mortes_para_liberar: int = 0
+# sem ação pra fazer, anda devagar por perto em vez de ficar parado
+@export var passeia: bool = false
+@export var velocidade_passeio: float = 45.0
+@export var raio_passeio: float = 200.0
 
 var recarga_restante: Dictionary = {}
 var selecionado: bool = false
@@ -52,6 +56,9 @@ var luz: PointLight2D
 var tempo_luz: float = randf() * TAU
 # o mouse está em cima (decidido no _process): depois de entrar, o raio fica maior pra sair
 var no_hover: bool = false
+var destino_passeio: Vector2 = Vector2.INF
+var espera_passeio: float = randf_range(1.0, 3.0)
+var tempo_passeio: float = 0.0
 # caminho da navegação até o destino de andar_pelo_caminho
 var caminho: PackedVector2Array = PackedVector2Array()
 var indice_caminho: int = 0
@@ -83,6 +90,7 @@ func _process(delta: float) -> void:
 	luz.energy = 0.55 + 0.15 * sin(tempo_luz * 1.5)
 
 	no_hover = mouse_em_cima()
+	passear(delta)
 	var destaque = selecionado or no_hover
 	$AnimatedSprite2D.material = material_fantasma
 	material_fantasma.set_shader_parameter("contorno", destaque)
@@ -156,6 +164,61 @@ func negar() -> void:
 	tween_negar = create_tween()
 	for x in [passo, -passo, passo * 0.5, 0.0]:
 		tween_negar.tween_property(sprite, "offset:x", x, 0.05)
+
+# parado por um tempo, depois anda até um ponto ali perto, no mesmo cômodo. para com o mouse em cima
+# (pra dar pra clicar) e quando tem o que fazer
+func passear(delta: float) -> void:
+	if not passeia:
+		return
+	if selecionado or no_hover or ocupado_agora():
+		destino_passeio = Vector2.INF
+		return
+	if destino_passeio == Vector2.INF:
+		espera_passeio -= delta
+		if espera_passeio <= 0.0:
+			espera_passeio = randf_range(2.0, 5.0)
+			destino_passeio = sortear_passeio()
+			tempo_passeio = 0.0
+		return
+	tempo_passeio += delta
+	var antes = global_position
+	mover_passeio(destino_passeio, velocidade_passeio * delta)
+	if global_position != antes:
+		virar_para(antes.direction_to(global_position))
+	if global_position.distance_to(destino_passeio) <= 4.0 or tempo_passeio > 8.0:
+		destino_passeio = Vector2.INF
+
+func ocupado_agora() -> bool:
+	return (has_method("ocupado") and call("ocupado")) or (has_method("ocupada") and call("ocupada"))
+
+# um ponto da malha ali perto, no mesmo cômodo, sem parede nem cômodo proibido. INF se não achar
+func sortear_passeio() -> Vector2:
+	var house = GameManager.house
+	var comodo = house.comodo_em(global_position)
+	for i in 8:
+		var longe = global_position + Vector2.from_angle(randf() * TAU) * randf_range(raio_passeio * 0.3, raio_passeio)
+		var ponto = NavigationServer2D.map_get_closest_point(get_world_2d().navigation_map, longe)
+		if house.comodo_em(ponto) == comodo and not house.eh_parede(ponto) and not house.comodo_proibido(ponto, comodos_proibidos):
+			return ponto
+	return Vector2.INF
+
+func mover_passeio(destino: Vector2, passo: float) -> void:
+	andar_pelo_caminho(destino, passo)
+
+# cada fantasma vira do jeito dele (o desenho de cada um olha pra um lado)
+func virar_para(_direcao: Vector2) -> void:
+	pass
+
+# a recarga de uma ação fica cheia (enquanto ela ainda está acontecendo) ou zera (não deu certo)
+func segurar_recarga(metodo: StringName) -> void:
+	for acao in acoes:
+		if acao.metodo == metodo:
+			recarga_restante[acao] = acao.recarga
+
+func liberar_recarga(metodo: StringName) -> void:
+	for acao in acoes:
+		if acao.metodo == metodo:
+			recarga_restante[acao] = 0.0
 
 # anda um passo até o destino seguindo a malha de navegação da casa (camada 1, a dos NPCs),
 # então não atravessa parede. recalcula o caminho quando o destino muda mais de 8 px

@@ -6,7 +6,10 @@ extends Fantasma
 
 @onready var lagrimas: AnimatedSprite2D = $lagrimas
 
-# fica parada no canto e só chora se tiver exatamente uma pessoa perto
+func ocupado() -> bool:
+	return lagrimas.visible
+
+# só chora se tiver exatamente uma pessoa perto
 func chorar() -> bool:
 	var perto = get_tree().get_nodes_in_group("npc").filter(
 		func(npc): return global_position.distance_to(npc.global_position) <= raio_choro

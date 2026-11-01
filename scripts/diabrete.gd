@@ -36,7 +36,14 @@ func quebrar_objetos() -> bool:
 	if segurando or is_instance_valid(alvo):
 		return false
 	alvo = objeto_mais_perto()
-	return alvo != null
+	if alvo == null:
+		return false
+	# já é dele: outro diabrete não vem atrás do mesmo objeto (quebrado, ele fica invisível até reaparecer)
+	alvo.remove_from_group("quebravel")
+	return true
+
+func ocupado() -> bool:
+	return segurando or is_instance_valid(alvo)
 
 func objeto_mais_perto() -> Node2D:
 	var mais_perto: Node2D = null

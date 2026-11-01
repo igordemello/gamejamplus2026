@@ -81,7 +81,7 @@ func terminar() -> void:
 	while y_sort.get_children().any(func(c): return c is Npc):
 		await get_tree().process_frame
 	await get_tree().create_timer(0.8).timeout
-	$vitoria.mostrar(npcs_no_comeco - GameManager.mortes, GameManager.mortes, tempo_partida, objetivo_cumprido())
+	$vitoria.mostrar(npcs_no_comeco - GameManager.mortes, GameManager.mortes, tempo_partida, objetivo_cumprido(), int(objetivo_marcados) + int(objetivo_comodos) + int(objetivo_policial))
 
 # sorteia quem tem que morrer
 func marcar_alvos() -> void:

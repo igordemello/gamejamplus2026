@@ -115,6 +115,8 @@ func mostrar_dentes(npc: Node2D) -> void:
 	dentes.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	dentes.position = posicao_dentes
 	dentes.scale = Vector2(escala_dentes, escala_dentes)
+	# o npc ordena pelo pé: sem isso os dentes ficam atrás do desenho dele
+	dentes.z_index = 1
 	npc.add_child(dentes)
 	dentes.play("mordida")
 	dentes.animation_finished.connect(dentes.queue_free)

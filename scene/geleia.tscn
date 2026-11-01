@@ -178,6 +178,7 @@ animations = [{
 script = ExtResource("1_geleia")
 cena_comida = ExtResource("4_comida")
 custo = 5
+passeia = true
 tier = 2
 comodo_spawn = "cozinha"
 acoes = Array[ExtResource("5_acao")]([SubResource("Resource_comer"), SubResource("Resource_lambidao")])

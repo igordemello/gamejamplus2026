@@ -10,6 +10,7 @@ size = Vector2(30, 42)
 font_color = Color(1, 0, 0, 1)
 
 [node name="npc" type="CharacterBody2D" unique_id=997912080 groups=["npc"]]
+y_sort_enabled = true
 script = ExtResource("1_np5a4")
 visual = ExtResource("2_gotica")
 
@@ -22,7 +23,7 @@ shape = SubResource("RectangleShape2D_g4v7s")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=125246978]
 texture_filter = 1
 position = Vector2(0, 44)
-scale = Vector2(1.75, 1.75)
+scale = Vector2(2, 2)
 sprite_frames = ExtResource("2_gotica")
 animation = &"andar"
 offset = Vector2(0, -32)

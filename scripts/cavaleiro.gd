@@ -1,7 +1,8 @@
 extends Fantasma
 
-@export var raio_espada: float = 110.0
+@export var raio_espada: float = 150.0
 @export var medo_espada: int = 50
+@export var tempo_fuga: float = 3.0
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
@@ -22,4 +23,6 @@ func susto_de_espada() -> bool:
 	onomatopeia("SHING!", Color(0.8, 0.9, 1))
 	GameManager.som.tocar("cavaleiro")
 	alvo.tomar_susto("espada", medo_espada, self)
+	# quem levou a espadada sai de perto
+	alvo.correr_para_outro_comodo(tempo_fuga)
 	return true

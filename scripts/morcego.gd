@@ -11,6 +11,10 @@ extends Fantasma
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 var direcao: Vector2 = Vector2.from_angle(randf() * TAU)
+# onde ele estava há pouco: sem sair de perto daqui, procura um caminho aberto
+var ancora: Vector2 = Vector2.INF
+var tempo_ancora: float = 0.0
+var tempo_em_parede: float = 0.0
 
 func _physics_process(delta: float) -> void:
 	var house = GameManager.house
@@ -19,7 +23,14 @@ func _physics_process(delta: float) -> void:
 	# se por algum motivo entrou numa parede, segue reto até sair; quicar ali dentro prende ele
 	if house.eh_parede(global_position):
 		global_position += passo
+		tempo_em_parede += delta
+		# entrou fundo demais (seguindo reto ia sair da casa): volta pra dentro
+		if tempo_em_parede > 0.5:
+			global_position = NavigationServer2D.map_get_closest_point(get_world_2d().navigation_map, global_position)
+			direcao = direcao_livre()
+			tempo_em_parede = 0.0
 		return
+	tempo_em_parede = 0.0
 
 	var frente = direcao.sign() * raio_colisao
 
@@ -34,8 +45,32 @@ func _physics_process(delta: float) -> void:
 		direcao.x = -direcao.x
 	if bateu_y:
 		direcao.y = -direcao.y
+	# quica um pouco torto: reto, ele ficava indo e voltando entre duas paredes pra sempre
+	if bateu_x or bateu_y:
+		direcao = direcao.rotated(randf_range(-0.5, 0.5))
 
 	global_position += direcao * velocidade * delta
+
+	tempo_ancora += delta
+	if ancora == Vector2.INF:
+		ancora = global_position
+	if tempo_ancora >= 3.0:
+		if global_position.distance_to(ancora) < 150.0:
+			direcao = direcao_livre()
+		ancora = global_position
+		tempo_ancora = 0.0
+
+# a direção com mais espaço aberto pela frente (entre as melhores, uma sorteada)
+func direcao_livre() -> Vector2:
+	var opcoes = []
+	for i in 16:
+		var dir = Vector2.from_angle(TAU * i / 16.0)
+		var livre = 0.0
+		while livre < 700.0 and not GameManager.house.eh_parede(global_position + dir * (livre + 24.0)):
+			livre += 24.0
+		opcoes.append([livre, dir])
+	opcoes.sort_custom(func(a, b): return a[0] > b[0])
+	return opcoes.slice(0, 3).pick_random()[1]
 
 # olha o caminho todo até lá, não só a ponta: parede fina (menor que o raio de colisão) não deixa ele passar
 func parede_adiante(desvio: Vector2) -> bool:

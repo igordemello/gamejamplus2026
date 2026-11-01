@@ -20,10 +20,18 @@ func tem_vaga() -> bool:
 	ocupantes = ocupantes.filter(func(npc): return is_instance_valid(npc))
 	return ocupantes.size() < vagas
 
-# um lugar em volta do ponto, fora de parede
+# um lugar em volta do ponto, fora de parede e o mais longe possível de quem já vai ficar aqui
 func lugar_livre() -> Vector2:
+	var melhor = global_position
+	var folga = -1.0
 	for i in 8:
 		var lugar = global_position + Vector2.from_angle(randf() * TAU) * randf_range(raio * 0.4, raio)
-		if not GameManager.house.eh_parede(lugar):
-			return lugar
-	return global_position
+		if GameManager.house.eh_parede(lugar) or GameManager.house.eh_parede(lugar + Npc.ALTURA_PE):
+			continue
+		var perto = INF
+		for npc in ocupantes:
+			perto = minf(perto, npc.agent.target_position.distance_to(lugar))
+		if perto > folga:
+			folga = perto
+			melhor = lugar
+	return melhor

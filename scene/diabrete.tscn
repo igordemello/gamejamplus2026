@@ -81,6 +81,7 @@ metodo = &"quebrar_objetos"
 [node name="Diabrete" type="Node2D"]
 script = ExtResource("1_script")
 custo = 3
+passeia = true
 tipo = 3
 acoes = Array[ExtResource("2_acao")]([SubResource("Resource_quebrar")])
 raio_clique = 36.0

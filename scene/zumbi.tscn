@@ -279,6 +279,7 @@ animations = [{
 [node name="Zumbi" type="Node2D" unique_id=1550264278]
 script = ExtResource("1_script")
 custo = 6
+passeia = true
 tier = 2
 tipo = 3
 fora_de_casa = true

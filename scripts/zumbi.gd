@@ -40,6 +40,9 @@ func _process(delta: float) -> void:
 	var andando = andando_atras() or voltando
 	sprite.rotation = sin(tempo_andando * 5.0) * 0.12 if andando else 0.0
 	sprite.speed_scale = 2.0 if andando else 1.0
+	# a recarga do arranhão só começa quando ele termina de atacar, não no clique
+	if perseguindo:
+		segurar_recarga(&"arranhao")
 
 func _physics_process(delta: float) -> void:
 	if andando_atras():
@@ -86,6 +89,19 @@ func distancia_andando(ate: Vector2) -> float:
 	for i in range(1, caminho.size()):
 		total += caminho[i - 1].distance_to(caminho[i])
 	return total
+
+func ocupado_agora() -> bool:
+	return ocupado() or voltando
+
+func sortear_passeio() -> Vector2:
+	for i in 8:
+		var ponto = global_position + Vector2.from_angle(randf() * TAU) * randf_range(raio_passeio * 0.3, raio_passeio)
+		if GameManager.house.fora_de_casa(ponto):
+			return ponto
+	return Vector2.INF
+
+func mover_passeio(destino: Vector2, passo: float) -> void:
+	andar_ate(destino, passo)
 
 func andando_atras() -> bool:
 	return perseguindo and sprite.animation == &"parado"

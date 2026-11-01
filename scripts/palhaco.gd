@@ -32,6 +32,9 @@ func _ready() -> void:
 	sprite.animation_finished.connect(sprite.play.bind("parado"))
 	notas.draw.connect(_desenhar_notas)
 
+func ocupado() -> bool:
+	return sprite.animation == &"balao"
+
 func _process(delta: float) -> void:
 	super(delta)
 

@@ -19,6 +19,9 @@ var primeiro_susto: bool = false
 
 @export var tipo_susto: String = "objeto"
 @export var pontos_susto: int = 20
+# a partir desse nível de medo o objeto quase não faz efeito: quem termina o serviço são os fantasmas
+@export var nivel_fraco: int = 2
+@export var pontos_susto_fraco: int = 3
 @export var intervalo_susto: float = 1.0
 
 var tempo_susto: float = 0.0
@@ -36,9 +39,13 @@ func _ready() -> void:
 	sombra = Sprite2D.new()
 	sombra.texture = texture
 	sombra.show_behind_parent = true
+	# no chão (levantado, o objeto fica uma camada acima)
+	sombra.z_index = -1
 	add_child(sombra)
 
 func _process(delta: float) -> void:
+	# fora do chão fica por cima: o Y-sort usa a posição, e subir faria ele passar pra trás da parede
+	z_index = 1 if segurando or posicao_original.y - position.y > 0.5 else 0
 	if segurando:
 		tempo += delta
 		# quanto mais tempo segurando, mais treme e balança
@@ -121,6 +128,7 @@ func ser_pego() -> void:
 	scale = escala_original
 	rotation = 0.0
 	sombra.hide()
+	z_index = 0
 	set_process(false)
 	set_process_input(false)
 
@@ -225,7 +233,7 @@ func aplicar_susto() -> void:
 		if npc is Npc:
 			# só quem está de fato dentro do cômodo do objeto (no corredor, fora de cômodo, não conta)
 			if GameManager.house.comodo_em(npc.global_position) == regiao_objeto.name:
-				npc.tomar_susto(tipo_susto, pontos_susto)
+				npc.tomar_susto(tipo_susto, pontos_susto if npc.nivel_medo < nivel_fraco else pontos_susto_fraco)
 
 #func aplicar_susto() -> void:
 	#print("Posição do objeto: ", global_position)
