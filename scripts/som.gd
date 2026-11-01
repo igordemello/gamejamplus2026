@@ -93,8 +93,9 @@ func gritar() -> void:
 	ultimo_susto = SUSTOS.filter(func(nome): return nome != ultimo_susto).pick_random()
 	tocar(ultimo_susto)
 
-# some rapidinho e libera o player
-func parar(player: AudioStreamPlayer, fade: float = 0.1) -> void:
+# some rapidinho e libera o player. sem tipo no parâmetro: o som pode já ter acabado sozinho,
+# e um objeto liberado num parâmetro tipado dá erro antes de chegar no is_instance_valid
+func parar(player, fade: float = 0.1) -> void:
 	if not is_instance_valid(player):
 		return
 	var tween = player.create_tween().set_ignore_time_scale()
