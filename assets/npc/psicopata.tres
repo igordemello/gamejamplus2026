@@ -68,3 +68,5 @@ animations = [{
 metadata/escala = 1.33333333
 metadata/infarto_tipo = "Poltergeist"
 metadata/infarto_tier = 3
+metadata/lore = ["", "", ""]
+metadata/nome_tipo = "Psicopata"

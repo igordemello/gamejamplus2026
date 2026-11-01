@@ -1,0 +1,83 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://c08arjd5yfnsi" path="res://scripts/lore.gd" id="1_lore"]
+
+[node name="lore" type="CanvasLayer"]
+layer = 4
+visible = false
+script = ExtResource("1_lore")
+
+[node name="painel" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(700, 0)
+mouse_filter = 0
+
+[node name="margem" type="MarginContainer" parent="painel"]
+layout_mode = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 24
+
+[node name="coluna" type="VBoxContainer" parent="painel/margem"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="topo" type="HBoxContainer" parent="painel/margem/coluna"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="retrato" type="TextureRect" parent="painel/margem/coluna/topo"]
+unique_name_in_owner = true
+texture_filter = 1
+custom_minimum_size = Vector2(96, 120)
+layout_mode = 2
+size_flags_vertical = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="textos" type="VBoxContainer" parent="painel/margem/coluna/topo"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 6
+
+[node name="nome" type="Label" parent="painel/margem/coluna/topo/textos"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.97, 0.95, 0.88, 1)
+theme_override_font_sizes/font_size = 48
+text = "Tipo"
+
+[node name="linha_medo" type="HBoxContainer" parent="painel/margem/coluna/topo/textos"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="lbl_medo" type="Label" parent="painel/margem/coluna/topo/textos/linha_medo"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.84, 0.76, 1)
+theme_override_font_sizes/font_size = 26
+text = "Nível de medo 0"
+
+[node name="medo" type="Control" parent="painel/margem/coluna/topo/textos/linha_medo"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(124, 22)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="fechar" type="Button" parent="painel/margem/coluna/topo"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+focus_mode = 0
+theme_override_font_sizes/font_size = 22
+text = "Fechar"
+
+[node name="separador" type="HSeparator" parent="painel/margem/coluna"]
+layout_mode = 2
+
+[node name="arvore" type="VBoxContainer" parent="painel/margem/coluna"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0

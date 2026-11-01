@@ -154,9 +154,7 @@ func atualizar_objetivos() -> void:
 		h.objetivo_policial, false)
 	# o que aparece na barra com o painel fechado
 	var feitos = int(h.objetivo_marcados) + int(h.objetivo_comodos) + int(h.objetivo_policial)
-	resumo_objetivos.text = "%s %d" % ["resta" if restam == 1 else "restam", restam]
-	if feitos > 0:
-		resumo_objetivos.text += " · %d feito%s" % [feitos, "" if feitos == 1 else "s"]
+	resumo_objetivos.text = "%d feito%s" % [feitos, "" if feitos == 1 else "s"] if feitos > 0 else ""
 
 # a cor só muda quando o estado muda (e aí o painel abre pra mostrar)
 func linha(lbl: Label, texto: String, feito: bool, falhou: bool) -> void:

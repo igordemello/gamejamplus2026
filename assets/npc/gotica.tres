@@ -39,3 +39,5 @@ animations = [{
 }]
 metadata/infarto_tipo = "Poltergeist"
 metadata/infarto_tier = 1
+metadata/lore = ["", "", ""]
+metadata/nome_tipo = "Gótica"

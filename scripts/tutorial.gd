@@ -49,7 +49,7 @@ func comecar(casa) -> void:
 			"feito": func(): return get_tree().get_nodes_in_group("fantasma").any(func(f): return f.recarga_restante.values().any(func(r): return r > 0.0))},
 		{"texto": "Rodinha: zoom. Botão direito: arrasta a câmera.",
 			"feito": func(): return absf(cam.zoom_alvo - zoom_inicial) > 0.01 or cam.arrastado - arrastado_inicial > 100.0},
-		{"texto": "Mate de susto os marcados com caveira, ou cumpra outro objetivo do painel.",
+		{"texto": "Mate os marcados com caveira ou outro objetivo. Clique num convidado pra ver como.",
 			"destaque": house.ui.get_node("objetivos"), "abrir_objetivos": true},
 		{"texto": "Com %d mortes a polícia vem. Esc pausa. Boa assombração!" % house.limite_mortes},
 	]

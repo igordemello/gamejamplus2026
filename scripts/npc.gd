@@ -4,10 +4,17 @@ class_name Npc
 # o que é informação (medidor, "!") e a alma ignoram a noite e as luzes
 const SEM_LUZ = preload("res://assets/sem_luz.tres")
 const ALMA = preload("res://assets/alma.gdshader")
+const PAPEL = Color(0.86, 0.84, 0.76)
+# nível de medo que libera cada pedaço da lore (a árvore que abre no clique)
+const NIVEIS_LORE = [1, 3, 4]
 
 @export var house: House
 # animações desse npc (gotica.tres, cheerleader.tres...), precisa ter "andar" desenhada virada pra direita
 @export var visual: SpriteFrames
+# nome do tipo e lore (um texto por NIVEIS_LORE) vêm do visual (metadata nome_tipo e lore);
+# se estiverem preenchidos aqui, valem no lugar (o policial usa o visual do advogado)
+@export var nome_tipo: String = ""
+@export var lore: PackedStringArray = PackedStringArray()
 
 @export var speed: float = 150.0
 @export var acceleration: float = 300.0
@@ -39,6 +46,10 @@ var barra_mostrada: float = 0.0
 var alfa_medidor: float = 0.0
 # chegou na saída e está sumindo
 var saindo: bool = false
+# o mouse está nele (a area_jogo marca): anel de papel no chão, por baixo do desenho
+var em_destaque: bool = false
+var anel: Node2D
+var alfa_anel: float = 0.0
 
 # o fantasma que mata esse npc do coração: vem do visual (metadata infarto_tipo e infarto_tier)
 var infarto_tipo: String = ""
@@ -133,6 +144,12 @@ func _ready() -> void:
 		sombra.draw_circle(Vector2.ZERO, 16.0, Color(0, 0, 0, 0.35)))
 	add_child(sombra)
 	move_child(sombra, 0)
+	anel = Node2D.new()
+	anel.position = Vector2(0, altura_sprite)
+	anel.material = SEM_LUZ
+	anel.draw.connect(_desenhar_anel)
+	add_child(anel)
+	move_child(anel, 1)
 	if preferencia == "aleatória":
 		preferencia = ["dançar", "beber", "conversar", "descansar"].pick_random()
 	# cada um no seu passo
@@ -145,6 +162,12 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	$Label.text = str(nivel_medo) +" - "+ str(roundi(barra_susto)) + "/100"
+	# o anel aparece e some em tempo real (a lore abre com o mundo em câmera lenta)
+	var quer_anel = em_destaque and is_in_group("npc") and current_estado != Estado.Infarta
+	var alfa_antes = alfa_anel
+	alfa_anel = move_toward(alfa_anel, 1.0 if quer_anel else 0.0, 8.0 * minf(delta / maxf(Engine.time_scale, 0.01), 0.05))
+	if alfa_anel > 0.0 or alfa_antes > 0.0:
+		anel.queue_redraw()
 	if sirene:
 		sirene.color = Color(1, 0.15, 0.15) if fmod(Time.get_ticks_msec() / 1000.0, 0.6) < 0.3 else Color(0.2, 0.4, 1)
 	if marca:
@@ -404,6 +427,28 @@ func tomar_susto(susto: String, pontosDeSusto: int, fantasma: Fantasma = null) -
 			fugir() # ou foge, vou implementar a lógica disso aqui depois
 
 
+# o mouse está em cima do desenho: o retângulo do quadro, já com escala, respiração e flip
+func mouse_em_cima() -> bool:
+	var tamanho = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame).get_size()
+	return Rect2(sprite.offset - tamanho / 2.0, tamanho).has_point(sprite.get_local_mouse_position())
+
+# nome do tipo e os textos da lore, do npc ou, se ele não tiver, do visual
+func dados_lore() -> Dictionary:
+	var frames = sprite.sprite_frames
+	return {
+		"nome": nome_tipo if nome_tipo != "" else frames.get_meta("nome_tipo", ""),
+		"lore": lore if not lore.is_empty() else PackedStringArray(frames.get_meta("lore", [])),
+	}
+
+# elipse no chão em volta dos pés, pulsando de leve
+func _desenhar_anel() -> void:
+	if alfa_anel <= 0.01:
+		return
+	var raio = 30.0 * (1.0 + sin(Time.get_ticks_msec() / 1000.0 * 5.0) * 0.06)
+	anel.draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, 0.4))
+	anel.draw_circle(Vector2.ZERO, raio, Color(PAPEL, 0.14 * alfa_anel))
+	anel.draw_arc(Vector2.ZERO, raio, 0.0, TAU, 48, Color(PAPEL, alfa_anel), 3.0, true)
+
 # pulinho de susto, só no desenho (a posição do npc não muda)
 func pular_de_susto() -> void:
 	if tween_pulo:
@@ -563,6 +608,8 @@ func infartar() -> void:
 	velocity = Vector2.ZERO
 	$CollisionShape2D.set_deferred("disabled", true)
 	sprite.stop()
+	alfa_anel = 0.0
+	anel.queue_redraw()
 	alfa_medidor = 1.0
 	medidor.scale = Vector2(1.5, 1.5)
 	if marca:

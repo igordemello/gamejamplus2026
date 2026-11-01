@@ -6,5 +6,7 @@
 [node name="policial" instance=ExtResource("1_npc")]
 collision_layer = 2
 visual = ExtResource("2_visual")
+nome_tipo = "Policial"
+lore = PackedStringArray("", "", "")
 resistencia = 2.0
 policial = true

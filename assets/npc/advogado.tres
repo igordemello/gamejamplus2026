@@ -60,3 +60,5 @@ animations = [{
 metadata/escala = 0.18
 metadata/infarto_tipo = "Aparicao"
 metadata/infarto_tier = 3
+metadata/lore = ["", "", ""]
+metadata/nome_tipo = "Advogado"

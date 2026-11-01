@@ -53,3 +53,5 @@ animations = [{
 }]
 metadata/infarto_tipo = "Espectro"
 metadata/infarto_tier = 2
+metadata/lore = ["", "", ""]
+metadata/nome_tipo = "Hippie"

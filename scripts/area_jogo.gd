@@ -3,18 +3,53 @@ extends Control
 const INVOCACAO = preload("res://scene/invocacao.tscn")
 
 @onready var menu_acoes = $"../menu_acoes"
+@onready var lore = $"../../lore"
 
-# clicar e segurar num fantasma abre o menu de ações, soltar executa a que estiver no mouse
+# o anel no chão aparece no npc que o clique abriria: nenhum com fantasma embaixo, carta sendo arrastada,
+# menu de ações aberto ou outro controle (loja, painel de lore) por cima do mouse
+func _process(_delta: float) -> void:
+	var viewport = get_viewport()
+	var sobre = viewport.gui_get_hovered_control()
+	var alvo: Npc = null
+	if not (viewport.gui_is_dragging() or menu_acoes.visible or (sobre != null and sobre != self) or fantasma_sob_mouse()):
+		alvo = npc_sob_mouse()
+	# o que já está aberto na lore não precisa
+	if alvo == lore.npc:
+		alvo = null
+	for npc in get_tree().get_nodes_in_group("npc"):
+		npc.em_destaque = npc == alvo
+	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND if alvo else Control.CURSOR_ARROW
+
+# clicar e segurar num fantasma abre o menu de ações, soltar executa a que estiver no mouse;
+# clicar num npc (sem fantasma na frente) abre a lore dele
 func _gui_input(event: InputEvent) -> void:
 	if not (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT):
 		return
 	if event.pressed:
-		for fantasma in get_tree().get_nodes_in_group("fantasma"):
-			if fantasma.mouse_em_cima():
-				menu_acoes.abrir(fantasma, event.global_position)
-				return
+		var fantasma = fantasma_sob_mouse()
+		if fantasma:
+			lore.fechar(false)
+			menu_acoes.abrir(fantasma, event.global_position)
+			return
+		var npc = npc_sob_mouse()
+		if npc:
+			lore.abrir(npc)
 	else:
 		menu_acoes.soltar()
+
+func fantasma_sob_mouse() -> Fantasma:
+	for fantasma in get_tree().get_nodes_in_group("fantasma"):
+		if fantasma.mouse_em_cima():
+			return fantasma
+	return null
+
+# o npc embaixo do mouse; se tem vários, o da frente (o mais embaixo na tela)
+func npc_sob_mouse() -> Npc:
+	var da_frente: Npc = null
+	for npc in get_tree().get_nodes_in_group("npc"):
+		if npc.current_estado != Npc.Estado.Infarta and npc.mouse_em_cima() and (da_frente == null or npc.global_position.y > da_frente.global_position.y):
+			da_frente = npc
+	return da_frente
 
 func _can_drop_data(_at_position: Vector2, card: Variant) -> bool:
 	var pode = pode_soltar(card)
