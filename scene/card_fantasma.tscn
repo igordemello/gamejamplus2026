@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://bh02vgl1cqea2"]
+
+[ext_resource type="Script" uid="uid://bstcocu4peqtf" path="res://scripts/card_fantasma.gd" id="1_card"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_foco"]
+
+[node name="card_fantasma" type="Button" unique_id=581921413]
+texture_filter = 1
+custom_minimum_size = Vector2(0, 108)
+theme_override_styles/focus = SubResource("StyleBoxEmpty_foco")
+script = ExtResource("1_card")
+
+[node name="linha" type="HBoxContainer" parent="." unique_id=1759607454]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 8.0
+offset_right = -10.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="icone" type="TextureRect" parent="linha" unique_id=1756565721]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="textos" type="VBoxContainer" parent="linha" unique_id=235331207]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="nome" type="Label" parent="linha/textos" unique_id=1360496232]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Nome"
+
+[node name="restricao" type="Label" parent="linha/textos" unique_id=445166619]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Só na cozinha"
+
+[node name="custo" type="Label" parent="linha/textos" unique_id=2064443064]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "0 sustos"

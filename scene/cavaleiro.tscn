@@ -1,0 +1,109 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/cavaleiro.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/acao.gd" id="2_acao"]
+[ext_resource type="Texture2D" path="res://assets/cavaleiro/Estatua_parada.png" id="3_parada"]
+[ext_resource type="Texture2D" path="res://assets/cavaleiro/Estatua_atacando_spritesheet.png" id="4_atacar"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_parada"]
+atlas = ExtResource("3_parada")
+region = Rect2(0, 0, 64, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atacar0"]
+atlas = ExtResource("4_atacar")
+region = Rect2(0, 0, 64, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atacar1"]
+atlas = ExtResource("4_atacar")
+region = Rect2(64, 0, 64, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atacar2"]
+atlas = ExtResource("4_atacar")
+region = Rect2(128, 0, 64, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atacar3"]
+atlas = ExtResource("4_atacar")
+region = Rect2(192, 0, 64, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atacar4"]
+atlas = ExtResource("4_atacar")
+region = Rect2(256, 0, 64, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atacar5"]
+atlas = ExtResource("4_atacar")
+region = Rect2(320, 0, 64, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atacar6"]
+atlas = ExtResource("4_atacar")
+region = Rect2(384, 0, 64, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_atacar7"]
+atlas = ExtResource("4_atacar")
+region = Rect2(448, 0, 64, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_espada"]
+atlas = ExtResource("4_atacar")
+region = Rect2(202, 0, 44, 86)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cavaleiro"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_parada")
+}],
+"loop": true,
+"name": &"parada",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atacar0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atacar1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atacar2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atacar3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atacar4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atacar5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atacar6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_atacar7")
+}],
+"loop": false,
+"name": &"atacar",
+"speed": 14.0
+}]
+
+[sub_resource type="Resource" id="Resource_espada"]
+script = ExtResource("2_acao")
+nome = "Susto de Espada"
+icone = SubResource("AtlasTexture_icone_espada")
+descricao = "A estátua ataca com a espada quem estiver passando perto dela. Medo 5."
+recarga = 10.0
+metodo = &"susto_de_espada"
+
+[node name="Cavaleiro" type="Node2D"]
+script = ExtResource("1_script")
+tipo = 2
+pontos_spawn = &"armadura"
+acoes = Array[ExtResource("2_acao")]([SubResource("Resource_espada")])
+raio_clique = 45.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_cavaleiro")
+animation = &"parada"
+autoplay = "parada"
+offset = Vector2(0, -36)

@@ -1,0 +1,91 @@
+[gd_scene format=3 uid="uid://bmlvns6jg0bi"]
+
+[ext_resource type="Script" uid="uid://cmvaasri3mbyr" path="res://scripts/menu.gd" id="1_e5g8k"]
+[ext_resource type="PackedScene" path="res://scene/config.tscn" id="2_config"]
+
+[node name="Menu" type="Control" unique_id=1065229293]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_e5g8k")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=821887918]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="." unique_id=635670435]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -195.0
+offset_top = -406.0
+offset_right = 195.0
+offset_bottom = -342.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 63
+text = "Resident Haunter"
+
+[node name="btn_play" type="Button" parent="." unique_id=177721819]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -92.0
+offset_top = -73.0
+offset_right = 92.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 43
+text = "Jogar"
+
+[node name="btn_config" type="Button" parent="." unique_id=1173738203]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -112.0
+offset_top = 31.0
+offset_right = 112.0
+offset_bottom = 98.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 43
+text = "Configurar"
+
+[node name="btn_sair" type="Button" parent="." unique_id=1619859515]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -112.0
+offset_top = 136.0
+offset_right = 112.0
+offset_bottom = 203.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 43
+text = "Sair"
+
+[node name="config" parent="." unique_id=1624511279 instance=ExtResource("2_config")]
+visible = false
+layout_mode = 1
+
+[connection signal="button_down" from="btn_play" to="." method="_on_btn_play_button_down"]
+[connection signal="button_down" from="btn_config" to="." method="_on_btn_config_button_down"]
+[connection signal="button_down" from="btn_sair" to="." method="_on_btn_sair_button_down"]

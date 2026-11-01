@@ -1,0 +1,39 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://oc0jshojn1tu"]
+
+[ext_resource type="Texture2D" uid="uid://4ol4obh0i654" path="res://assets/npc/cheer-Sheet.png" id="1_sheet"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar0"]
+atlas = ExtResource("1_sheet")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar1"]
+atlas = ExtResource("1_sheet")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar2"]
+atlas = ExtResource("1_sheet")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_andar3"]
+atlas = ExtResource("1_sheet")
+region = Rect2(192, 0, 64, 64)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_andar3")
+}],
+"loop": 1,
+"name": &"andar",
+"speed": 8.0
+}]

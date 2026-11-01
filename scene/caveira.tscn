@@ -1,0 +1,296 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/caveira.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/acao.gd" id="2_acao"]
+[ext_resource type="Texture2D" path="res://assets/caveira/idleCaveira 64x112.png" id="3_idle"]
+[ext_resource type="Texture2D" path="res://assets/caveira/cabecadaCaveira64x112.png" id="4_cabecada"]
+[ext_resource type="Texture2D" path="res://assets/caveira/mordidaEsqueleto64x64.png" id="5_mordida"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle0"]
+atlas = ExtResource("3_idle")
+region = Rect2(0, 0, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle1"]
+atlas = ExtResource("3_idle")
+region = Rect2(64, 0, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle2"]
+atlas = ExtResource("3_idle")
+region = Rect2(128, 0, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle3"]
+atlas = ExtResource("3_idle")
+region = Rect2(192, 0, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle4"]
+atlas = ExtResource("3_idle")
+region = Rect2(256, 0, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle5"]
+atlas = ExtResource("3_idle")
+region = Rect2(320, 0, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle6"]
+atlas = ExtResource("3_idle")
+region = Rect2(384, 0, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle7"]
+atlas = ExtResource("3_idle")
+region = Rect2(448, 0, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cabecada0"]
+atlas = ExtResource("4_cabecada")
+region = Rect2(0, 0, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cabecada1"]
+atlas = ExtResource("4_cabecada")
+region = Rect2(64, 0, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cabecada2"]
+atlas = ExtResource("4_cabecada")
+region = Rect2(128, 0, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cabecada3"]
+atlas = ExtResource("4_cabecada")
+region = Rect2(192, 0, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cabecada4"]
+atlas = ExtResource("4_cabecada")
+region = Rect2(256, 0, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cabecada5"]
+atlas = ExtResource("4_cabecada")
+region = Rect2(320, 0, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cabecada6"]
+atlas = ExtResource("4_cabecada")
+region = Rect2(384, 0, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cabecada7"]
+atlas = ExtResource("4_cabecada")
+region = Rect2(448, 0, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cabecada8"]
+atlas = ExtResource("4_cabecada")
+region = Rect2(0, 112, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cabecada9"]
+atlas = ExtResource("4_cabecada")
+region = Rect2(64, 112, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cabecada10"]
+atlas = ExtResource("4_cabecada")
+region = Rect2(128, 112, 64, 112)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mordida0"]
+atlas = ExtResource("5_mordida")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mordida1"]
+atlas = ExtResource("5_mordida")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mordida2"]
+atlas = ExtResource("5_mordida")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mordida3"]
+atlas = ExtResource("5_mordida")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mordida4"]
+atlas = ExtResource("5_mordida")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mordida5"]
+atlas = ExtResource("5_mordida")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mordida6"]
+atlas = ExtResource("5_mordida")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mordida7"]
+atlas = ExtResource("5_mordida")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mordida8"]
+atlas = ExtResource("5_mordida")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_risada"]
+atlas = ExtResource("3_idle")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_mordida"]
+atlas = ExtResource("5_mordida")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_cabecada"]
+atlas = ExtResource("4_cabecada")
+region = Rect2(256, 0, 64, 80)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_caveira"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle7")
+}],
+"loop": true,
+"name": &"parada",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle0")
+}],
+"loop": false,
+"name": &"rir",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cabecada0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cabecada1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cabecada2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cabecada3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cabecada4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cabecada5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cabecada6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cabecada7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cabecada8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cabecada9")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cabecada10")
+}],
+"loop": false,
+"name": &"cabecada",
+"speed": 14.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mordida0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mordida1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mordida2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mordida3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mordida4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mordida5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mordida6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mordida7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mordida8")
+}],
+"loop": false,
+"name": &"mordida",
+"speed": 12.0
+}]
+
+[sub_resource type="Resource" id="Resource_risada"]
+script = ExtResource("2_acao")
+nome = "Risada Maligna"
+icone = SubResource("AtlasTexture_icone_risada")
+descricao = "A caveira começa a rir e todo mundo num círculo em volta se assusta. Medo 10."
+recarga = 15.0
+metodo = &"risada_maligna"
+
+[sub_resource type="Resource" id="Resource_mordida"]
+script = ExtResource("2_acao")
+nome = "Mordida de Fogo"
+icone = SubResource("AtlasTexture_icone_mordida")
+descricao = "Morde até duas pessoas perto, que saem correndo pra outro cômodo. Medo 20."
+recarga = 20.0
+metodo = &"mordida_de_fogo"
+
+[sub_resource type="Resource" id="Resource_cabecada"]
+script = ExtResource("2_acao")
+nome = "Cabeçada"
+icone = SubResource("AtlasTexture_icone_cabecada")
+descricao = "Persegue a pessoa mais perto e dá uma cabeçada: ela fica 10 s tonta, parada, com o medo caindo. Medo 30."
+recarga = 30.0
+metodo = &"cabecada"
+
+[node name="Caveira" type="Node2D"]
+script = ExtResource("1_script")
+custo = 25
+tier = 3
+pontos_spawn = &"lareira"
+acoes = Array[ExtResource("2_acao")]([SubResource("Resource_risada"), SubResource("Resource_mordida"), SubResource("Resource_cabecada")])
+raio_clique = 50.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_caveira")
+animation = &"parada"
+autoplay = "parada"
+offset = Vector2(0, -20)

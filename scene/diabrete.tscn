@@ -1,0 +1,106 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/diabrete.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/acao.gd" id="2_acao"]
+[ext_resource type="Texture2D" path="res://assets/diabrete/diabrete_spritesheet.png" id="3_voar"]
+[ext_resource type="Texture2D" path="res://assets/diabrete/diabrete_quebrando_objeto_spritesheet.png" id="4_carregar"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_voar0"]
+atlas = ExtResource("3_voar")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_voar1"]
+atlas = ExtResource("3_voar")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_voar2"]
+atlas = ExtResource("3_voar")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_carregar0"]
+atlas = ExtResource("4_carregar")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_carregar1"]
+atlas = ExtResource("4_carregar")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_carregar2"]
+atlas = ExtResource("4_carregar")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_quebrar"]
+atlas = ExtResource("4_carregar")
+region = Rect2(34, 1, 28, 28)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_diabrete"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_voar0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_voar1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_voar2")
+}],
+"loop": true,
+"name": &"voar",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_carregar0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_carregar1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_carregar2")
+}],
+"loop": true,
+"name": &"carregar",
+"speed": 10.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_brasas"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(1, 0.95, 0.5, 1, 1, 0.5, 0.1, 0.95, 0.7, 0.1, 0.05, 0)
+
+[sub_resource type="Resource" id="Resource_quebrar"]
+script = ExtResource("2_acao")
+nome = "Quebrar Objetos"
+icone = SubResource("AtlasTexture_icone_quebrar")
+descricao = "Pega o objeto do cenário mais perto, ergue e derruba no chão. Quem estiver bem perto se assusta. Medo 10."
+recarga = 5.0
+metodo = &"quebrar_objetos"
+
+[node name="Diabrete" type="Node2D"]
+script = ExtResource("1_script")
+custo = 7
+tipo = 3
+acoes = Array[ExtResource("2_acao")]([SubResource("Resource_quebrar")])
+raio_clique = 36.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(2.5, 2.5)
+sprite_frames = SubResource("SpriteFrames_diabrete")
+animation = &"voar"
+autoplay = "voar"
+
+[node name="brasas" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 22
+lifetime = 0.7
+emission_shape = 1
+emission_sphere_radius = 16.0
+direction = Vector2(0, -1)
+spread = 35.0
+gravity = Vector2(0, -60)
+initial_velocity_min = 20.0
+initial_velocity_max = 55.0
+scale_amount_min = 3.0
+scale_amount_max = 5.0
+color_ramp = SubResource("Gradient_brasas")

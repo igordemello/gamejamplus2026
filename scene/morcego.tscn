@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://cbgvi56ugb03g"]
+
+[ext_resource type="Script" uid="uid://b3hlmb0rdy40m" path="res://scripts/morcego.gd" id="1_4norb"]
+[ext_resource type="Script" uid="uid://dtu3rtcl8iegv" path="res://scripts/acao.gd" id="2_acao"]
+[ext_resource type="Texture2D" uid="uid://podf650q6wdv" path="res://assets/bat-Sheet.png" id="4_a3jf4"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_bater"]
+atlas = ExtResource("4_a3jf4")
+region = Rect2(70, 0, 49, 49)
+
+[sub_resource type="Resource" id="Resource_bater_asas"]
+script = ExtResource("2_acao")
+nome = "Bater asas"
+icone = SubResource("AtlasTexture_icone_bater")
+descricao = "Bate as asas com força e o vento empurra pra trás quem estiver na frente dele. Medo 10."
+metodo = &"bater_asas"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8h54h"]
+atlas = ExtResource("4_a3jf4")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p40bt"]
+atlas = ExtResource("4_a3jf4")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yaym7"]
+atlas = ExtResource("4_a3jf4")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_utctt"]
+atlas = ExtResource("4_a3jf4")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_g4v7s"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8h54h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p40bt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yaym7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_utctt")
+}],
+"loop": 1,
+"name": &"voar",
+"speed": 10.0
+}]
+
+[node name="Morcego" type="Node2D" unique_id=494321899]
+script = ExtResource("1_4norb")
+acoes = Array[ExtResource("2_acao")]([SubResource("Resource_bater_asas")])
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=990475690]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_g4v7s")
+animation = &"voar"
+autoplay = "voar"

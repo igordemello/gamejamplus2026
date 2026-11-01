@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://bvro6fjibueab"]
+
+[ext_resource type="Script" uid="uid://b5ra8fdddq376" path="res://scripts/npc.gd" id="1_np5a4"]
+[ext_resource type="SpriteFrames" path="res://assets/npc/gotica.tres" id="2_gotica"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g4v7s"]
+size = Vector2(30, 30)
+
+[sub_resource type="LabelSettings" id="LabelSettings_54ctn"]
+font_color = Color(1, 0, 0, 1)
+
+[node name="npc" type="CharacterBody2D" unique_id=997912080 groups=["npc"]]
+script = ExtResource("1_np5a4")
+visual = ExtResource("2_gotica")
+min_wait_time = 6.0
+max_wait_time = 10.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=855655254]
+shape = SubResource("RectangleShape2D_g4v7s")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1879952820]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=125246978]
+texture_filter = 1
+position = Vector2(0, 25)
+scale = Vector2(1.5, 1.5)
+sprite_frames = ExtResource("2_gotica")
+animation = &"andar"
+offset = Vector2(0, -32)
+
+[node name="Label" type="Label" parent="." unique_id=1384180380]
+offset_left = -89.00001
+offset_top = -90.0
+offset_right = 88.99999
+offset_bottom = -67.0
+pivot_offset = Vector2(89, 12)
+text = "67/100"
+label_settings = SubResource("LabelSettings_54ctn")
+horizontal_alignment = 1
+vertical_alignment = 1

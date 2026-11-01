@@ -1,0 +1,113 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/palhaco.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dtu3rtcl8iegv" path="res://scripts/acao.gd" id="2_acao"]
+[ext_resource type="Texture2D" uid="uid://tgih8d8habk3" path="res://assets/palhaço/palhaço.png" id="3_parado"]
+[ext_resource type="Texture2D" uid="uid://bsxgttly3od4p" path="res://assets/palhaço/palhaço-Sheet-export.png" id="4_balao"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_balao0"]
+atlas = ExtResource("4_balao")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_balao1"]
+atlas = ExtResource("4_balao")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_balao2"]
+atlas = ExtResource("4_balao")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_balao3"]
+atlas = ExtResource("4_balao")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_balao4"]
+atlas = ExtResource("4_balao")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_balao5"]
+atlas = ExtResource("4_balao")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_balao6"]
+atlas = ExtResource("4_balao")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_balao"]
+atlas = ExtResource("4_balao")
+region = Rect2(390, 0, 52, 40)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_palhaco"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_parado")
+}],
+"loop": true,
+"name": &"parado",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_balao0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_balao1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_balao2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_balao3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_balao4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_balao5")
+}, {
+"duration": 4.0,
+"texture": SubResource("AtlasTexture_balao6")
+}],
+"loop": false,
+"name": &"balao",
+"speed": 10.0
+}]
+
+[sub_resource type="Resource" id="Resource_musica"]
+script = ExtResource("2_acao")
+nome = "Música de Circo"
+icone = ExtResource("3_parado")
+descricao = "Uma música de circo estranha começa a tocar no cômodo do palhaço: por 8 s, todo susto lá dentro fica 50% mais forte."
+recarga = 10.0
+metodo = &"musica_de_circo"
+
+[sub_resource type="Resource" id="Resource_balao"]
+script = ExtResource("2_acao")
+nome = "Balão"
+icone = SubResource("AtlasTexture_icone_balao")
+descricao = "A cabeça do palhaço incha e ele assusta a pessoa mais perto no mesmo cômodo. Medo 15."
+recarga = 5.0
+metodo = &"balao"
+
+[node name="Palhaço" type="Node2D"]
+script = ExtResource("1_script")
+custo = 30
+tier = 3
+tipo = 1
+comodo_spawn = "quarto"
+acoes = Array[ExtResource("2_acao")]([SubResource("Resource_musica"), SubResource("Resource_balao")])
+raio_clique = 45.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, -52)
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_palhaco")
+animation = &"parado"
+autoplay = "parado"
+
+[node name="notas" type="Node2D" parent="."]
+z_index = 1
+
+[node name="musica" type="AudioStreamPlayer2D" parent="."]

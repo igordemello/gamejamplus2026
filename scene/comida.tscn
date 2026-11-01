@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/comida.gd" id="1_comida"]
+[ext_resource type="Texture2D" uid="uid://btpkmr0kdu5sj" path="res://assets/Tileset_HouseHounted.webp" id="2_tiles"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_abobora"]
+atlas = ExtResource("2_tiles")
+region = Rect2(512, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vomito"]
+atlas = ExtResource("2_tiles")
+region = Rect2(704, 0, 64, 64)
+
+[node name="Comida" type="Sprite2D"]
+texture_filter = 1
+scale = Vector2(0.6, 0.6)
+texture = SubResource("AtlasTexture_abobora")
+script = ExtResource("1_comida")
+textura_vomito = SubResource("AtlasTexture_vomito")

@@ -1,0 +1,186 @@
+[gd_scene format=3 uid="uid://bwpf1jpd3uryp"]
+
+[ext_resource type="Script" uid="uid://bb3qp7xo7os38" path="res://scripts/geleia.gd" id="1_geleia"]
+[ext_resource type="Texture2D" uid="uid://l0dnqk313ml6" path="res://assets/mordida-Sheet.png" id="2_mordida"]
+[ext_resource type="Texture2D" uid="uid://b7tbcrcndjkx" path="res://assets/lambida-Sheet.png" id="3_lambida"]
+[ext_resource type="PackedScene" path="res://scene/comida.tscn" id="4_comida"]
+[ext_resource type="Script" uid="uid://dtu3rtcl8iegv" path="res://scripts/acao.gd" id="5_acao"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_comer"]
+atlas = ExtResource("2_mordida")
+region = Rect2(208, 10, 43, 43)
+
+[sub_resource type="Resource" id="Resource_comer"]
+script = ExtResource("5_acao")
+nome = "Comer e regorfar"
+icone = SubResource("AtlasTexture_icone_comer")
+descricao = "Come e regorfa a comida no chão. Quem comer vai vomitar. Medo 15."
+recarga = 10.0
+metodo = &"comer_e_regorfar"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_lambida"]
+atlas = ExtResource("3_lambida")
+region = Rect2(192, 9, 54, 54)
+
+[sub_resource type="Resource" id="Resource_lambidao"]
+script = ExtResource("5_acao")
+nome = "Lambidão"
+icone = SubResource("AtlasTexture_icone_lambida")
+descricao = "Vai até a pessoa mais perto no cômodo e dá um lambidão na cara. Ela sai correndo até bater numa parede e fica atordoada. Medo 20."
+recarga = 20.0
+metodo = &"lambidao"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lambida0"]
+atlas = ExtResource("3_lambida")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lambida1"]
+atlas = ExtResource("3_lambida")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lambida2"]
+atlas = ExtResource("3_lambida")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lambida3"]
+atlas = ExtResource("3_lambida")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lambida4"]
+atlas = ExtResource("3_lambida")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lambida5"]
+atlas = ExtResource("3_lambida")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lambida6"]
+atlas = ExtResource("3_lambida")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lambida7"]
+atlas = ExtResource("3_lambida")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lambida8"]
+atlas = ExtResource("3_lambida")
+region = Rect2(512, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lambida9"]
+atlas = ExtResource("3_lambida")
+region = Rect2(576, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lambida10"]
+atlas = ExtResource("3_lambida")
+region = Rect2(640, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mordida0"]
+atlas = ExtResource("2_mordida")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mordida1"]
+atlas = ExtResource("2_mordida")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mordida2"]
+atlas = ExtResource("2_mordida")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mordida3"]
+atlas = ExtResource("2_mordida")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mordida4"]
+atlas = ExtResource("2_mordida")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mordida5"]
+atlas = ExtResource("2_mordida")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_geleia"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lambida0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lambida1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lambida2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lambida3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lambida4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lambida5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lambida6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lambida7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lambida8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lambida9")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lambida10")
+}],
+"loop": 0,
+"name": &"lambida",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mordida0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mordida1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mordida2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mordida3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mordida4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mordida5")
+}],
+"loop": 0,
+"name": &"mordida",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mordida2")
+}],
+"loop": 1,
+"name": &"parada",
+"speed": 5.0
+}]
+
+[node name="Geleia Roxa" type="Node2D" unique_id=1509536684]
+script = ExtResource("1_geleia")
+cena_comida = ExtResource("4_comida")
+custo = 15
+tier = 2
+comodo_spawn = "cozinha"
+acoes = Array[ExtResource("5_acao")]([SubResource("Resource_comer"), SubResource("Resource_lambidao")])
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=808238444]
+texture_filter = 1
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_geleia")
+animation = &"parada"
+autoplay = "parada"

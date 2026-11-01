@@ -1,0 +1,18 @@
+extends Sprite2D
+
+@export var raio: float = 30.0
+@export var tempo_vomitando: float = 1.5
+@export var textura_vomito: Texture2D
+
+var medo: int = 15
+
+func _physics_process(_delta: float) -> void:
+	for npc in get_tree().get_nodes_in_group("npc"):
+		if global_position.distance_to(npc.global_position) <= raio:
+			npc.tomar_susto("comida", medo)
+			npc.atordoar(tempo_vomitando)
+			# vira a poça de vômito e some quando ele termina de vomitar
+			texture = textura_vomito
+			set_physics_process(false)
+			get_tree().create_timer(tempo_vomitando).timeout.connect(queue_free)
+			return

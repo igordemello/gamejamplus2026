@@ -1,0 +1,281 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/cao.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/acao.gd" id="2_acao"]
+[ext_resource type="Texture2D" path="res://assets/cao possuido/loboIdle128x128.png" id="3_idle"]
+[ext_resource type="Texture2D" path="res://assets/cao possuido/LoboAgarrar128x128.png" id="4_agarrar"]
+[ext_resource type="Texture2D" path="res://assets/cao possuido/LoboAgarrado128x128.png" id="5_agarrado"]
+[ext_resource type="Texture2D" path="res://assets/cao possuido/RugidoLobo128x128.png" id="6_rugido"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle0"]
+atlas = ExtResource("3_idle")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle1"]
+atlas = ExtResource("3_idle")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle2"]
+atlas = ExtResource("3_idle")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle3"]
+atlas = ExtResource("3_idle")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle4"]
+atlas = ExtResource("3_idle")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle5"]
+atlas = ExtResource("3_idle")
+region = Rect2(640, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle6"]
+atlas = ExtResource("3_idle")
+region = Rect2(768, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idle7"]
+atlas = ExtResource("3_idle")
+region = Rect2(896, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_agarrar0"]
+atlas = ExtResource("4_agarrar")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_agarrar1"]
+atlas = ExtResource("4_agarrar")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_agarrar2"]
+atlas = ExtResource("4_agarrar")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_agarrar3"]
+atlas = ExtResource("4_agarrar")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_agarrado0"]
+atlas = ExtResource("5_agarrado")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_agarrado1"]
+atlas = ExtResource("5_agarrado")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_agarrado2"]
+atlas = ExtResource("5_agarrado")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_agarrado3"]
+atlas = ExtResource("5_agarrado")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_agarrado4"]
+atlas = ExtResource("5_agarrado")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_agarrado5"]
+atlas = ExtResource("5_agarrado")
+region = Rect2(640, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_agarrado6"]
+atlas = ExtResource("5_agarrado")
+region = Rect2(768, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_agarrado7"]
+atlas = ExtResource("5_agarrado")
+region = Rect2(896, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rugido0"]
+atlas = ExtResource("6_rugido")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rugido1"]
+atlas = ExtResource("6_rugido")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rugido2"]
+atlas = ExtResource("6_rugido")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rugido3"]
+atlas = ExtResource("6_rugido")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rugido4"]
+atlas = ExtResource("6_rugido")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rugido5"]
+atlas = ExtResource("6_rugido")
+region = Rect2(640, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rugido6"]
+atlas = ExtResource("6_rugido")
+region = Rect2(768, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rugido7"]
+atlas = ExtResource("6_rugido")
+region = Rect2(896, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rugido8"]
+atlas = ExtResource("6_rugido")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rugido9"]
+atlas = ExtResource("6_rugido")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_mastigar"]
+atlas = ExtResource("5_agarrado")
+region = Rect2(300, 28, 42, 70)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_latido"]
+atlas = ExtResource("6_rugido")
+region = Rect2(647, 0, 114, 109)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cao"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idle7")
+}],
+"loop": true,
+"name": &"parado",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_agarrar0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_agarrar1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_agarrar2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_agarrar3")
+}],
+"loop": false,
+"name": &"agarrar",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_agarrado0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_agarrado1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_agarrado2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_agarrado3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_agarrado4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_agarrado5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_agarrado6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_agarrado7")
+}],
+"loop": true,
+"name": &"mastigar",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rugido0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rugido1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rugido2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rugido3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rugido4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rugido5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rugido6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rugido7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rugido8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rugido9")
+}],
+"loop": false,
+"name": &"latir",
+"speed": 12.0
+}]
+
+[sub_resource type="Resource" id="Resource_mastigar"]
+script = ExtResource("2_acao")
+nome = "Mastigar"
+icone = SubResource("AtlasTexture_icone_mastigar")
+descricao = "Vai até a pessoa mais perto no cômodo e mastiga a perna dela. Só ela se assusta. Medo 15."
+recarga = 15.0
+metodo = &"mastigar"
+
+[sub_resource type="Resource" id="Resource_latido"]
+script = ExtResource("2_acao")
+nome = "Latido Feral"
+icone = SubResource("AtlasTexture_icone_latido")
+descricao = "Um latido invertido que assusta todo mundo no cômodo. Medo 10."
+recarga = 5.0
+metodo = &"latido_feral"
+
+[node name="Cão Possuído" type="Node2D"]
+script = ExtResource("1_script")
+custo = 16
+tier = 2
+tipo = 2
+comodos_proibidos = Array[String](["quarto"])
+acoes = Array[ExtResource("2_acao")]([SubResource("Resource_mastigar"), SubResource("Resource_latido")])
+raio_clique = 45.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(1.25, 1.25)
+sprite_frames = SubResource("SpriteFrames_cao")
+animation = &"parado"
+autoplay = "parado"

@@ -1,0 +1,82 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/config.gd" id="1_config"]
+
+[node name="config" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_config")
+
+[node name="fundo" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="painel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -160.0
+offset_right = 260.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="margem" type="MarginContainer" parent="painel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 20
+
+[node name="itens" type="VBoxContainer" parent="painel/margem"]
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="titulo" type="Label" parent="painel/margem/itens"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Configurações"
+horizontal_alignment = 1
+
+[node name="linha_volume" type="HBoxContainer" parent="painel/margem/itens"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="rotulo" type="Label" parent="painel/margem/itens/linha_volume"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Volume"
+
+[node name="volume" type="HSlider" parent="painel/margem/itens/linha_volume"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+value = 100.0
+
+[node name="tela_cheia" type="CheckButton" parent="painel/margem/itens"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Tela cheia"
+
+[node name="voltar" type="Button" parent="painel/margem/itens"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Voltar"
