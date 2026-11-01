@@ -1,0 +1,122 @@
+[gd_scene format=3 uid="uid://dlq3otged2xdr"]
+
+[ext_resource type="Shader" uid="uid://bo6qi60mj0v2y" path="res://assets/neblina.gdshader" id="1_628cs"]
+[ext_resource type="FontFile" uid="uid://bw8xfuto4kao2" path="res://fonts/Halloween Spooky.otf" id="2_pnght"]
+[ext_resource type="Script" path="res://scripts/credito.gd" id="3_credito"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_pnght"]
+frequency = 0.012
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_neblina"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_pnght")
+seamless = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_b0av2"]
+shader = ExtResource("1_628cs")
+shader_parameter/ruido = SubResource("NoiseTexture2D_neblina")
+shader_parameter/cor = Color(0.85, 0.85, 0.85, 1)
+shader_parameter/densidade = 0.15
+shader_parameter/vento = Vector2(0.012, 0.003)
+shader_parameter/escala = 0.8
+shader_parameter/tamanho = Vector2(1920, 1080)
+shader_parameter/pixel = 8.0
+shader_parameter/degraus = 4.0
+shader_parameter/borda = 0.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_b0av2"]
+font = ExtResource("2_pnght")
+font_size = 251
+outline_size = 15
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_g4v7s"]
+font = ExtResource("2_pnght")
+font_size = 101
+
+[node name="Credito" type="Control" unique_id=226988781]
+script = ExtResource("3_credito")
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=143623177]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="neblina" type="ColorRect" parent="." unique_id=857597739]
+material = SubResource("ShaderMaterial_b0av2")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="." unique_id=1184013554]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -693.0
+offset_top = -441.0
+offset_right = 693.0
+offset_bottom = -189.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 63
+text = "Resident Haunter"
+label_settings = SubResource("LabelSettings_b0av2")
+
+[node name="Label2" type="Label" parent="." unique_id=1275384180]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -693.0
+offset_top = -116.0
+offset_right = 693.0
+offset_bottom = 406.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 63
+text = "Nicholas Esteves
+Igor Mello
+Enzo Toscano
+Arthur Pellenz
+Alan"
+label_settings = SubResource("LabelSettings_g4v7s")
+horizontal_alignment = 1
+
+[node name="voltar" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -175.0
+offset_top = -96.0
+offset_right = 175.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 36
+text = "Voltar ao menu"
+
+[connection signal="pressed" from="voltar" to="." method="_on_voltar_pressed"]
