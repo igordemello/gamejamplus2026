@@ -1,5 +1,7 @@
 extends CanvasLayer
 
+@export var objeto_levitavel: Sprite2D
+
 # tutorial do começo: uma frase por passo num painel no topo, com o jogo rodando atrás e o destaque
 # no que ela fala (controle da tela pulsando, ou seta e brilho em cima de algo do mundo).
 # os passos com "feito" passam sozinhos quando o jogador faz o que foi pedido.
@@ -37,7 +39,7 @@ func comecar(casa) -> void:
 	passos = [
 		{"texto": "Assuste todo mundo da festa até a casa ficar vazia."},
 		{"texto": "Segure o botão esquerdo no objeto que flutua: ele assusta quem estiver no cômodo.",
-			"alvo": func(): return get_tree().get_first_node_in_group("levitavel"),
+			"alvo": func(): return objeto_levitavel if is_instance_valid(objeto_levitavel) and objeto_levitavel.is_in_group("levitavel") else null,
 			"feito": func(): return GameManager.sustos >= 1},
 		{"texto": "Cada nível de medo vale 1 susto.",
 			"destaque": house.ui.get_node("contadores/sustos"), "auto": 4.0},
