@@ -40,7 +40,7 @@ func comecar(casa) -> void:
 		{"texto": "Assuste todo mundo da festa até a casa ficar vazia."},
 		{"texto": "Segure o botão esquerdo no objeto que flutua: ele assusta quem estiver no cômodo.",
 			"alvo": func(): return objeto_levitavel if is_instance_valid(objeto_levitavel) and objeto_levitavel.is_in_group("levitavel") else null,
-			"feito": func(): return GameManager.sustos >= 1},
+			"feito": func(): return GameManager.sustos >= 6},
 		{"texto": "Cada nível de medo vale 1 susto.",
 			"destaque": house.ui.get_node("contadores/sustos"), "auto": 4.0},
 		{"texto": "Junte sustos e arraste uma carta do baralho pra casa.",
