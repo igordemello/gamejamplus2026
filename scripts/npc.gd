@@ -79,7 +79,8 @@ enum Estado {
 
 var current_estado = Estado.Normal
 
-@export var reducao_por_nivel: float = 0.1
+@export var reducao_por_nivel: float = 0.05
+# sem uso: o mesmo susto repetido seguido já não é ignorado
 var last_susto: String = ""
 
 @export var distancia_fuga: float = 15.0
@@ -120,7 +121,7 @@ func _ready() -> void:
 		add_child(sirene)
 	medidor = Node2D.new()
 	medidor.z_index = 2
-	medidor.position = Vector2(0, topo_desenho - 8.0)
+	medidor.position = Vector2(0, topo_desenho - 16.0)
 	medidor.material = SEM_LUZ
 	add_child(medidor)
 	medidor.draw.connect(_desenhar_medidor)
@@ -362,9 +363,6 @@ func get_random_point_in_region(region: NavigationRegion2D) -> Vector2:
 func tomar_susto(susto: String, pontosDeSusto: int, fantasma: Fantasma = null) -> void:
 	if current_estado == Estado.Infarta:
 		return
-	# TEM QUE LEMBRAR DE TIRAR ESSA PORRA HEIN
-	if susto == last_susto:
-		return
 	if pontosDeSusto <= 0:
 		return
 
@@ -373,9 +371,6 @@ func tomar_susto(susto: String, pontosDeSusto: int, fantasma: Fantasma = null) -
 	)
 
 	var pontos_recebidos = pontosDeSusto * multiplicador_nivel * house.intensidade_susto(global_position) / resistencia
-
-	if susto != "objeto":
-		last_susto = susto
 
 	pular_de_susto()
 	house.registrar_susto(global_position)
@@ -457,14 +452,16 @@ func _desenhar_medidor() -> void:
 		desenhar_monitor()
 		return
 	var a = alfa_medidor
-	var largura = 40.0
-	var barra = Rect2(-largura / 2.0, 0, largura, 5)
-	medidor.draw_rect(barra.grow(1.0), Color(0, 0, 0, a))
+	var largura = 60.0
+	var barra = Rect2(-largura / 2.0, 0, largura, 8)
+	medidor.draw_rect(barra.grow(2.0), Color(0, 0, 0, a))
 	medidor.draw_rect(barra, Color(0.25, 0.25, 0.25, a))
-	medidor.draw_rect(Rect2(barra.position, Vector2(largura * barra_mostrada / 100.0, 5)), Color(1, 1, 1, a))
+	medidor.draw_rect(Rect2(barra.position, Vector2(largura * barra_mostrada / 100.0, 8)), Color(1, 1, 1, a))
+	# os 5 quadradinhos de nível ocupam a largura toda da barra
+	var passo = (largura - 9.0) / 4.0
 	for i in 5:
-		var nivel = Rect2(-largura / 2.0 + i * 8.75, -7, 5, 4)
-		medidor.draw_rect(nivel.grow(1.0), Color(0, 0, 0, a))
+		var nivel = Rect2(-largura / 2.0 + i * passo, -12, 9, 7)
+		medidor.draw_rect(nivel.grow(1.5), Color(0, 0, 0, a))
 		medidor.draw_rect(nivel, Color(1, 1, 1, a) if i < nivel_medo else Color(0.25, 0.25, 0.25, a))
 
 # o peito sobe e desce esticando o desenho pra cima (o pivô do sprite fica nos pés).
@@ -523,8 +520,8 @@ func marcar() -> void:
 	marca.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	marca.material = SEM_LUZ
 	marca.modulate = Color(1, 0.25, 0.25)
-	# acima do medidor de medo (a barra e os quadradinhos de nível ocupam uns 14 px)
-	altura_marca = medidor.position.y - 20.0
+	# acima do medidor de medo (os quadradinhos de nível sobem até uns 14 px do ponto dele)
+	altura_marca = medidor.position.y - 28.0
 	marca.scale = Vector2(0.6, 0.6)
 	marca.position = Vector2(0, altura_marca)
 	marca.z_index = 2

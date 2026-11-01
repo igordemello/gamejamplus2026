@@ -3,6 +3,10 @@ extends Node2D
 # invocação de fantasma comprado na loja: o pentagrama se desenha no chão, brilha,
 # solta brasas e, no clarão, o fantasma sai do meio dele. a area_jogo cria isso no lugar do spawn
 
+# quem estiver a esse raio do pentagrama leva um susto pequeno quando o fantasma sai
+@export var raio_susto: float = 160.0
+@export var medo_susto: int = 10
+
 var fantasma: Fantasma
 var tempo: float = 0.0
 var brilho: float = 1.0
@@ -51,3 +55,14 @@ func _soltar_fantasma() -> void:
 	house.pos.chutar(3.0)
 	house.piscar_luzes(global_position, 0.3)
 	Onomatopeia.soltar("VUUSH!", global_position + Vector2(0, -90), Color(1, 0.35, 0.3))
+	assustar_perto()
+
+# o clarão assusta quem está em volta do pentagrama
+func assustar_perto() -> void:
+	var assustou = false
+	for npc in get_tree().get_nodes_in_group("npc"):
+		if pentagrama.global_position.distance_to(npc.global_position) <= raio_susto:
+			npc.tomar_susto("invocacao", medo_susto, fantasma)
+			assustou = true
+	if assustou:
+		Onomatopeia.soltar(["BU!", "AAAH!"].pick_random(), global_position + Vector2(randf_range(-70.0, 70.0), -150.0), Color(1, 0.95, 0.6))

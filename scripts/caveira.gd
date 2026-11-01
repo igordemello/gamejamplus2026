@@ -1,10 +1,10 @@
 extends Fantasma
 
 @export var raio_risada: float = 220.0
-@export var medo_risada: int = 14
+@export var medo_risada: int = 20
 
 @export var raio_mordida: float = 160.0
-@export var medo_mordida: int = 24
+@export var medo_mordida: int = 32
 @export var max_mordidos: int = 2
 @export var tempo_fugindo: float = 4.0
 # onde e de que tamanho os dentes aparecem no npc mordido
@@ -14,7 +14,7 @@ extends Fantasma
 @export var velocidade: float = 260.0
 @export var alcance_cabecada: float = 30.0
 @export var tempo_max_perseguindo: float = 6.0
-@export var medo_cabecada: int = 40
+@export var medo_cabecada: int = 55
 @export var duracao_stun_cabecada: float = 10.0
 # quanto do medo a pessoa perde por segundo enquanto está tonta da cabeçada
 @export var dreno_cabecada: float = 1.5
@@ -23,7 +23,7 @@ extends Fantasma
 
 var alvo: Npc
 var tempo_perseguindo: float = 0.0
-var tween_volta: Tween
+var voltando: bool = false
 # a lareira de onde saiu; volta pra cá depois da cabeçada
 var casa: Vector2
 
@@ -31,6 +31,12 @@ func _ready() -> void:
 	sprite.animation_finished.connect(_on_animacao_acabou)
 
 func _physics_process(delta: float) -> void:
+	if voltando:
+		andar_pelo_caminho(casa, velocidade * delta)
+		if global_position.distance_to(casa) <= 2.0:
+			global_position = casa
+			voltando = false
+		return
 	if not is_instance_valid(alvo) or sprite.animation != &"parada":
 		return
 	if casa == Vector2.ZERO:
@@ -42,14 +48,14 @@ func _physics_process(delta: float) -> void:
 		voltar_pra_casa()
 		return
 
-	# é uma aparição: flutua reto atrás da pessoa, atravessando parede
+	# é uma aparição, mas segue o caminho da casa como todo mundo: não atravessa parede
 	if global_position.distance_to(alvo.global_position) <= alcance_cabecada:
 		# segura a pessoa parada até a cabeçada acertar
 		var frames = sprite.sprite_frames
 		alvo.atordoar(frames.get_frame_count("cabecada") / frames.get_animation_speed("cabecada"))
 		sprite.play("cabecada")
 	else:
-		global_position = global_position.move_toward(alvo.global_position, velocidade * delta)
+		andar_pelo_caminho(alvo.global_position, velocidade * delta)
 
 func ocupada() -> bool:
 	return sprite.animation != &"parada" or is_instance_valid(alvo)
@@ -96,8 +102,7 @@ func cabecada() -> bool:
 	tempo_perseguindo = 0.0
 	if casa == Vector2.ZERO:
 		casa = global_position
-	if tween_volta:
-		tween_volta.kill()
+	voltando = false
 	return true
 
 # os dentes fantasmas (com a aura) fechando em cima de quem foi mordido;
@@ -113,8 +118,7 @@ func mostrar_dentes(npc: Node2D) -> void:
 	dentes.animation_finished.connect(dentes.queue_free)
 
 func voltar_pra_casa() -> void:
-	tween_volta = create_tween()
-	tween_volta.tween_property(self, "global_position", casa, global_position.distance_to(casa) / velocidade).set_trans(Tween.TRANS_SINE)
+	voltando = true
 
 func _on_animacao_acabou() -> void:
 	if sprite.animation == &"cabecada" and is_instance_valid(alvo):

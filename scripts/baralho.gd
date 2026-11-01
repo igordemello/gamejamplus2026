@@ -13,11 +13,14 @@ extends Control
 # distância da carta levantada até a borda de baixo
 @export var folga_baixo: float = 10.0
 @export var tempo_subida: float = 0.12
+# câmera lenta enquanto uma carta é arrastada (o mesmo valor do menu de ações)
+@export var tempo_lento: float = 0.25
 
 var hover: Control
 # carta -> [pé (base-centro) e giro dela em repouso]
 var repouso: Dictionary = {}
 var tweens: Dictionary = {}
+var lento: bool = false
 
 func _ready() -> void:
 	resized.connect(organizar)
@@ -101,7 +104,26 @@ func _input(event: InputEvent) -> void:
 func _process(_delta: float) -> void:
 	if hover and get_viewport().gui_is_dragging():
 		escolher(null)
+	atualizar_tempo()
+
+# o tempo desliza pra lento enquanto uma carta daqui está sendo arrastada, e volta ao soltar ou cancelar
+func atualizar_tempo() -> void:
+	var viewport = get_viewport()
+	var carta = viewport.gui_get_drag_data()
+	var arrastando = viewport.gui_is_dragging() and is_instance_valid(carta) and carta.get_parent() == self
+	if arrastando == lento:
+		return
+	lento = arrastando
+	GameManager.mudar_tempo(tempo_lento if arrastando else 1.0, 0.15 if arrastando else 0.1)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_MOUSE_EXIT:
 		escolher(null)
+	# soltar ou cancelar (Esc, botão direito) volta o tempo na hora, mesmo se o jogo estiver pausado
+	elif what == NOTIFICATION_DRAG_END:
+		atualizar_tempo()
+
+# saiu da casa com uma carta na mão: o tempo volta ao normal
+func _exit_tree() -> void:
+	if lento:
+		GameManager.tempo_normal()

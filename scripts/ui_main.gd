@@ -1,12 +1,31 @@
 extends CanvasLayer
 
 const FOCO = preload("res://assets/foco.gdshader")
+# objetivo em andamento (tom de papel), feito (branco) e falhou (apagado)
+const COR_LINHA = [Color(0.86, 0.84, 0.76), Color.WHITE, Color(0.5, 0.5, 0.5)]
 
 @onready var lbl_sustos: Label = $contadores/sustos/lbl_sustos
 @onready var lbl_mortes: Label = $contadores/mortes/lbl_mortes
 # o "+1" voa até esse ícone
 @onready var icone_sustos: Control = $contadores/sustos/icone
-@onready var objetivos: VBoxContainer = $objetivos/margem/coluna
+@onready var painel_objetivos: PanelContainer = $objetivos
+@onready var recorte_objetivos: Control = $objetivos/margem/coluna/recorte
+@onready var objetivos: VBoxContainer = $objetivos/margem/coluna/recorte/corpo
+@onready var botao_objetivos: Button = $objetivos/margem/coluna/cabecalho/botao
+@onready var resumo_objetivos: Label = $objetivos/margem/coluna/cabecalho/resumo
+# o painel de objetivos começa aberto e se fecha sozinho depois de tempo_objetivos; toda vez que abre
+# de novo (botão, tutorial) fecha depois de tempo_reaberto, e um objetivo que muda abre por tempo_aviso.
+# com o mouse em cima ele não fecha
+@export var tempo_objetivos: float = 12.0
+@export var tempo_reaberto: float = 8.0
+@export var tempo_aviso: float = 6.0
+var objetivos_abertos: bool = true
+var restante_objetivos: float = 0.0
+# 1 = aberto, 0 = só a barra do cabeçalho (anima entre os dois)
+var abertura_objetivos: float = 1.0
+var tween_objetivos: Tween
+# cada linha de objetivo: 0 em andamento, 1 feito, 2 falhou (pra abrir o painel quando muda)
+var estado_linhas: Dictionary = {}
 # retrato de cada marcado no painel de objetivos
 var retratos: Dictionary = {}
 
@@ -26,9 +45,13 @@ var foco_raio: float = 0.6
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	botao_objetivos.pressed.connect(func(): abrir_objetivos(not objetivos_abertos))
+	botao_objetivos.draw.connect(desenhar_seta)
+	restante_objetivos = tempo_objetivos
+	mostrar_objetivos(1.0)
 	sustos_antes = GameManager.sustos
 	mortes_antes = GameManager.mortes
-	$contadores/mortes.tooltip_text = "Mortes\nQuantas pessoas morreram de susto. Quem chega no medo máximo pelo fantasma\ncerto (o tipo e o tier que matam aquele tipo de pessoa) infarta em vez de fugir.\nCada infarto vale 3 sustos. Com %d mortes a polícia é chamada." % get_parent().limite_mortes
+	$contadores/mortes.tooltip_text = "Mortes\nQuantas pessoas morreram de susto. Com %d mortes a polícia é chamada." % get_parent().limite_mortes
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -46,6 +69,15 @@ func _process(delta: float) -> void:
 	# fica mais vermelho conforme chega perto do limite (a polícia)
 	lbl_mortes.add_theme_color_override("font_color", Color.WHITE.lerp(Color(1, 0.15, 0.15), clampf(GameManager.mortes / float(get_parent().limite_mortes), 0.0, 1.0)))
 	atualizar_objetivos()
+	if objetivos_abertos:
+		# com o mouse em cima não fecha: some uns instantes depois que ele sair
+		if painel_objetivos.get_global_rect().has_point(get_viewport().get_mouse_position()):
+			restante_objetivos = maxf(restante_objetivos, 1.5)
+		restante_objetivos -= minf(delta / maxf(Engine.time_scale, 0.01), 0.05)
+		if restante_objetivos <= 0.0:
+			abrir_objetivos(false)
+	# o texto muda e o painel acompanha o tamanho
+	mostrar_objetivos(abertura_objetivos)
 
 	if foco and foco.visible:
 		foco.material.set_shader_parameter("forca", foco_forca)
@@ -72,26 +104,73 @@ func marcar_retrato(npc, morreu: bool) -> void:
 	if retratos.has(npc):
 		retratos[npc].modulate = Color(1, 0.25, 0.25, 0.7) if morreu else Color(0.4, 0.4, 0.4, 0.4)
 
+# fechado fica só a barrinha do cabeçalho (título, resumo e botão); abre e fecha deslizando
+func abrir_objetivos(abrir: bool = true, tempo: float = -1.0) -> void:
+	restante_objetivos = tempo if tempo > 0.0 else tempo_reaberto
+	if abrir == objetivos_abertos:
+		return
+	objetivos_abertos = abrir
+	if tween_objetivos:
+		tween_objetivos.kill()
+	tween_objetivos = create_tween().set_ignore_time_scale()
+	tween_objetivos.tween_method(mostrar_objetivos, abertura_objetivos, 1.0 if abrir else 0.0, 0.2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+
+# um objetivo mudou de estado: abre sozinho um pouco (se já está aberto, só garante o tempo)
+func avisar_objetivos() -> void:
+	if objetivos_abertos:
+		restante_objetivos = maxf(restante_objetivos, tempo_aviso)
+	else:
+		abrir_objetivos(true, tempo_aviso)
+
+# t de 0 a 1: o corpo do painel encolhe (cortado, subindo e sumindo) e o resumo aparece na barra
+func mostrar_objetivos(t: float) -> void:
+	abertura_objetivos = t
+	recorte_objetivos.visible = t > 0.0
+	recorte_objetivos.custom_minimum_size.y = objetivos.get_combined_minimum_size().y * t
+	# offset, não position: o corpo é ancorado e position fixaria a largura que ele tem na hora
+	objetivos.offset_top = -(1.0 - t) * 18.0
+	objetivos.modulate.a = t
+	resumo_objetivos.modulate.a = 1.0 - t
+	botao_objetivos.queue_redraw()
+	# o painel só cresce sozinho: encolhe de volta ao tamanho do que sobrou
+	painel_objetivos.reset_size()
+
+# triângulo no botão: aponta pra baixo fechado (abrir) e gira pra cima aberto (fechar)
+func desenhar_seta() -> void:
+	var modo = botao_objetivos.get_draw_mode()
+	var cor = botao_objetivos.get_theme_color("font_pressed_color" if modo in [BaseButton.DRAW_PRESSED, BaseButton.DRAW_HOVER_PRESSED] else "font_hover_color" if modo == BaseButton.DRAW_HOVER else "font_color")
+	botao_objetivos.draw_set_transform(botao_objetivos.size / 2.0, PI * abertura_objetivos)
+	botao_objetivos.draw_colored_polygon(PackedVector2Array([Vector2(-8, -4), Vector2(8, -4), Vector2(0, 5)]), cor)
+
 func atualizar_objetivos() -> void:
 	var h = get_parent()
-	objetivos.get_node("casa").text = "Tirar todo mundo da casa (restam %d)" % get_tree().get_nodes_in_group("npc").size()
+	var restam = get_tree().get_nodes_in_group("npc").size()
+	objetivos.get_node("casa").text = "Tirar todo mundo da casa (restam %d)" % restam
 	linha(objetivos.get_node("marcados"), "Matar os %d marcados (%d/%d)" % [h.marcados.size(), h.marcados_mortos, h.marcados.size()],
 		h.objetivo_marcados, h.marcado_escapou)
 	linha(objetivos.get_node("comodos"), "Assustar em todos os cômodos juntos (%d/%d)" % [h.comodos_assustados(), h.regionsHouse.size()],
 		h.objetivo_comodos, false)
 	linha(objetivos.get_node("policial"), "Matar um policial" + ("" if h.policia_chamada else " (vem com %d mortes)" % h.limite_mortes),
 		h.objetivo_policial, false)
+	# o que aparece na barra com o painel fechado
+	var feitos = int(h.objetivo_marcados) + int(h.objetivo_comodos) + int(h.objetivo_policial)
+	resumo_objetivos.text = "%s %d" % ["resta" if restam == 1 else "restam", restam]
+	if feitos > 0:
+		resumo_objetivos.text += " · %d feito%s" % [feitos, "" if feitos == 1 else "s"]
 
+# a cor só muda quando o estado muda (e aí o painel abre pra mostrar)
 func linha(lbl: Label, texto: String, feito: bool, falhou: bool) -> void:
+	var estado = 1 if feito else 2 if falhou else 0
+	if estado != estado_linhas.get(lbl, 0):
+		estado_linhas[lbl] = estado
+		lbl.add_theme_color_override("font_color", COR_LINHA[estado])
+		avisar_objetivos()
 	if feito:
 		lbl.text = texto + " - feito!"
-		lbl.modulate = Color(0.6, 1, 0.6)
 	elif falhou:
 		lbl.text = texto + " - falhou"
-		lbl.modulate = Color(0.5, 0.5, 0.5)
 	else:
 		lbl.text = texto
-		lbl.modulate = Color.WHITE
 
 # o número cresce (ou encolhe) do meio e volta
 func pular(lbl: Label, tween: Tween, tamanho: float) -> Tween:

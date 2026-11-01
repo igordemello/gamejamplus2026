@@ -34,6 +34,8 @@ const NOME_TIPO = {
 
 @export var acoes: Array[Acao] = []
 @export var raio_clique: float = 32.0
+# só aparece na loja depois dessa quantidade de infartos (GameManager.mortes)
+@export var mortes_para_liberar: int = 0
 
 var recarga_restante: Dictionary = {}
 var selecionado: bool = false
@@ -48,6 +50,13 @@ var escala_raiz: Vector2 = Vector2.ZERO
 # brilho de ectoplasma em volta, pulsando devagar (no escuro é por ele que se acha o fantasma)
 var luz: PointLight2D
 var tempo_luz: float = randf() * TAU
+# o mouse está em cima (decidido no _process): depois de entrar, o raio fica maior pra sair
+var no_hover: bool = false
+# caminho da navegação até o destino de andar_pelo_caminho
+var caminho: PackedVector2Array = PackedVector2Array()
+var indice_caminho: int = 0
+var destino_caminho: Vector2 = Vector2.INF
+var quadro_caminho: int = 0
 
 func _enter_tree() -> void:
 	add_to_group("fantasma")
@@ -61,9 +70,11 @@ func _enter_tree() -> void:
 		add_child(luz)
 
 func _process(delta: float) -> void:
+	# em tempo real: a câmera lenta do menu de ações não pode atrasar a recarga
+	var real = minf(delta / maxf(Engine.time_scale, 0.01), 0.05)
 	for acao in recarga_restante:
 		var antes = recarga_restante[acao]
-		recarga_restante[acao] = maxf(antes - delta, 0.0)
+		recarga_restante[acao] = maxf(antes - real, 0.0)
 		# piscadinha avisando que a ação ficou pronta de novo
 		if antes > 0.0 and recarga_restante[acao] == 0.0:
 			piscar(1, 0.08)
@@ -71,13 +82,13 @@ func _process(delta: float) -> void:
 	tempo_luz += delta
 	luz.energy = 0.55 + 0.15 * sin(tempo_luz * 1.5)
 
-	var destaque = selecionado or mouse_em_cima()
+	no_hover = mouse_em_cima()
+	var destaque = selecionado or no_hover
 	$AnimatedSprite2D.material = material_fantasma
 	material_fantasma.set_shader_parameter("contorno", destaque)
 	if not (tween_aparecer and tween_aparecer.is_running()):
 		if escala_raiz == Vector2.ZERO:
 			escala_raiz = scale
-		var real = minf(delta / maxf(Engine.time_scale, 0.01), 0.05)
 		scale = scale.lerp(escala_raiz * (1.08 if destaque else 1.0), minf(15.0 * real, 1.0))
 
 # onomatopeia em cima do desenho (a luz fica no meio dele)
@@ -93,11 +104,12 @@ func piscar(vezes: int, duracao: float) -> void:
 		tween.tween_callback(material_fantasma.set_shader_parameter.bind("brilho", 0.0))
 		tween.tween_interval(duracao)
 
-# mede do meio do desenho, porque alguns fantasmas têm a origem nos pés
+# mede do meio do desenho, porque alguns fantasmas têm a origem nos pés. com ele em destaque o raio
+# é maior: o fantasma cresce 8% e o centro do desenho anda, e sem folga o hover ficava piscando na borda
 func mouse_em_cima() -> bool:
 	var sprite: AnimatedSprite2D = $AnimatedSprite2D
 	var centro = sprite.global_position + sprite.offset * sprite.global_scale
-	return centro.distance_to(get_global_mouse_position()) <= raio_clique
+	return centro.distance_to(get_global_mouse_position()) <= raio_clique * (1.25 if no_hover else 1.0)
 
 func executar(acao: Acao) -> void:
 	if recarga_restante.get(acao, 0.0) <= 0.0 and call(acao.metodo):
@@ -144,6 +156,24 @@ func negar() -> void:
 	tween_negar = create_tween()
 	for x in [passo, -passo, passo * 0.5, 0.0]:
 		tween_negar.tween_property(sprite, "offset:x", x, 0.05)
+
+# anda um passo até o destino seguindo a malha de navegação da casa (camada 1, a dos NPCs),
+# então não atravessa parede. recalcula o caminho quando o destino muda mais de 8 px
+# (ou quando ficou um quadro sem andar, porque aí o caminho guardado é de outra viagem)
+func andar_pelo_caminho(destino: Vector2, passo: float) -> void:
+	var quadro = Engine.get_physics_frames()
+	if caminho.is_empty() or quadro - quadro_caminho > 1 or destino_caminho.distance_to(destino) > 8.0:
+		destino_caminho = destino
+		caminho = NavigationServer2D.map_get_path(get_world_2d().navigation_map, global_position, destino, true, 1)
+		indice_caminho = 0
+	while indice_caminho < caminho.size() and global_position.distance_to(caminho[indice_caminho]) < 1.0:
+		indice_caminho += 1
+	quadro_caminho = quadro
+	# sem caminho, fica parado; acabando o caminho, o último trecho até o destino é curto
+	if caminho.is_empty():
+		return
+	var proximo = caminho[indice_caminho] if indice_caminho < caminho.size() else destino
+	global_position = global_position.move_toward(proximo, passo)
 
 func npc_mais_perto() -> Npc:
 	var meu_comodo = GameManager.house.comodo_em(global_position)

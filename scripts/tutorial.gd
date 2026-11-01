@@ -1,19 +1,24 @@
 extends CanvasLayer
 
-# tutorial do começo: passos curtos num painel no topo, com o jogo rodando atrás.
+# tutorial do começo: uma frase por passo num painel no topo, com o jogo rodando atrás e o destaque
+# no que ela fala (controle da tela pulsando, ou seta e brilho em cima de algo do mundo).
 # os passos com "feito" passam sozinhos quando o jogador faz o que foi pedido.
 # a casa chama comecar() toda vez que a partida começa; a pausa tem "Como jogar"
 
-@onready var titulo: Label = %titulo
 @onready var texto: Label = %texto
 @onready var proximo: Button = %proximo
+@onready var seta: Node2D = $seta
 
 var house
 var passos: Array = []
 var atual: int = 0
+# tempo real (a câmera lenta do menu de ações não atrasa o tutorial)
 var tempo: float = 0.0
-# o que fica piscando pra chamar atenção no passo atual
+var tempo_passo: float = 0.0
+# controle da tela que pulsa no passo atual
 var destaque: CanvasItem
+# coisa do mundo que pulsa e leva a seta em cima, resolvida todo quadro pelo "alvo" do passo
+var alvo: CanvasItem
 # como estava quando o passo começou, pra saber se o jogador já fez
 var zoom_inicial: float
 var arrastado_inicial: float
@@ -24,70 +29,124 @@ func _ready() -> void:
 	hide()
 	%pular.pressed.connect(terminar)
 	proximo.pressed.connect(avancar)
+	seta.draw.connect(desenhar_seta)
 
 func comecar(casa) -> void:
 	house = casa
 	var cam = house.camera
 	passos = [
-		{"titulo": "Bem-vindo, fantasma", "texto": "A casa está cheia de gente em festa. Seu trabalho é assustar todo mundo até a casa ficar vazia."},
-		{"titulo": "Zoom", "texto": "Role a rodinha do mouse para aproximar ou afastar a câmera.",
-			"feito": func(): return absf(cam.zoom_alvo - zoom_inicial) > 0.01},
-		{"titulo": "Andar pela casa", "texto": "Com a câmera aproximada, segure o botão direito do mouse e arraste para andar pela casa.",
-			"feito": func(): return cam.arrastado - arrastado_inicial > 150.0},
-		{"titulo": "Chamar fantasmas", "texto": "Arraste um fantasma do baralho, lá embaixo, até a casa. Cada um custa sustos, e alguns só podem ficar em certos lugares (está escrito na carta).",
+		{"texto": "Assuste todo mundo da festa até a casa ficar vazia."},
+		{"texto": "Segure o botão esquerdo no objeto que flutua: ele assusta quem estiver no cômodo.",
+			"alvo": func(): return get_tree().get_first_node_in_group("levitavel"),
+			"feito": func(): return GameManager.sustos >= 1},
+		{"texto": "Cada nível de medo vale 1 susto.",
+			"destaque": house.ui.get_node("contadores/sustos"), "auto": 4.0},
+		{"texto": "Junte sustos e arraste uma carta do baralho pra casa.",
 			"destaque": house.ui.get_node("painel_fantasmas"),
 			"feito": func(): return get_tree().get_nodes_in_group("fantasma").size() > fantasmas_inicial},
-		{"titulo": "Usar ações", "texto": "Segure o botão esquerdo em cima de um fantasma: o tempo desacelera e aparecem as ações dele. Arraste até uma e solte. Cada ação tem recarga.",
+		{"texto": "Segure o botão esquerdo no fantasma e solte numa ação.",
+			"alvo": ultimo_fantasma,
 			"feito": func(): return get_tree().get_nodes_in_group("fantasma").any(func(f): return f.recarga_restante.values().any(func(r): return r > 0.0))},
-		{"titulo": "Objetos", "texto": "Alguns objetos da casa flutuam: segure o botão esquerdo em cima de um para ele levitar e assustar quem estiver no mesmo cômodo."},
-		{"titulo": "Medo", "texto": "Cada susto enche a barrinha em cima da pessoa. Barra cheia: ela sobe um nível de medo e você ganha 1 susto. No nível 5 ela foge da casa.",
-			"destaque": house.ui.get_node("contadores/sustos")},
-		{"titulo": "Infarto", "texto": "Cada tipo de pessoa tem um fantasma que mata ela do coração (o tipo e o tier certos). Infarto vale 3 sustos, mas com %d mortes a polícia é chamada, e o policial é duas vezes mais difícil de assustar." % house.limite_mortes,
-			"destaque": house.ui.get_node("contadores/mortes")},
-		{"titulo": "Objetivos", "texto": "Para vencer, tire todo mundo da casa e cumpra um dos objetivos do painel: matar os marcados (caveira vermelha na cabeça), assustar todos os cômodos ao mesmo tempo ou matar um policial.",
-			"destaque": house.ui.get_node("objetivos")},
-		{"titulo": "Pronto!", "texto": "Esc pausa o jogo, e na pausa dá para ver este tutorial de novo. Boa assombração!"},
+		{"texto": "Rodinha: zoom. Botão direito: arrasta a câmera.",
+			"feito": func(): return absf(cam.zoom_alvo - zoom_inicial) > 0.01 or cam.arrastado - arrastado_inicial > 100.0},
+		{"texto": "Mate de susto os marcados com caveira, ou cumpra outro objetivo do painel.",
+			"destaque": house.ui.get_node("objetivos"), "abrir_objetivos": true},
+		{"texto": "Com %d mortes a polícia vem. Esc pausa. Boa assombração!" % house.limite_mortes},
 	]
 	atual = -1
 	show()
 	avancar()
 
 func avancar() -> void:
-	if destaque:
-		destaque.modulate = Color.WHITE
+	apagar_destaques()
 	atual += 1
 	if atual >= passos.size():
 		terminar()
 		return
 	var passo = passos[atual]
-	titulo.text = "%s   (%d/%d)" % [passo.titulo, atual + 1, passos.size()]
 	texto.text = passo.texto
 	proximo.text = "Começar" if atual == passos.size() - 1 else "Próximo"
 	destaque = passo.get("destaque")
 	concluido = false
+	tempo_passo = 0.0
 	zoom_inicial = house.camera.zoom_alvo
 	arrastado_inicial = house.camera.arrastado
 	fantasmas_inicial = get_tree().get_nodes_in_group("fantasma").size()
+	# o painel de objetivos se fecha sozinho: no passo dele ele abre de novo
+	if passo.get("abrir_objetivos", false):
+		house.ui.abrir_objetivos(true)
 
 func _process(delta: float) -> void:
 	if atual < 0 or atual >= passos.size():
 		return
-	tempo += delta
+	var real = minf(delta / maxf(Engine.time_scale, 0.01), 0.05)
+	tempo += real
+	tempo_passo += real
+	var passo = passos[atual]
+	var brilho = Color.WHITE.lerp(Color(1.8, 1.8, 1.8), 0.5 + 0.5 * sin(tempo * 6.0))
 	if destaque:
-		destaque.modulate = Color.WHITE.lerp(Color(1.8, 1.8, 1.8), 0.5 + 0.5 * sin(tempo * 6.0))
-	var feito = passos[atual].get("feito")
+		destaque.modulate = brilho
+	# o alvo do mundo pode mudar de um quadro pro outro (o fantasma só existe depois do pentagrama)
+	var novo = passo["alvo"].call() if passo.has("alvo") else null
+	if novo != alvo:
+		tirar_brilho(alvo)
+		alvo = novo
+	if is_instance_valid(alvo):
+		brilho.a = alvo.modulate.a
+		alvo.modulate = brilho
+	seta.queue_redraw()
+
+	var feito = passo.get("feito")
 	if feito and not concluido and feito.call():
 		# fez o que o passo pedia: mostra que deu certo e passa sozinho
 		concluido = true
 		proximo.text = "Boa!"
 		var passo_agora = atual
-		get_tree().create_timer(0.9).timeout.connect(func():
+		get_tree().create_timer(0.8, true, false, true).timeout.connect(func():
 			if atual == passo_agora:
 				avancar())
+	elif passo.has("auto") and not concluido and tempo_passo >= passo["auto"]:
+		avancar()
 
 func terminar() -> void:
-	if destaque:
-		destaque.modulate = Color.WHITE
-	destaque = null
+	apagar_destaques()
 	atual = passos.size()
 	hide()
+
+# o fantasma invocado mais recente (null enquanto o pentagrama ainda não soltou nenhum)
+func ultimo_fantasma() -> Node:
+	var fantasmas = get_tree().get_nodes_in_group("fantasma")
+	return null if fantasmas.is_empty() else fantasmas.back()
+
+# o brilho de quem pulsa volta ao normal (só a cor: o alfa do fantasma aparecendo é de outro tween)
+func tirar_brilho(no: CanvasItem) -> void:
+	if is_instance_valid(no):
+		no.modulate = Color(1, 1, 1, no.modulate.a)
+
+func apagar_destaques() -> void:
+	tirar_brilho(destaque)
+	tirar_brilho(alvo)
+	destaque = null
+	alvo = null
+	seta.queue_redraw()
+
+# topo do desenho do alvo na tela (acompanha a câmera e o zoom)
+func topo_na_tela(no: CanvasItem) -> Vector2:
+	if no is Fantasma:
+		var sprite: AnimatedSprite2D = no.get_node("AnimatedSprite2D")
+		return sprite.get_global_transform_with_canvas() * sprite.offset - Vector2(0, no.raio_clique * house.camera.zoom.x)
+	var retangulo = no.get_rect()
+	return no.get_global_transform_with_canvas() * Vector2(retangulo.get_center().x, retangulo.position.y)
+
+# seta grande quicando, com a ponta em cima do alvo
+func desenhar_seta() -> void:
+	if not is_instance_valid(alvo):
+		return
+	var ponta = topo_na_tela(alvo) - Vector2(0, 8.0 + absf(sin(tempo * 4.5)) * 18.0)
+	var forma = PackedVector2Array([Vector2(0, 0), Vector2(-30, -36), Vector2(-13, -36), Vector2(-13, -76),
+		Vector2(13, -76), Vector2(13, -36), Vector2(30, -36)])
+	for i in forma.size():
+		forma[i] += ponta
+	seta.draw_colored_polygon(forma, Color(1, 0.85, 0.2))
+	forma.append(forma[0])
+	seta.draw_polyline(forma, Color(0.55, 0.3, 0.05), 3.0)

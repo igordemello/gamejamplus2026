@@ -40,6 +40,6 @@ func _on_configuracoes() -> void:
 
 func _on_menu() -> void:
 	despausar()
-	# se pausou segurando um fantasma, o menu de ações deixou o jogo em câmera lenta
-	Engine.time_scale = 1.0
+	# se pausou segurando um fantasma ou uma carta, o jogo ficou em câmera lenta
+	GameManager.tempo_normal()
 	get_tree().change_scene_to_file("res://scene/menu.tscn")

@@ -17,7 +17,7 @@ icone = SubResource("AtlasTexture_icone_comer")
 descricao = "Come e regorfa a comida no chão. Quem comer vai vomitar."
 resumo = "Come e regorfa a comida no chão, quem comer vai vomitar"
 propriedade_medo = &"medo_comida"
-recarga = 10.0
+recarga = 8.0
 metodo = &"comer_e_regorfar"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_icone_lambida"]
@@ -31,7 +31,7 @@ icone = SubResource("AtlasTexture_icone_lambida")
 descricao = "Vai até a pessoa mais perto no cômodo e dá um lambidão na cara. Ela sai correndo até bater numa parede e fica atordoada."
 resumo = "Vai até a pessoa mais perto no cômodo e dá um lambidão na cara"
 propriedade_medo = &"medo_lambida"
-recarga = 16.0
+recarga = 12.0
 metodo = &"lambidao"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lambida0"]
@@ -177,7 +177,7 @@ animations = [{
 [node name="Geleia Roxa" type="Node2D" unique_id=1509536684]
 script = ExtResource("1_geleia")
 cena_comida = ExtResource("4_comida")
-custo = 14
+custo = 9
 tier = 2
 comodo_spawn = "cozinha"
 acoes = Array[ExtResource("5_acao")]([SubResource("Resource_comer"), SubResource("Resource_lambidao")])

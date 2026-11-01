@@ -10,6 +10,9 @@ var comodo_spawn: String = ""
 var comodos_proibidos: Array[String] = []
 var pontos_spawn: StringName = &""
 var fora_de_casa: bool = false
+# só libera na loja com esse tanto de infartos (GameManager.mortes)
+var mortes_para_liberar: int = 0
+var estava_travada: bool = false
 var tipo: int = 0
 var tier: int = 1
 # o desenho do fantasma, pros pontos fixos mostrarem onde ele vai ficar
@@ -20,6 +23,7 @@ var silhueta_offset: Vector2
 # o que segue o mouse enquanto arrasta; a área do jogo deixa avermelhado onde não pode soltar
 var preview: Control
 var tween_chacoalho: Tween
+var tween_liberou: Tween
 
 func _ready() -> void:
 	var fantasma: Fantasma = cena.instantiate()
@@ -29,6 +33,7 @@ func _ready() -> void:
 	comodos_proibidos = fantasma.comodos_proibidos
 	pontos_spawn = fantasma.pontos_spawn
 	fora_de_casa = fantasma.fora_de_casa
+	mortes_para_liberar = fantasma.mortes_para_liberar
 	tipo = fantasma.tipo
 	tier = fantasma.tier
 	var sprite: AnimatedSprite2D = fantasma.get_node("AnimatedSprite2D")
@@ -45,6 +50,11 @@ func _ready() -> void:
 	# uma palavra por linha ("Geleia / Roxa")
 	$nome.text = fantasma.name.replace(" ", "\n")
 	caber($nome, area_nome, 32)
+	# tipo e tier numa linha discreta logo abaixo do nome, de uma ou duas linhas
+	$tipo.text = "%s · tier %d" % [Fantasma.NOME_TIPO[tipo], tier]
+	$tipo.position.y = $nome.position.y + $nome.get_minimum_size().y - 6.0
+	# nome de duas linhas: a arte desce pra não bater na linha do tipo
+	$arte.offset_top = maxf($arte.offset_top, $tipo.position.y + $tipo.get_minimum_size().y)
 	$custo.text = str(custo)
 	caber($custo, area_custo, 40)
 	atualizar_restantes()
@@ -54,10 +64,17 @@ func _ready() -> void:
 
 	# uma linha por ação; com 3 cabem só com letras menores
 	var acoes = fantasma.acoes
-	var altura = 114.0 / maxi(acoes.size(), 2)
+	var altura = 142.0 / maxi(acoes.size(), 2)
 	for acao in acoes:
-		criar_habilidade(acao, fantasma, altura, 16 if acoes.size() > 2 else 18, 34 if acoes.size() > 2 else 44)
+		criar_habilidade(acao, fantasma, altura, 19 if acoes.size() > 2 else 22, 40 if acoes.size() > 2 else 52)
 	fantasma.free()
+
+	# carta travada: escura, com o cadeado e o que falta pra liberar
+	$trava/texto.text = "Libera com %d %s" % [mortes_para_liberar, "morte" if mortes_para_liberar == 1 else "mortes"]
+	# logo abaixo da linha do tipo, que a trava escurece mas não esconde
+	$trava/texto.position.y = $tipo.position.y + $tipo.get_minimum_size().y
+	estava_travada = travada()
+	$trava.visible = estava_travada
 
 # diminui a fonte até o texto caber na área
 func caber(label: Label, area: Vector2, minimo: int) -> void:
@@ -101,7 +118,7 @@ func criar_habilidade(acao: Acao, fantasma: Fantasma, altura: float, fonte_resum
 
 	var medo = Label.new()
 	medo.text = acao.texto_medo(fantasma)
-	medo.custom_minimum_size.x = 56
+	medo.custom_minimum_size.x = 64
 	medo.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	medo.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	medo.add_theme_font_size_override("font_size", fonte_medo)
@@ -109,9 +126,40 @@ func criar_habilidade(acao: Acao, fantasma: Fantasma, altura: float, fonte_resum
 
 	$habilidades.add_child(linha)
 
+func travada() -> bool:
+	return GameManager.mortes < mortes_para_liberar
+
 func _process(_delta: float) -> void:
-	disabled = GameManager.sustos < custo or restantes <= 0
-	modulate.a = 0.45 if disabled else 1.0
+	var trancada = travada()
+	disabled = trancada or GameManager.sustos < custo or restantes <= 0
+	# a travada não fica transparente (o escuro por cima já avisa e não deixa ver as outras cartas)
+	modulate.a = 0.45 if disabled and not trancada else 1.0
+	if trancada != estava_travada:
+		$trava.visible = trancada
+		if not trancada:
+			liberou()
+		estava_travada = trancada
+
+# chegou nas mortes que faltavam: a carta brilha e a arte e o custo dão um pulinho
+func liberou() -> void:
+	if tween_liberou:
+		tween_liberou.kill()
+	if $brilho.material == null:
+		$brilho.material = CanvasItemMaterial.new()
+		$brilho.material.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	$brilho.show()
+	$brilho.modulate.a = 0.0
+	tween_liberou = create_tween().set_parallel().set_ignore_time_scale()
+	for no in [$arte, $custo]:
+		no.pivot_offset = no.size / 2.0
+		no.scale = Vector2.ONE * 1.35
+		tween_liberou.tween_property(no, "scale", Vector2.ONE, 0.5).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	# duas piscadas
+	var pisca = create_tween().set_ignore_time_scale()
+	for i in 2:
+		pisca.tween_property($brilho, "modulate:a", 0.8, 0.1)
+		pisca.tween_property($brilho, "modulate:a", 0.0, 0.35)
+	pisca.tween_callback($brilho.hide)
 
 func comprou() -> void:
 	GameManager.sustos -= custo

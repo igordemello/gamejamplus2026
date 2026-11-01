@@ -16,7 +16,7 @@ icone = SubResource("AtlasTexture_icone_chorar")
 descricao = "Só funciona com uma única pessoa perto: a criança começa a chorar de um jeito muito bizarro."
 resumo = "Chora de um jeito bizarro, só funciona com uma pessoa perto"
 propriedade_medo = &"medo_choro"
-recarga = 10.0
+recarga = 8.0
 metodo = &"chorar"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_crianca0"]
@@ -177,7 +177,7 @@ animations = [{
 
 [node name="Criança Medonha" type="Node2D" unique_id=120000610]
 script = ExtResource("1_script")
-custo = 8
+custo = 5
 tipo = 1
 acoes = Array[ExtResource("2_acao")]([SubResource("Resource_chorar")])
 raio_clique = 40.0

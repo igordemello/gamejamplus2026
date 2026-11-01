@@ -7,7 +7,6 @@
 [ext_resource type="Script" uid="uid://b2c6tvgflw0e7" path="res://scripts/ui_main.gd" id="7_qg36w"]
 [ext_resource type="PackedScene" uid="uid://cbgvi56ugb03g" path="res://scene/morcego.tscn" id="8_66jkb"]
 [ext_resource type="Script" uid="uid://bjju5au0p8vg3" path="res://scripts/area_jogo.gd" id="9_area"]
-[ext_resource type="Script" uid="uid://b6cshrshcjpw4" path="res://scripts/baralho.gd" id="78_baralho"]
 [ext_resource type="PackedScene" uid="uid://bh02vgl1cqea2" path="res://scene/card_fantasma.tscn" id="10_card"]
 [ext_resource type="Texture2D" uid="uid://qmpjsyiljvbw" path="res://assets/cenario em partes/Casa_gramachao.png" id="11_2iacw"]
 [ext_resource type="Texture2D" uid="uid://podf650q6wdv" path="res://assets/bat-Sheet.png" id="11_morc"]
@@ -65,6 +64,7 @@
 [ext_resource type="PackedScene" path="res://scene/vitoria.tscn" id="75_vitoria"]
 [ext_resource type="PackedScene" path="res://scene/tutorial.tscn" id="76_tutorial"]
 [ext_resource type="PackedScene" path="res://scene/policial.tscn" id="77_policial"]
+[ext_resource type="Script" uid="uid://b6cshrshcjpw4" path="res://scripts/baralho.gd" id="78_baralho"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_morc0"]
 atlas = ExtResource("11_morc")
@@ -217,8 +217,7 @@ theme_override_constants/separation = 6
 [node name="sustos" type="HBoxContainer" parent="UI_main/contadores" unique_id=1693541514]
 layout_mode = 2
 tooltip_text = "Sustos
-Sua moeda. Toda vez que alguém sobe um nível de medo, você ganha 1.
-Gaste na loja para chamar fantasmas."
+Sua moeda. Toda vez que alguém sobe um nível de medo, você ganha. Use para conjurar fantasmas."
 theme_override_constants/separation = 10
 
 [node name="icone" type="TextureRect" parent="UI_main/contadores/sustos" unique_id=1966020292]
@@ -233,7 +232,7 @@ stretch_mode = 5
 [node name="lbl_sustos" type="Label" parent="UI_main/contadores/sustos" unique_id=410184512]
 layout_mode = 2
 theme_override_font_sizes/font_size = 60
-text = "25"
+text = "0"
 
 [node name="mortes" type="HBoxContainer" parent="UI_main/contadores" unique_id=57193233]
 layout_mode = 2
@@ -255,54 +254,103 @@ theme_override_font_sizes/font_size = 40
 text = "0"
 
 [node name="objetivos" type="PanelContainer" parent="UI_main" unique_id=331926869]
-offset_left = 16.0
-offset_top = 132.0
-offset_right = 340.0
-offset_bottom = 340.0
+custom_minimum_size = Vector2(380, 0)
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -396.0
+offset_top = 10.0
+offset_right = -16.0
+offset_bottom = 218.0
+grow_horizontal = 0
 mouse_filter = 2
 
 [node name="margem" type="MarginContainer" parent="UI_main/objetivos" unique_id=871964330]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 14
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
 
 [node name="coluna" type="VBoxContainer" parent="UI_main/objetivos/margem" unique_id=1441197807]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 0
 
-[node name="titulo" type="Label" parent="UI_main/objetivos/margem/coluna" unique_id=686167761]
+[node name="cabecalho" type="HBoxContainer" parent="UI_main/objetivos/margem/coluna" unique_id=1679408715]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="titulo" type="Label" parent="UI_main/objetivos/margem/coluna/cabecalho" unique_id=686167761]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
-text = "Para vencer"
+text = "Cumpra pelo menos 1"
 
-[node name="casa" type="Label" parent="UI_main/objetivos/margem/coluna" unique_id=1602806740]
+[node name="resumo" type="Label" parent="UI_main/objetivos/margem/coluna/cabecalho" unique_id=1382184531]
+modulate = Color(1, 1, 1, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.86, 0.84, 0.76, 0.7)
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 2
+clip_text = true
+
+[node name="botao" type="Button" parent="UI_main/objetivos/margem/coluna/cabecalho" unique_id=2057372961]
+custom_minimum_size = Vector2(40, 34)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Mostrar ou esconder os objetivos"
+focus_mode = 0
+
+[node name="recorte" type="Control" parent="UI_main/objetivos/margem/coluna" unique_id=276511566]
+clip_contents = true
+layout_mode = 2
+mouse_filter = 2
+
+[node name="corpo" type="VBoxContainer" parent="UI_main/objetivos/margem/coluna/recorte" unique_id=338933429]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="separador" type="HSeparator" parent="UI_main/objetivos/margem/coluna/recorte/corpo" unique_id=1908681511]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="casa" type="Label" parent="UI_main/objetivos/margem/coluna/recorte/corpo" unique_id=1602806740]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.84, 0.76, 1)
 text = "Tirar todo mundo da casa"
 
-[node name="um_destes" type="Label" parent="UI_main/objetivos/margem/coluna" unique_id=414424472]
+[node name="um_destes" type="Label" parent="UI_main/objetivos/margem/coluna/recorte/corpo" unique_id=414424472]
 modulate = Color(0.75, 0.75, 0.75, 1)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.84, 0.76, 1)
 text = "e cumprir um destes:"
 
-[node name="marcados" type="Label" parent="UI_main/objetivos/margem/coluna" unique_id=709234385]
+[node name="marcados" type="Label" parent="UI_main/objetivos/margem/coluna/recorte/corpo" unique_id=709234385]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.84, 0.76, 1)
 text = "Matar os marcados"
 
-[node name="retratos" type="HBoxContainer" parent="UI_main/objetivos/margem/coluna" unique_id=1486088368]
+[node name="retratos" type="HBoxContainer" parent="UI_main/objetivos/margem/coluna/recorte/corpo" unique_id=1486088368]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
 
-[node name="comodos" type="Label" parent="UI_main/objetivos/margem/coluna" unique_id=880667902]
+[node name="comodos" type="Label" parent="UI_main/objetivos/margem/coluna/recorte/corpo" unique_id=880667902]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.84, 0.76, 1)
 text = "Assustar em todos os cômodos juntos"
 
-[node name="policial" type="Label" parent="UI_main/objetivos/margem/coluna" unique_id=230750829]
+[node name="policial" type="Label" parent="UI_main/objetivos/margem/coluna/recorte/corpo" unique_id=230750829]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.84, 0.76, 1)
 text = "Matar um policial"
 
 [node name="painel_fantasmas" type="Control" parent="UI_main" unique_id=2048188518]

@@ -6,59 +6,52 @@
 layer = 3
 script = ExtResource("1_tutorial")
 
+[node name="seta" type="Node2D" parent="."]
+
 [node name="painel" type="PanelContainer" parent="."]
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -390.0
+offset_left = -400.0
 offset_top = 16.0
-offset_right = 390.0
-offset_bottom = 206.0
+offset_right = 400.0
+offset_bottom = 110.0
 grow_horizontal = 2
 
 [node name="margem" type="MarginContainer" parent="painel"]
 layout_mode = 2
 theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 14
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 14
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 10
 
-[node name="coluna" type="VBoxContainer" parent="painel/margem"]
+[node name="linha" type="HBoxContainer" parent="painel/margem"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 18
 
-[node name="titulo" type="Label" parent="painel/margem/coluna"]
+[node name="texto" type="Label" parent="painel/margem/linha"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(560, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "Bem-vindo"
-
-[node name="texto" type="Label" parent="painel/margem/coluna"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(740, 0)
-layout_mode = 2
-theme_override_font_sizes/font_size = 24
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 28
 text = "Texto do passo"
 autowrap_mode = 3
 
-[node name="botoes" type="HBoxContainer" parent="painel/margem/coluna"]
+[node name="botoes" type="VBoxContainer" parent="painel/margem/linha"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 8
 
-[node name="pular" type="Button" parent="painel/margem/coluna/botoes"]
+[node name="proximo" type="Button" parent="painel/margem/linha/botoes"]
 unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 22
-text = "Pular tutorial"
-flat = true
-
-[node name="espaco" type="Control" parent="painel/margem/coluna/botoes"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="proximo" type="Button" parent="painel/margem/coluna/botoes"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 44)
+custom_minimum_size = Vector2(150, 44)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Próximo"
+
+[node name="pular" type="Button" parent="painel/margem/linha/botoes"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Pular tutorial"

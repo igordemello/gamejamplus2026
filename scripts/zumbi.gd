@@ -1,11 +1,10 @@
 extends Fantasma
 
-@export var alcance_bafo: float = 350.0
-# metade da abertura do cone, em graus
-@export var abertura_bafo: float = 35.0
-@export var medo_bafo: int = 14
+# o bafo sai em volta dele: todo mundo nesse círculo se assusta e fica paralisado
+@export var raio_bafo: float = 220.0
+@export var medo_bafo: int = 20
 @export var paralisia_bafo: float = 2.0
-@export var nuvens_bafo: int = 6
+@export var nuvens_bafo: int = 8
 
 # dentro da casa ele vai bem devagar; lá fora, só se reposicionando, anda mais rápido
 @export var velocidade: float = 75.0
@@ -14,7 +13,7 @@ extends Fantasma
 @export var alcance_arranhao: float = 2500.0
 @export var tempo_max_perseguindo: float = 30.0
 @export var distancia_arranhao: float = 30.0
-@export var medo_arranhao: int = 32
+@export var medo_arranhao: int = 45
 # quadro da animação em que a garra desce
 @export var quadro_arranhao: int = 4
 
@@ -101,43 +100,42 @@ func npcs_perto(raio: float) -> Array:
 	perto.sort_custom(func(a, b): return global_position.distance_to(a.global_position) < global_position.distance_to(b.global_position))
 	return perto
 
-# bafo num cone virado pra pessoa mais perto: todo mundo dentro se assusta e fica paralisado
+# bafo em volta dele: todo mundo no círculo se assusta e fica paralisado (parede não segura)
 func bafo_do_medo() -> bool:
 	if ocupado():
 		return false
-	var perto = npcs_perto(alcance_bafo)
+	var perto = npcs_perto(raio_bafo)
 	if perto.is_empty():
 		return false
-	var direcao = global_position.direction_to(perto[0].global_position)
-	sprite.flip_h = direcao.x > 0.0
+	sprite.flip_h = perto[0].global_position.x > global_position.x
 	onomatopeia("HUAAAA", Color(0.6, 1, 0.45))
 	for npc in perto:
-		if absf(rad_to_deg(direcao.angle_to(global_position.direction_to(npc.global_position)))) <= abertura_bafo:
-			npc.tomar_susto("bafo", medo_bafo, self)
-			npc.atordoar(paralisia_bafo)
-	soltar_nuvens(direcao)
+		npc.tomar_susto("bafo", medo_bafo, self)
+		npc.atordoar(paralisia_bafo)
+	soltar_nuvens()
 	return true
 
-# nuvens do bafo uma atrás da outra pelo cone, maiores e mais abertas quanto mais longe
-func soltar_nuvens(direcao: Vector2) -> void:
+# nuvens do bafo saindo em volta dele, as mais longe aparecendo depois e maiores
+func soltar_nuvens() -> void:
 	var y_sort = GameManager.house.y_sort
 	var boca = global_position + Vector2(0, -40)
+	var giro = randf() * TAU
 	for i in nuvens_bafo:
-		var distancia = alcance_bafo * (0.2 + 0.8 * i / float(nuvens_bafo - 1))
-		var lado = direcao.orthogonal() * randf_range(-1.0, 1.0) * distancia * tan(deg_to_rad(abertura_bafo)) * 0.6
+		var distancia = raio_bafo * (0.3 + 0.6 * ((i * 3) % nuvens_bafo) / float(nuvens_bafo - 1))
+		var direcao = Vector2.from_angle(giro + TAU * i / nuvens_bafo + randf_range(-0.2, 0.2))
 		var nuvem = AnimatedSprite2D.new()
 		nuvem.sprite_frames = sprite.sprite_frames
 		nuvem.animation = &"bafo"
 		nuvem.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		nuvem.z_index = 1
 		nuvem.visible = false
-		nuvem.position = y_sort.to_local(boca + direcao * distancia + lado)
-		nuvem.scale = Vector2.ONE * (1.0 + distancia / alcance_bafo * 2.2)
+		nuvem.position = y_sort.to_local(boca + direcao * distancia)
+		nuvem.scale = Vector2.ONE * (1.0 + distancia / raio_bafo * 2.2)
 		nuvem.rotation = randf() * TAU
 		y_sort.add_child(nuvem)
 		nuvem.animation_finished.connect(nuvem.queue_free)
 		var tween = nuvem.create_tween()
-		tween.tween_interval(i * 0.06)
+		tween.tween_interval((distancia / raio_bafo - 0.3) * 0.4)
 		tween.tween_callback(nuvem.show)
 		tween.tween_callback(nuvem.play.bind("bafo"))
 

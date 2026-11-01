@@ -8,7 +8,7 @@ extends Fantasma
 @export var duracao_nota: float = 1.4
 
 @export var raio_balao: float = 250.0
-@export var medo_balao: int = 22
+@export var medo_balao: int = 30
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var notas: Node2D = $notas

@@ -2,10 +2,10 @@ extends Fantasma
 
 @export var velocidade: float = 200.0
 
-@export var medo_comida: int = 18
+@export var medo_comida: int = 25
 @export var cena_comida: PackedScene
 
-@export var medo_lambida: int = 26
+@export var medo_lambida: int = 35
 @export var alcance_lambida: float = 40.0
 
 @export var amplitude_balanco: float = 1.0
@@ -55,7 +55,7 @@ func ir_ate_alvo(delta: float) -> void:
 		return
 
 	sprite.flip_h = alvo.global_position.x > global_position.x
-	global_position = global_position.move_toward(alvo.global_position, velocidade * delta)
+	andar_pelo_caminho(alvo.global_position, velocidade * delta)
 
 func lamber() -> void:
 	sprite.play("lambida")

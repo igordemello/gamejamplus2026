@@ -1,8 +1,181 @@
-[gd_resource type="Theme" format=3]
+[gd_resource type="Theme" format=3 uid="uid://c0jcn2puq7205"]
 
-[ext_resource type="FontFile" path="res://fonts/Halloween Spooky Acentos.otf" id="1_fonte"]
+[ext_resource type="FontFile" uid="uid://t7fayvwsism" path="res://fonts/Halloween Spooky Acentos.otf" id="1_fonte"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_disabled"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+bg_color = Color(0.05, 0.04, 0.06, 0.6)
+border_color = Color(0.86, 0.84, 0.76, 0.28)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_foco"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hover"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+bg_color = Color(0.15, 0.13, 0.17, 0.96)
+border_color = Color(0.97, 0.95, 0.88, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pressed"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+bg_color = Color(0.86, 0.84, 0.76, 1)
+border_color = Color(0.97, 0.95, 0.88, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_normal"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+bg_color = Color(0.05, 0.04, 0.06, 0.92)
+border_color = Color(0.86, 0.84, 0.76, 1)
+
+[sub_resource type="Gradient" id="Gradient_caixa_cheia"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.66, 0.83)
+colors = PackedColorArray(0.86, 0.84, 0.76, 1, 0.05, 0.04, 0.06, 1, 0.86, 0.84, 0.76, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_caixa_cheia"]
+gradient = SubResource("Gradient_caixa_cheia")
+width = 24
+height = 24
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="Gradient" id="Gradient_caixa_vazia"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.83)
+colors = PackedColorArray(0.05, 0.04, 0.06, 1, 0.86, 0.84, 0.76, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_caixa_vazia"]
+gradient = SubResource("Gradient_caixa_vazia")
+width = 24
+height = 24
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_check"]
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_separador"]
+color = Color(0.86, 0.84, 0.76, 0.35)
+thickness = 2
+
+[sub_resource type="Gradient" id="Gradient_cursor"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.86, 0.84, 0.76, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_cursor"]
+gradient = SubResource("Gradient_cursor")
+width = 12
+height = 26
+
+[sub_resource type="Gradient" id="Gradient_cursor_hover"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.97, 0.95, 0.88, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_cursor_hover"]
+gradient = SubResource("Gradient_cursor_hover")
+width = 12
+height = 26
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cheio"]
+content_margin_top = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.86, 0.84, 0.76, 0.85)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cheio_hover"]
+content_margin_top = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.97, 0.95, 0.88, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trilho"]
+content_margin_top = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.86, 0.84, 0.76, 0.22)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_painel_opaco"]
+bg_color = Color(0.05, 0.04, 0.06, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.86, 0.84, 0.76, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_painel"]
+bg_color = Color(0.05, 0.04, 0.06, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.86, 0.84, 0.76, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dica"]
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+bg_color = Color(0.05, 0.04, 0.06, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.86, 0.84, 0.76, 1)
 
 [resource]
 default_font = ExtResource("1_fonte")
 default_font_size = 20
+Button/colors/font_color = Color(0.86, 0.84, 0.76, 1)
+Button/colors/font_disabled_color = Color(0.86, 0.84, 0.76, 0.38)
+Button/colors/font_focus_color = Color(0.86, 0.84, 0.76, 1)
+Button/colors/font_hover_color = Color(0.97, 0.95, 0.88, 1)
+Button/colors/font_hover_pressed_color = Color(0.07, 0.06, 0.08, 1)
+Button/colors/font_pressed_color = Color(0.07, 0.06, 0.08, 1)
+Button/styles/disabled = SubResource("StyleBoxFlat_disabled")
+Button/styles/focus = SubResource("StyleBoxEmpty_foco")
+Button/styles/hover = SubResource("StyleBoxFlat_hover")
+Button/styles/hover_pressed = SubResource("StyleBoxFlat_pressed")
+Button/styles/normal = SubResource("StyleBoxFlat_normal")
+Button/styles/pressed = SubResource("StyleBoxFlat_pressed")
+CheckButton/colors/font_color = Color(0.86, 0.84, 0.76, 1)
+CheckButton/colors/font_disabled_color = Color(0.86, 0.84, 0.76, 0.38)
+CheckButton/colors/font_focus_color = Color(0.86, 0.84, 0.76, 1)
+CheckButton/colors/font_hover_color = Color(0.97, 0.95, 0.88, 1)
+CheckButton/colors/font_hover_pressed_color = Color(0.97, 0.95, 0.88, 1)
+CheckButton/colors/font_pressed_color = Color(0.86, 0.84, 0.76, 1)
+CheckButton/icons/checked = SubResource("GradientTexture2D_caixa_cheia")
+CheckButton/icons/checked_disabled = SubResource("GradientTexture2D_caixa_cheia")
+CheckButton/icons/checked_disabled_mirrored = SubResource("GradientTexture2D_caixa_cheia")
+CheckButton/icons/checked_mirrored = SubResource("GradientTexture2D_caixa_cheia")
+CheckButton/icons/unchecked = SubResource("GradientTexture2D_caixa_vazia")
+CheckButton/icons/unchecked_disabled = SubResource("GradientTexture2D_caixa_vazia")
+CheckButton/icons/unchecked_disabled_mirrored = SubResource("GradientTexture2D_caixa_vazia")
+CheckButton/icons/unchecked_mirrored = SubResource("GradientTexture2D_caixa_vazia")
+CheckButton/styles/disabled = SubResource("StyleBoxEmpty_check")
+CheckButton/styles/focus = SubResource("StyleBoxEmpty_foco")
+CheckButton/styles/hover = SubResource("StyleBoxEmpty_check")
+CheckButton/styles/hover_pressed = SubResource("StyleBoxEmpty_check")
+CheckButton/styles/normal = SubResource("StyleBoxEmpty_check")
+CheckButton/styles/pressed = SubResource("StyleBoxEmpty_check")
+HSeparator/styles/separator = SubResource("StyleBoxLine_separador")
+HSlider/icons/grabber = SubResource("GradientTexture2D_cursor")
+HSlider/icons/grabber_disabled = SubResource("GradientTexture2D_cursor")
+HSlider/icons/grabber_highlight = SubResource("GradientTexture2D_cursor_hover")
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_cheio")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_cheio_hover")
+HSlider/styles/slider = SubResource("StyleBoxFlat_trilho")
+PainelOpaco/base_type = &"PanelContainer"
+PainelOpaco/styles/panel = SubResource("StyleBoxFlat_painel_opaco")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_painel")
+TooltipLabel/colors/font_color = Color(0.97, 0.95, 0.88, 1)
 TooltipLabel/font_sizes/font_size = 24
+TooltipPanel/styles/panel = SubResource("StyleBoxFlat_dica")

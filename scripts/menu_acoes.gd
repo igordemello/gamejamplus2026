@@ -20,7 +20,6 @@ var abertura: float = 1.0
 var realce: Array[float] = []
 var piscada: Array[float] = []
 var escolhida_antes: Acao
-var tween_tempo: Tween
 
 func abrir(f: Fantasma, onde: Vector2) -> void:
 	fantasma = f
@@ -28,7 +27,7 @@ func abrir(f: Fantasma, onde: Vector2) -> void:
 	position = onde
 	bolinha = Vector2.ZERO
 	sentido = -1.0 if onde.y > distancia_icones + raio_icone + 140 else 1.0
-	mudar_tempo(tempo_lento, 0.15)
+	GameManager.mudar_tempo(tempo_lento, 0.15)
 	realce.resize(f.acoes.size())
 	realce.fill(1.0)
 	piscada.resize(f.acoes.size())
@@ -51,21 +50,12 @@ func fechar() -> void:
 	if is_instance_valid(fantasma):
 		fantasma.selecionado = false
 	fantasma = null
-	mudar_tempo(1.0, 0.1)
+	GameManager.mudar_tempo(1.0, 0.1)
 	hide()
-
-# a câmera lenta entra e sai deslizando (em tempo real, e termina mesmo se pausar no meio)
-func mudar_tempo(alvo: float, duracao: float) -> void:
-	if tween_tempo:
-		tween_tempo.kill()
-	tween_tempo = create_tween().set_ignore_time_scale().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	tween_tempo.tween_property(Engine, "time_scale", alvo, duracao)
 
 # saiu da casa (voltou pro menu) no meio da câmera lenta: o tempo volta ao normal
 func _exit_tree() -> void:
-	if tween_tempo:
-		tween_tempo.kill()
-	Engine.time_scale = 1.0
+	GameManager.tempo_normal()
 
 func _input(event: InputEvent) -> void:
 	if fantasma and event is InputEventMouseMotion:

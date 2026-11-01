@@ -1,7 +1,7 @@
 extends Fantasma
 
 @export var raio_choro: float = 150.0
-@export var medo_choro: int = 22
+@export var medo_choro: int = 30
 @export var duracao_choro: float = 1.5
 
 @onready var lagrimas: AnimatedSprite2D = $lagrimas

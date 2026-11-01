@@ -3,10 +3,10 @@ extends Fantasma
 @export var velocidade: float = 120.0
 @export var raio_colisao: float = 20.0
 
-@export var medo_bater_asas: int = 14
+@export var medo_bater_asas: int = 20
 @export var forca_empurrao: float = 250.0
-# retangulo na frente do morcego, o x positivo aponta pra onde ele ta voando
-@export var area_bater_asas: Rect2 = Rect2(0, -48, 160, 96)
+# todo mundo nesse raio em volta dele se assusta e é empurrado pra longe
+@export var raio_bater_asas: float = 100.0
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
@@ -23,10 +23,10 @@ func _physics_process(delta: float) -> void:
 
 	var frente = direcao.sign() * raio_colisao
 
-	var bateu_x = house.eh_parede(global_position + Vector2(passo.x + frente.x, 0))
-	var bateu_y = house.eh_parede(global_position + Vector2(0, passo.y + frente.y))
+	var bateu_x = parede_adiante(Vector2(passo.x + frente.x, 0))
+	var bateu_y = parede_adiante(Vector2(0, passo.y + frente.y))
 	# quina de parede pega na diagonal
-	if not bateu_x and not bateu_y and house.eh_parede(global_position + passo + frente):
+	if not bateu_x and not bateu_y and parede_adiante(passo + frente):
 		bateu_x = true
 		bateu_y = true
 
@@ -37,15 +37,21 @@ func _physics_process(delta: float) -> void:
 
 	global_position += direcao * velocidade * delta
 
+# olha o caminho todo até lá, não só a ponta: parede fina (menor que o raio de colisão) não deixa ele passar
+func parede_adiante(desvio: Vector2) -> bool:
+	for i in range(1, 5):
+		if GameManager.house.eh_parede(global_position + desvio * (i / 4.0)):
+			return true
+	return false
+
 func bater_asas() -> bool:
 	onomatopeia("FLAP FLAP", Color(0.75, 0.6, 1))
 	# duas piscadas brancas, cada uma do tamanho de um quadro do voo
 	piscar(2, 1.0 / sprite.sprite_frames.get_animation_speed(sprite.animation))
 
 	for npc in get_tree().get_nodes_in_group("npc"):
-		var pos_local = (npc.global_position - global_position).rotated(-direcao.angle())
-		if area_bater_asas.has_point(pos_local):
-			npc.velocity += direcao * forca_empurrao
+		if global_position.distance_to(npc.global_position) <= raio_bater_asas:
+			npc.velocity += global_position.direction_to(npc.global_position) * forca_empurrao
 			npc.tomar_susto("morcego", medo_bater_asas, self)
 
 	return true

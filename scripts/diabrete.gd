@@ -9,7 +9,7 @@ const ESTILHACOS = preload("res://scene/estilhacos.tscn")
 @export var peito: Vector2 = Vector2(0, 3)
 @export var altura_levantar: float = 40.0
 
-@export var medo_quebra: int = 18
+@export var medo_quebra: int = 25
 @export var raio_quebra: float = 180.0
 @export var max_assustados: int = 3
 
@@ -18,6 +18,8 @@ const ESTILHACOS = preload("res://scene/estilhacos.tscn")
 
 var alvo: Node2D
 var segurando: bool = false
+# quanto subiu de verdade com o objeto (menos que altura_levantar se tiver parede em cima)
+var altura_subida: float = 0.0
 
 func _physics_process(delta: float) -> void:
 	if segurando or not is_instance_valid(alvo):
@@ -26,7 +28,7 @@ func _physics_process(delta: float) -> void:
 	if global_position.distance_to(destino) <= 4.0:
 		pegar()
 	else:
-		global_position = global_position.move_toward(destino, velocidade * delta)
+		andar_pelo_caminho(destino, velocidade * delta)
 
 # voa até o objeto quebrável mais perto
 func quebrar_objetos() -> bool:
@@ -49,14 +51,22 @@ func pegar() -> void:
 	var objeto = alvo
 	alvo = null
 	objeto.remove_from_group("quebravel")
+	# prop que também levita: sai do mouse e volta pro chão antes de ser levado
+	if objeto.has_method("ser_pego"):
+		objeto.ser_pego()
 	var chao = objeto.global_position
 	objeto.reparent(self)
 	objeto.position = peito
 	sprite.play("carregar")
 	brasas.emitting = true
 
+	# também não atravessa parede subindo
+	altura_subida = altura_levantar
+	while altura_subida > 0.0 and GameManager.house.eh_parede(global_position + Vector2(0, -altura_subida)):
+		altura_subida -= 8.0
+	altura_subida = maxf(altura_subida, 0.0)
 	var tween = create_tween()
-	tween.tween_property(self, "global_position:y", global_position.y - altura_levantar, 0.45).set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "global_position:y", global_position.y - altura_subida, 0.45).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(soltar.bind(objeto, chao))
 
 func soltar(objeto: Node2D, chao: Vector2) -> void:
@@ -70,7 +80,7 @@ func soltar(objeto: Node2D, chao: Vector2) -> void:
 	queda.tween_callback(quebrar.bind(objeto))
 
 	# volta pra altura de antes
-	create_tween().tween_property(self, "global_position:y", global_position.y + altura_levantar, 0.4)
+	create_tween().tween_property(self, "global_position:y", global_position.y + altura_subida, 0.4)
 
 func quebrar(objeto: Node2D) -> void:
 	var assustados = get_tree().get_nodes_in_group("npc").filter(

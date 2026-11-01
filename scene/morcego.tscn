@@ -11,10 +11,10 @@ region = Rect2(70, 0, 49, 49)
 [sub_resource type="Resource" id="Resource_bater_asas"]
 script = ExtResource("2_acao")
 nome = "Bater asas"
-recarga = 6.0
+recarga = 5.0
 icone = SubResource("AtlasTexture_icone_bater")
-descricao = "Bate as asas com força e o vento empurra pra trás quem estiver na frente dele."
-resumo = "Bate as asas e o vento empurra quem está na frente"
+descricao = "Bate as asas com força e o vento empurra e assusta quem estiver em volta dele."
+resumo = "Bate as asas e o vento empurra quem está em volta"
 propriedade_medo = &"medo_bater_asas"
 metodo = &"bater_asas"
 
@@ -56,7 +56,7 @@ animations = [{
 
 [node name="Morcego" type="Node2D" unique_id=494321899]
 script = ExtResource("1_4norb")
-custo = 6
+custo = 4
 acoes = Array[ExtResource("2_acao")]([SubResource("Resource_bater_asas")])
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=990475690]

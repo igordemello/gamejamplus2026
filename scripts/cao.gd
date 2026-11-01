@@ -4,10 +4,10 @@ extends Fantasma
 @export var velocidade_giro: float = 12.0
 @export var alcance_mordida: float = 30.0
 
-@export var medo_mastigar: int = 26
+@export var medo_mastigar: int = 35
 @export var duracao_mastigar: float = 2.5
 
-@export var medo_latido: int = 12
+@export var medo_latido: int = 18
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 

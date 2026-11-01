@@ -18,7 +18,7 @@ var segurando : bool = false
 var primeiro_susto: bool = false
 
 @export var tipo_susto: String = "objeto"
-@export var pontos_susto: int = 5
+@export var pontos_susto: int = 15
 @export var intervalo_susto: float = 1.0
 
 var tempo_susto: float = 0.0
@@ -29,6 +29,7 @@ var tween_queda: Tween
 var sombra: Sprite2D
 
 func _ready() -> void:
+	add_to_group("levitavel")
 	posicao_original = position
 	escala_original = scale
 	sombra = Sprite2D.new()
@@ -103,6 +104,20 @@ func soltar() -> void:
 	tween_queda.parallel().tween_property(self, "rotation", 0.0, 0.2)
 	# a primeira batida do TRANS_BOUNCE é em ~36% do tempo
 	tween_queda.parallel().tween_callback(esticar.bind(Vector2(1.3, 0.75))).set_delay(0.16)
+
+# o diabrete pegou (o prop também está no grupo "quebravel"): larga o mouse, volta pro chão e
+# para de levitar e de receber clique. quem pegou cuida do resto
+func ser_pego() -> void:
+	segurando = false
+	for tween in [tween_queda, tween_escala]:
+		if tween:
+			tween.kill()
+	position = posicao_original
+	scale = escala_original
+	rotation = 0.0
+	sombra.hide()
+	set_process(false)
+	set_process_input(false)
 
 # a cada susto: incha, pisca claro e a tela dá uma tremidinha
 func pulsar() -> void:

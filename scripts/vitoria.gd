@@ -25,7 +25,7 @@ func mostrar(fugiram: int, mortes: int, tempo: float, venceu: bool) -> void:
 	%mortes.text = "%d morreram de susto" % mortes
 	%tempo.text = "Tempo: %d:%02d" % [int(tempo) / 60, int(tempo) % 60]
 	get_tree().paused = true
-	Engine.time_scale = 1.0
+	GameManager.tempo_normal()
 	show()
 	fundo.modulate.a = 0.0
 	caixa.modulate.a = 0.0
