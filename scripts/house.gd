@@ -7,6 +7,8 @@ var regionsHouse: Array[NavigationRegion2D] = []
 @onready var house_regions: Node2D = $houseRegions
 # camera.gd, quem quiser chacoalhar a tela chama camera.tremer(forca)
 @onready var camera = $Camera2D
+# ui_main.gd (contador de sustos)
+@onready var ui = $UI_main
 
 @export var ponto_fuga: Marker2D
 @export var chao: Sprite2D
@@ -42,6 +44,15 @@ func intensidade_susto(pos: Vector2) -> float:
 		if comodo != "" and palhaco.comodo_musica == comodo:
 			intensidade = maxf(intensidade, palhaco.intensidade_musica)
 	return intensidade
+
+# lado de fora: fora do chão da casa e sem parede em cima (as paredes de fora também contam)
+func fora_de_casa(pos: Vector2) -> bool:
+	if chao.is_pixel_opaque(chao.to_local(pos)):
+		return false
+	for sprite in get_tree().get_nodes_in_group("parede"):
+		if sprite.is_pixel_opaque(sprite.to_local(pos)):
+			return false
+	return true
 
 # parede = pixel opaco em qualquer sprite do grupo "parede", ou fora do chão
 func eh_parede(pos: Vector2) -> bool:

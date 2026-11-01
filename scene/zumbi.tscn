@@ -1,0 +1,295 @@
+[gd_scene format=3 uid="uid://cx2f26uhoalyf"]
+
+[ext_resource type="Script" uid="uid://cy3e4nx7k45mx" path="res://scripts/zumbi.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dtu3rtcl8iegv" path="res://scripts/acao.gd" id="2_acao"]
+[ext_resource type="Texture2D" uid="uid://o4v2hb2ed3or" path="res://assets/zumbie/zumbiIdle64x64.png" id="3_parado"]
+[ext_resource type="Texture2D" uid="uid://b6mji1s27pt4r" path="res://assets/zumbie/zombieArranhão64x64.png" id="4_arranhao"]
+[ext_resource type="Texture2D" uid="uid://cu8wjyl3t5kqh" path="res://assets/zumbie/bafoZumbi64x64.png" id="5_bafo"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_bafo"]
+atlas = ExtResource("5_bafo")
+region = Rect2(199, 73, 53, 51)
+
+[sub_resource type="Resource" id="Resource_bafo"]
+script = ExtResource("2_acao")
+nome = "Bafo do Medo"
+icone = SubResource("AtlasTexture_icone_bafo")
+descricao = "Solta o bafo num cone virado pra pessoa mais perto: todo mundo dentro se assusta e fica 2 s paralisado. Medo 10."
+recarga = 20.0
+metodo = &"bafo_do_medo"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_arranhao"]
+atlas = ExtResource("4_arranhao")
+region = Rect2(69, 6, 51, 48)
+
+[sub_resource type="Resource" id="Resource_arranhao"]
+script = ExtResource("2_acao")
+nome = "Arranhão"
+icone = SubResource("AtlasTexture_icone_arranhao")
+descricao = "Vai arrastando os pés, bem devagar, até a pessoa mais perto e dá um arranhão. Medo 20."
+recarga = 25.0
+metodo = &"arranhao"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_arranhao0"]
+atlas = ExtResource("4_arranhao")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_arranhao1"]
+atlas = ExtResource("4_arranhao")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_arranhao2"]
+atlas = ExtResource("4_arranhao")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_arranhao3"]
+atlas = ExtResource("4_arranhao")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_arranhao4"]
+atlas = ExtResource("4_arranhao")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_arranhao5"]
+atlas = ExtResource("4_arranhao")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_arranhao6"]
+atlas = ExtResource("4_arranhao")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_arranhao7"]
+atlas = ExtResource("4_arranhao")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bafo0"]
+atlas = ExtResource("5_bafo")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bafo1"]
+atlas = ExtResource("5_bafo")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bafo2"]
+atlas = ExtResource("5_bafo")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bafo3"]
+atlas = ExtResource("5_bafo")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bafo4"]
+atlas = ExtResource("5_bafo")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bafo5"]
+atlas = ExtResource("5_bafo")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bafo6"]
+atlas = ExtResource("5_bafo")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bafo7"]
+atlas = ExtResource("5_bafo")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bafo8"]
+atlas = ExtResource("5_bafo")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bafo9"]
+atlas = ExtResource("5_bafo")
+region = Rect2(64, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bafo10"]
+atlas = ExtResource("5_bafo")
+region = Rect2(128, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bafo11"]
+atlas = ExtResource("5_bafo")
+region = Rect2(192, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bafo12"]
+atlas = ExtResource("5_bafo")
+region = Rect2(256, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bafo13"]
+atlas = ExtResource("5_bafo")
+region = Rect2(320, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bafo14"]
+atlas = ExtResource("5_bafo")
+region = Rect2(384, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bafo15"]
+atlas = ExtResource("5_bafo")
+region = Rect2(448, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bafo16"]
+atlas = ExtResource("5_bafo")
+region = Rect2(0, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bafo17"]
+atlas = ExtResource("5_bafo")
+region = Rect2(64, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_parado0"]
+atlas = ExtResource("3_parado")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_parado1"]
+atlas = ExtResource("3_parado")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_parado2"]
+atlas = ExtResource("3_parado")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_parado3"]
+atlas = ExtResource("3_parado")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_parado4"]
+atlas = ExtResource("3_parado")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_parado5"]
+atlas = ExtResource("3_parado")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_zumbi"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_arranhao0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_arranhao1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_arranhao2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_arranhao3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_arranhao4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_arranhao5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_arranhao6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_arranhao7")
+}],
+"loop": 0,
+"name": &"arranhao",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bafo0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bafo1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bafo2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bafo3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bafo4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bafo5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bafo6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bafo7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bafo8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bafo9")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bafo10")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bafo11")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bafo12")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bafo13")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bafo14")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bafo15")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bafo16")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bafo17")
+}],
+"loop": 0,
+"name": &"bafo",
+"speed": 20.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_parado0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_parado1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_parado2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_parado3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_parado4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_parado5")
+}],
+"loop": 1,
+"name": &"parado",
+"speed": 6.0
+}]
+
+[node name="Zumbi" type="Node2D" unique_id=1550264278]
+script = ExtResource("1_script")
+custo = 18
+tier = 2
+tipo = 3
+fora_de_casa = true
+acoes = Array[ExtResource("2_acao")]([SubResource("Resource_bafo"), SubResource("Resource_arranhao")])
+raio_clique = 40.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1521644950]
+texture_filter = 1
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_zumbi")
+animation = &"parado"
+autoplay = "parado"
+offset = Vector2(0, -24)
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 8.0
+target_desired_distance = 8.0
+navigation_layers = 3

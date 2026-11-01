@@ -12,8 +12,6 @@ font_color = Color(1, 0, 0, 1)
 [node name="npc" type="CharacterBody2D" unique_id=997912080 groups=["npc"]]
 script = ExtResource("1_np5a4")
 visual = ExtResource("2_gotica")
-min_wait_time = 6.0
-max_wait_time = 10.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=855655254]
 shape = SubResource("RectangleShape2D_g4v7s")
@@ -29,6 +27,7 @@ animation = &"andar"
 offset = Vector2(0, -32)
 
 [node name="Label" type="Label" parent="." unique_id=1384180380]
+visible = false
 offset_left = -89.00001
 offset_top = -90.0
 offset_right = 88.99999

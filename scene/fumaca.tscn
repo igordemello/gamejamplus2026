@@ -1,0 +1,29 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/efeito_unico.gd" id="1_script"]
+
+[sub_resource type="Gradient" id="Gradient_fumaca"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(1, 1, 1, 0.8, 1, 1, 1, 0)
+
+[node name="fumaca" type="CPUParticles2D"]
+z_index = 1
+emitting = false
+amount = 18
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+emission_shape = 1
+emission_sphere_radius = 14.0
+direction = Vector2(0, -1)
+spread = 180.0
+gravity = Vector2(0, -40)
+initial_velocity_min = 60.0
+initial_velocity_max = 130.0
+damping_min = 120.0
+damping_max = 180.0
+scale_amount_min = 10.0
+scale_amount_max = 20.0
+color = Color(0.92, 0.9, 1, 1)
+color_ramp = SubResource("Gradient_fumaca")
+script = ExtResource("1_script")

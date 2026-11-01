@@ -26,6 +26,8 @@
 [ext_resource type="Script" uid="uid://b4deurdln0fr8" path="res://scripts/camera.gd" id="30_camera"]
 [ext_resource type="PackedScene" path="res://scene/pausa.tscn" id="31_pausa"]
 [ext_resource type="SpriteFrames" uid="uid://oc0jshojn1tu" path="res://assets/npc/cheerleader.tres" id="32_cheer"]
+[ext_resource type="SpriteFrames" path="res://assets/npc/hippie.tres" id="33_hippie"]
+[ext_resource type="SpriteFrames" path="res://assets/npc/psicopata.tres" id="34_psicopata"]
 [ext_resource type="PackedScene" uid="uid://smibflxwsbi4" path="res://scene/crianca.tscn" id="40_crianca"]
 [ext_resource type="PackedScene" path="res://scene/cavaleiro.tscn" id="41_cavaleiro"]
 [ext_resource type="PackedScene" path="res://scene/cao.tscn" id="42_cao"]
@@ -40,6 +42,10 @@
 [ext_resource type="Texture2D" uid="uid://caorr4lm2csj1" path="res://assets/caveira/idleCaveira 64x112.png" id="54_caveira_tex"]
 [ext_resource type="PackedScene" path="res://scene/palhaco.tscn" id="55_palhaco"]
 [ext_resource type="Texture2D" uid="uid://tgih8d8habk3" path="res://assets/palhaço/palhaço.png" id="56_palhaco_tex"]
+[ext_resource type="Script" path="res://scripts/ponto_festa.gd" id="57_festa"]
+[ext_resource type="PackedScene" path="res://scene/zumbi.tscn" id="58_zumbi"]
+[ext_resource type="Texture2D" path="res://assets/zumbie/zumbiIdle64x64.png" id="59_zumbi_tex"]
+[ext_resource type="NavigationPolygon" path="res://assets/navegacao_fora.tres" id="60_nav_fora"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_2813k"]
 font_size = 36
@@ -67,6 +73,10 @@ region = Rect2(30, 28, 68, 68)
 [sub_resource type="AtlasTexture" id="AtlasTexture_icone_diabrete"]
 atlas = ExtResource("53_diabrete_tex")
 region = Rect2(2, 1, 28, 28)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_zumbi"]
+atlas = ExtResource("59_zumbi_tex")
+region = Rect2(10, 6, 44, 50)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_icone_caveira"]
 atlas = ExtResource("54_caveira_tex")
@@ -183,6 +193,11 @@ layout_mode = 2
 cena = ExtResource("55_palhaco")
 icone = ExtResource("56_palhaco_tex")
 
+[node name="card_zumbi" parent="UI_main/painel_fantasmas/lista" unique_id=1366094218 instance=ExtResource("10_card")]
+layout_mode = 2
+cena = ExtResource("58_zumbi")
+icone = SubResource("AtlasTexture_icone_zumbi")
+
 [node name="menu_acoes" type="Control" parent="UI_main" unique_id=1039218413]
 visible = false
 texture_filter = 1
@@ -295,67 +310,81 @@ offset = Vector2(-626.00006, -296)
 position = Vector2(308, 282)
 collision_layer = 2
 house = NodePath("../..")
+preferencia = "conversar"
 
 [node name="npc2" parent="Y-sort" unique_id=997912080 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
 position = Vector2(319, 428)
 collision_layer = 2
 house = NodePath("../..")
 visual = ExtResource("32_cheer")
+preferencia = "dançar"
 
 [node name="npc3" parent="Y-sort" unique_id=1187792258 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
 position = Vector2(963, 239)
 collision_layer = 2
 house = NodePath("../..")
+visual = ExtResource("33_hippie")
+preferencia = "descansar"
 
 [node name="npc4" parent="Y-sort" unique_id=2047802193 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
 position = Vector2(705, 287)
 collision_layer = 2
 house = NodePath("../..")
-visual = ExtResource("32_cheer")
+visual = ExtResource("34_psicopata")
+preferencia = "beber"
 
 [node name="npc5" parent="Y-sort" unique_id=674207968 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
 position = Vector2(906, 796)
 collision_layer = 2
 house = NodePath("../..")
+preferencia = "descansar"
 
 [node name="npc6" parent="Y-sort" unique_id=560872406 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
 position = Vector2(991, 820)
 collision_layer = 2
 house = NodePath("../..")
 visual = ExtResource("32_cheer")
+preferencia = "dançar"
 
 [node name="npc7" parent="Y-sort" unique_id=821055622 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
 position = Vector2(620, 931)
 collision_layer = 2
 house = NodePath("../..")
+visual = ExtResource("33_hippie")
+preferencia = "dançar"
 
 [node name="npc8" parent="Y-sort" unique_id=1532609554 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
 position = Vector2(1453, 639)
 collision_layer = 2
 house = NodePath("../..")
-visual = ExtResource("32_cheer")
+visual = ExtResource("34_psicopata")
 
 [node name="npc9" parent="Y-sort" unique_id=1190665817 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
 position = Vector2(1318, 224)
 collision_layer = 2
 house = NodePath("../..")
+preferencia = "beber"
 
 [node name="npc10" parent="Y-sort" unique_id=1115174982 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
 position = Vector2(1610, 397)
 collision_layer = 2
 house = NodePath("../..")
 visual = ExtResource("32_cheer")
+preferencia = "dançar"
 
 [node name="npc11" parent="Y-sort" unique_id=253180521 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
 position = Vector2(1325, 431)
 collision_layer = 2
 house = NodePath("../..")
+visual = ExtResource("33_hippie")
+preferencia = "conversar"
 
 [node name="npc12" parent="Y-sort" unique_id=1833456704 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
 position = Vector2(1065, 609)
 collision_layer = 2
 house = NodePath("../..")
-visual = ExtResource("32_cheer")
+visual = ExtResource("34_psicopata")
+preferencia = "descansar"
 
 [node name="objeto_levitavel" type="Sprite2D" parent="." unique_id=1605782649]
 position = Vector2(860.9999, 121.00001)
@@ -365,6 +394,20 @@ script = ExtResource("5_52fq0")
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=2079252784]
 navigation_polygon = SubResource("NavigationPolygon_6hm8r")
+
+[node name="navegacao_fora" type="NavigationRegion2D" parent="." unique_id=1093417781]
+navigation_polygon = ExtResource("60_nav_fora")
+navigation_layers = 2
+
+[node name="porta_esquerda" type="NavigationLink2D" parent="." unique_id=1093417782]
+navigation_layers = 2
+start_position = Vector2(845, 1090)
+end_position = Vector2(900, 1090)
+
+[node name="porta_direita" type="NavigationLink2D" parent="." unique_id=1093417783]
+navigation_layers = 2
+start_position = Vector2(1032, 1090)
+end_position = Vector2(985, 1090)
 
 [node name="houseRegions" type="Node2D" parent="." unique_id=871958387]
 
@@ -410,6 +453,98 @@ script = ExtResource("43_ponto")
 [node name="lareira1" type="Marker2D" parent="pontos_lareira" unique_id=279216836 groups=["lareira"]]
 position = Vector2(877, 110)
 script = ExtResource("43_ponto")
+
+[node name="pontos_festa" type="Node2D" parent="." unique_id=1730245511]
+
+[node name="pista" type="Marker2D" parent="pontos_festa" unique_id=1730245512]
+position = Vector2(880, 300)
+script = ExtResource("57_festa")
+atividade = "dançar"
+vagas = 5
+raio = 90.0
+tempo_min = 15.0
+tempo_max = 40.0
+
+[node name="papo_sala" type="Marker2D" parent="pontos_festa" unique_id=1730245513]
+position = Vector2(700, 200)
+script = ExtResource("57_festa")
+atividade = "conversar"
+vagas = 3
+raio = 50.0
+tempo_min = 12.0
+tempo_max = 35.0
+
+[node name="bebidas" type="Marker2D" parent="pontos_festa" unique_id=1730245514]
+position = Vector2(1270, 860)
+script = ExtResource("57_festa")
+atividade = "beber"
+vagas = 4
+raio = 60.0
+tempo_min = 8.0
+tempo_max = 20.0
+
+[node name="petiscos" type="Marker2D" parent="pontos_festa" unique_id=1730245515]
+position = Vector2(950, 900)
+script = ExtResource("57_festa")
+atividade = "beber"
+vagas = 3
+raio = 50.0
+tempo_min = 8.0
+tempo_max = 20.0
+
+[node name="cama_quarto" type="Marker2D" parent="pontos_festa" unique_id=1730245516]
+position = Vector2(400, 330)
+script = ExtResource("57_festa")
+atividade = "descansar"
+vagas = 3
+raio = 60.0
+tempo_min = 15.0
+tempo_max = 40.0
+
+[node name="cama_quarto_roxo" type="Marker2D" parent="pontos_festa" unique_id=1730245517]
+position = Vector2(650, 900)
+script = ExtResource("57_festa")
+atividade = "descansar"
+vagas = 2
+raio = 50.0
+tempo_min = 15.0
+tempo_max = 40.0
+
+[node name="papo_escritorio" type="Marker2D" parent="pontos_festa" unique_id=1730245518]
+position = Vector2(1355, 330)
+script = ExtResource("57_festa")
+atividade = "conversar"
+vagas = 3
+raio = 60.0
+tempo_min = 12.0
+tempo_max = 35.0
+
+[node name="banheiro" type="Marker2D" parent="pontos_festa" unique_id=1730245519]
+position = Vector2(1610, 420)
+script = ExtResource("57_festa")
+atividade = "banheiro"
+vagas = 1
+raio = 10.0
+tempo_min = 4.0
+tempo_max = 8.0
+
+[node name="papo_corredor" type="Marker2D" parent="pontos_festa" unique_id=1730245520]
+position = Vector2(1000, 650)
+script = ExtResource("57_festa")
+atividade = "conversar"
+vagas = 4
+raio = 70.0
+tempo_min = 10.0
+tempo_max = 25.0
+
+[node name="papo_corredor2" type="Marker2D" parent="pontos_festa" unique_id=1730245521]
+position = Vector2(1500, 660)
+script = ExtResource("57_festa")
+atividade = "conversar"
+vagas = 3
+raio = 50.0
+tempo_min = 10.0
+tempo_max = 25.0
 
 [node name="PontoFuga" type="Marker2D" parent="." unique_id=241806709]
 position = Vector2(945, 1195)

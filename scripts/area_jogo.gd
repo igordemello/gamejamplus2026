@@ -25,6 +25,8 @@ func pode_soltar(card: Variant) -> bool:
 		return ponto_livre_perto(card.pontos_spawn) != null
 	var house = GameManager.house
 	var pos = house.get_global_mouse_position()
+	if card.fora_de_casa:
+		return house.fora_de_casa(pos)
 	if house.eh_parede(pos) or house.comodo_proibido(pos, card.comodos_proibidos):
 		return false
 	# o cômodo vale como prefixo: "quarto" pega quarto, quarto2...

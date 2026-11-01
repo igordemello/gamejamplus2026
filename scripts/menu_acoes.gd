@@ -16,6 +16,11 @@ var bolinha: Vector2 = Vector2.ZERO
 var sentido: float = -1.0
 # 0 → 1 quando abre: os ícones saltam pra fora a partir do clique
 var abertura: float = 1.0
+# tamanho de cada ícone (cresce quando a bolinha entra) e o anel que pisca nessa hora
+var realce: Array[float] = []
+var piscada: Array[float] = []
+var escolhida_antes: Acao
+var tween_tempo: Tween
 
 func abrir(f: Fantasma, onde: Vector2) -> void:
 	fantasma = f
@@ -23,7 +28,12 @@ func abrir(f: Fantasma, onde: Vector2) -> void:
 	position = onde
 	bolinha = Vector2.ZERO
 	sentido = -1.0 if onde.y > distancia_icones + raio_icone + 140 else 1.0
-	Engine.time_scale = tempo_lento
+	mudar_tempo(tempo_lento, 0.15)
+	realce.resize(f.acoes.size())
+	realce.fill(1.0)
+	piscada.resize(f.acoes.size())
+	piscada.fill(0.0)
+	escolhida_antes = null
 	abertura = 0.0
 	var tween = create_tween().set_ignore_time_scale()
 	tween.tween_property(self, "abertura", 1.0, 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
@@ -41,14 +51,27 @@ func fechar() -> void:
 	if is_instance_valid(fantasma):
 		fantasma.selecionado = false
 	fantasma = null
-	Engine.time_scale = 1.0
+	mudar_tempo(1.0, 0.1)
 	hide()
+
+# a câmera lenta entra e sai deslizando (em tempo real, e termina mesmo se pausar no meio)
+func mudar_tempo(alvo: float, duracao: float) -> void:
+	if tween_tempo:
+		tween_tempo.kill()
+	tween_tempo = create_tween().set_ignore_time_scale().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tween_tempo.tween_property(Engine, "time_scale", alvo, duracao)
+
+# saiu da casa (voltou pro menu) no meio da câmera lenta: o tempo volta ao normal
+func _exit_tree() -> void:
+	if tween_tempo:
+		tween_tempo.kill()
+	Engine.time_scale = 1.0
 
 func _input(event: InputEvent) -> void:
 	if fantasma and event is InputEventMouseMotion:
 		bolinha = (event.position - position).limit_length(distancia_icones + raio_icone)
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if fantasma == null:
 		return
 	if not is_instance_valid(fantasma):
@@ -56,6 +79,15 @@ func _process(_delta: float) -> void:
 		return
 
 	var acao = acao_na_bolinha()
+	# delta sem a câmera lenta, senão o realce fica arrastado
+	var real = minf(delta / maxf(Engine.time_scale, 0.01), 0.05)
+	for i in realce.size():
+		var dela = fantasma.acoes[i] == acao
+		realce[i] = lerpf(realce[i], 1.25 if dela else 1.0, minf(20.0 * real, 1.0))
+		piscada[i] = maxf(piscada[i] - 4.0 * real, 0.0)
+		if dela and acao != escolhida_antes:
+			piscada[i] = 1.0
+	escolhida_antes = acao
 	painel_descricao.visible = acao != null
 	if acao:
 		titulo.text = acao.nome
@@ -89,7 +121,7 @@ func _draw() -> void:
 	for i in fantasma.acoes.size():
 		var acao = fantasma.acoes[i]
 		var c = centro_icone(i) * abertura
-		var r = raio_icone * abertura * (1.15 if acao == escolhida else 1.0)
+		var r = raio_icone * abertura * realce[i]
 		var falta = fantasma.recarga_restante.get(acao, 0.0)
 
 		draw_circle(c, r, Color(0, 0, 0, 0.6), true, -1.0, true)
@@ -105,3 +137,6 @@ func _draw() -> void:
 		draw_arc(c, r, -PI / 2, -PI / 2 + TAU * progresso, 48, Color.WHITE, 3.0 if acao == escolhida else 2.0, true)
 		if falta > 0.0:
 			draw_string(fonte, c + Vector2(-r, 9), str(ceili(falta)), HORIZONTAL_ALIGNMENT_CENTER, r * 2, 26)
+		# anel que abre e some quando a bolinha entra no ícone
+		if piscada[i] > 0.0:
+			draw_arc(c, r * (1.0 + (1.0 - piscada[i]) * 0.5), 0, TAU, 48, Color(1, 1, 1, piscada[i]), 3.0, true)

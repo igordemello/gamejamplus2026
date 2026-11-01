@@ -2,6 +2,7 @@ extends Node2D
 class_name Fantasma
 
 const CONTORNO = preload("res://assets/contorno.tres")
+const FUMACA = preload("res://scene/fumaca.tscn")
 
 enum Tipo {
 	Aparicao,
@@ -28,6 +29,8 @@ const NOME_TIPO = {
 @export var comodos_proibidos: Array[String] = []
 # se preenchido, só pode ser colocado num ponto livre desse grupo (ex.: "armadura")
 @export var pontos_spawn: StringName = &""
+# só pode ser colocado do lado de fora da casa, na grama
+@export var fora_de_casa: bool = false
 
 @export var acoes: Array[Acao] = []
 @export var raio_clique: float = 32.0
@@ -39,6 +42,9 @@ var material_fantasma: ShaderMaterial = CONTORNO.duplicate()
 var escala_sprite: Vector2 = Vector2.ZERO
 var tween_pulinho: Tween
 var tween_negar: Tween
+var tween_aparecer: Tween
+# escala do nó como veio da cena; com o mouse em cima ele cresce um pouco a partir dela
+var escala_raiz: Vector2 = Vector2.ZERO
 
 func _enter_tree() -> void:
 	add_to_group("fantasma")
@@ -51,8 +57,14 @@ func _process(delta: float) -> void:
 		if antes > 0.0 and recarga_restante[acao] == 0.0:
 			piscar(1, 0.08)
 
+	var destaque = selecionado or mouse_em_cima()
 	$AnimatedSprite2D.material = material_fantasma
-	material_fantasma.set_shader_parameter("contorno", selecionado or mouse_em_cima())
+	material_fantasma.set_shader_parameter("contorno", destaque)
+	if not (tween_aparecer and tween_aparecer.is_running()):
+		if escala_raiz == Vector2.ZERO:
+			escala_raiz = scale
+		var real = minf(delta / maxf(Engine.time_scale, 0.01), 0.05)
+		scale = scale.lerp(escala_raiz * (1.08 if destaque else 1.0), minf(15.0 * real, 1.0))
 
 # fica branco rapidinho algumas vezes
 func piscar(vezes: int, duracao: float) -> void:
@@ -78,12 +90,18 @@ func executar(acao: Acao) -> void:
 
 # chamado quando é solto da loja: cresce com um pulinho e aparece
 func aparecer() -> void:
-	var escala = scale
-	scale = escala * 0.3
+	if escala_raiz == Vector2.ZERO:
+		escala_raiz = scale
+	scale = escala_raiz * 0.3
 	modulate.a = 0.0
-	var tween = create_tween().set_parallel()
-	tween.tween_property(self, "scale", escala, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_property(self, "modulate:a", 1.0, 0.15)
+	tween_aparecer = create_tween().set_parallel()
+	tween_aparecer.tween_property(self, "scale", escala_raiz, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween_aparecer.tween_property(self, "modulate:a", 1.0, 0.15)
+	# fumaça no chão e uma tremidinha
+	var fumaca = FUMACA.instantiate()
+	fumaca.position = get_parent().to_local(global_position)
+	get_parent().add_child(fumaca)
+	GameManager.house.camera.tremer(3.0)
 
 # amassa e estica rapidinho quando usa uma ação
 func pulinho() -> void:
