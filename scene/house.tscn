@@ -47,6 +47,18 @@
 [ext_resource type="PackedScene" path="res://scene/zumbi.tscn" id="58_zumbi"]
 [ext_resource type="Texture2D" path="res://assets/zumbie/zumbiIdle64x64.png" id="59_zumbi_tex"]
 [ext_resource type="NavigationPolygon" path="res://assets/navegacao_fora.tres" id="60_nav_fora"]
+[ext_resource type="Script" path="res://scripts/luz.gd" id="61_luz"]
+[ext_resource type="Texture2D" path="res://assets/luz.tres" id="62_luz_tex"]
+[ext_resource type="Shader" path="res://assets/neblina.gdshader" id="63_neblina"]
+[ext_resource type="Shader" path="res://assets/pos.gdshader" id="64_pos"]
+[ext_resource type="Script" path="res://scripts/pos.gd" id="65_pos_script"]
+[ext_resource type="PackedScene" path="res://scene/abobora.tscn" id="66_abobora"]
+[ext_resource type="PackedScene" path="res://scene/lapide.tscn" id="67_lapide"]
+[ext_resource type="Script" path="res://scripts/teia.gd" id="68_teia"]
+[ext_resource type="Script" path="res://scripts/varal.gd" id="69_varal"]
+[ext_resource type="Script" path="res://scripts/globo.gd" id="70_globo"]
+[ext_resource type="Material" path="res://assets/brilho.tres" id="71_brilho"]
+[ext_resource type="Material" path="res://assets/sem_luz.tres" id="72_sem_luz"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_2813k"]
 font_size = 36
@@ -113,6 +125,55 @@ vertices = PackedVector2Array(1414, 945.15625, 1416.5234, 999.0625, 1122, 1000.9
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(4, 0, 3, 5, 6), PackedInt32Array(4, 6, 7, 8, 9)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(1324, 792, 1422, 794, 1425, 874, 1424, 945, 1427, 1009, 1112, 1011, 1112, 925, 1115, 795, 1216, 794, 1287, 792)])
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_neblina"]
+frequency = 0.012
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_neblina"]
+width = 256
+height = 256
+seamless = true
+noise = SubResource("FastNoiseLite_neblina")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_neblina_fora"]
+shader = ExtResource("63_neblina")
+shader_parameter/ruido = SubResource("NoiseTexture2D_neblina")
+shader_parameter/cor = Color(0.72, 0.74, 0.92, 1)
+shader_parameter/densidade = 0.42
+shader_parameter/vento = Vector2(0.006, 0.002)
+shader_parameter/escala = 2.5
+shader_parameter/tamanho = Vector2(2480, 1420)
+shader_parameter/pixel = 4.0
+shader_parameter/degraus = 4.0
+shader_parameter/borda = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fumaca_pista"]
+shader = ExtResource("63_neblina")
+shader_parameter/ruido = SubResource("NoiseTexture2D_neblina")
+shader_parameter/cor = Color(0.95, 0.95, 1, 1)
+shader_parameter/densidade = 0.4
+shader_parameter/vento = Vector2(0.015, 0.004)
+shader_parameter/escala = 1.2
+shader_parameter/tamanho = Vector2(605, 360)
+shader_parameter/pixel = 3.0
+shader_parameter/degraus = 4.0
+shader_parameter/borda = 0.18
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pos"]
+shader = ExtResource("64_pos")
+
+[sub_resource type="Gradient" id="Gradient_some"]
+offsets = PackedFloat32Array(0, 0.15, 0.8, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_folhas"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(0.85, 0.4, 0.1, 1, 0.55, 0.18, 0.08, 1, 0.9, 0.65, 0.15, 1)
+
+[sub_resource type="Gradient" id="Gradient_fogo"]
+offsets = PackedFloat32Array(0, 0.4, 1)
+colors = PackedColorArray(1, 0.9, 0.45, 1, 1, 0.45, 0.1, 0.9, 0.6, 0.1, 0.05, 0)
+
 [node name="house" type="Node2D" unique_id=102113114 node_paths=PackedStringArray("ponto_fuga", "chao", "y_sort")]
 script = ExtResource("1_vjqwo")
 ponto_fuga = NodePath("PontoFuga")
@@ -122,6 +183,7 @@ metadata/_edit_vertical_guides_ = [960.0]
 metadata/_edit_horizontal_guides_ = [540.0]
 
 [node name="UI_main" type="CanvasLayer" parent="." unique_id=1000281048]
+layer = 2
 script = ExtResource("7_qg36w")
 
 [node name="lbl_sustos" type="Label" parent="UI_main" unique_id=1126181964]
@@ -235,6 +297,51 @@ position = Vector2(959.99994, 540)
 scale = Vector2(2.045, 2.045)
 texture = ExtResource("11_2iacw")
 
+[node name="neblina_fora" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_neblina_fora")
+offset_left = -280.0
+offset_top = -170.0
+offset_right = 2200.0
+offset_bottom = 1250.0
+mouse_filter = 2
+
+[node name="folhas" type="CPUParticles2D" parent="."]
+position = Vector2(960, 535)
+amount = 70
+lifetime = 9.0
+preprocess = 9.0
+emission_shape = 3
+emission_rect_extents = Vector2(1240, 710)
+direction = Vector2(1, 0.35)
+spread = 25.0
+gravity = Vector2(10, 4)
+initial_velocity_min = 15.0
+initial_velocity_max = 40.0
+angular_velocity_min = -120.0
+angular_velocity_max = 120.0
+scale_amount_min = 3.0
+scale_amount_max = 5.0
+color_ramp = SubResource("Gradient_some")
+color_initial_ramp = SubResource("Gradient_folhas")
+
+[node name="fogos_fatuos" type="CPUParticles2D" parent="."]
+material = ExtResource("71_brilho")
+position = Vector2(960, 535)
+amount = 18
+lifetime = 7.0
+preprocess = 7.0
+emission_shape = 3
+emission_rect_extents = Vector2(1240, 710)
+direction = Vector2(0, -1)
+spread = 180.0
+gravity = Vector2(0, -2)
+initial_velocity_min = 4.0
+initial_velocity_max = 12.0
+scale_amount_min = 3.0
+scale_amount_max = 4.0
+color = Color(0.55, 1, 0.75, 1)
+color_ramp = SubResource("Gradient_some")
+
 [node name="chao" type="Sprite2D" parent="." unique_id=1750618319]
 texture_filter = 1
 position = Vector2(959.99994, 540)
@@ -245,6 +352,35 @@ texture_filter = 1
 position = Vector2(943, 1190)
 texture = ExtResource("20_si276")
 offset = Vector2(16.999939, -650)
+
+[node name="fumaca_pista" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_fumaca_pista")
+offset_left = 580.0
+offset_top = 75.0
+offset_right = 1185.0
+offset_bottom = 435.0
+mouse_filter = 2
+
+[node name="globo" type="Node2D" parent="."]
+material = ExtResource("71_brilho")
+position = Vector2(880, 260)
+script = ExtResource("70_globo")
+
+[node name="fogo_lareira" type="CPUParticles2D" parent="."]
+material = ExtResource("71_brilho")
+position = Vector2(861, 133)
+amount = 30
+lifetime = 0.7
+emission_shape = 3
+emission_rect_extents = Vector2(13, 2)
+direction = Vector2(0, -1)
+spread = 12.0
+gravity = Vector2(0, -60)
+initial_velocity_min = 10.0
+initial_velocity_max = 40.0
+scale_amount_min = 4.0
+scale_amount_max = 6.0
+color_ramp = SubResource("Gradient_fogo")
 
 [node name="paredes2" type="Sprite2D" parent="." unique_id=267741825 groups=["parede"]]
 texture_filter = 1
@@ -389,11 +525,115 @@ house = NodePath("../..")
 visual = ExtResource("34_psicopata")
 preferencia = "descansar"
 
+[node name="abobora1" parent="Y-sort" instance=ExtResource("66_abobora")]
+position = Vector2(865, 1135)
+
+[node name="abobora2" parent="Y-sort" instance=ExtResource("66_abobora")]
+position = Vector2(1025, 1135)
+
+[node name="abobora3" parent="Y-sort" instance=ExtResource("66_abobora")]
+position = Vector2(300, 830)
+
+[node name="abobora4" parent="Y-sort" instance=ExtResource("66_abobora")]
+position = Vector2(1640, 880)
+
+[node name="abobora5" parent="Y-sort" instance=ExtResource("66_abobora")]
+position = Vector2(705, 100)
+
+[node name="abobora6" parent="Y-sort" instance=ExtResource("66_abobora")]
+position = Vector2(1035, 100)
+
+[node name="abobora7" parent="Y-sort" instance=ExtResource("66_abobora")]
+position = Vector2(1180, 792)
+
+[node name="abobora8" parent="Y-sort" instance=ExtResource("66_abobora")]
+position = Vector2(1455, 160)
+
+[node name="lapide1" parent="Y-sort" instance=ExtResource("67_lapide")]
+position = Vector2(70, 280)
+
+[node name="lapide2" parent="Y-sort" instance=ExtResource("67_lapide")]
+position = Vector2(150, 440)
+
+[node name="lapide3" parent="Y-sort" instance=ExtResource("67_lapide")]
+position = Vector2(60, 610)
+
+[node name="lapide4" parent="Y-sort" instance=ExtResource("67_lapide")]
+position = Vector2(200, 1070)
+
+[node name="lapide5" parent="Y-sort" instance=ExtResource("67_lapide")]
+position = Vector2(640, 1170)
+
+[node name="lapide6" parent="Y-sort" instance=ExtResource("67_lapide")]
+position = Vector2(1500, 1120)
+
 [node name="objeto_levitavel" type="Sprite2D" parent="." unique_id=1605782649]
 position = Vector2(860.9999, 121.00001)
 scale = Vector2(0.085, 0.085)
 texture = ExtResource("4_3bjdp")
 script = ExtResource("5_52fq0")
+
+[node name="decoracao" type="Node2D" parent="."]
+
+[node name="varal1" type="Node2D" parent="decoracao"]
+material = ExtResource("72_sem_luz")
+position = Vector2(585, 80)
+script = ExtResource("69_varal")
+fim = Vector2(590, 0)
+caida = 45.0
+lampadas = 16
+
+[node name="varal2" type="Node2D" parent="decoracao"]
+material = ExtResource("72_sem_luz")
+position = Vector2(245, 522)
+script = ExtResource("69_varal")
+fim = Vector2(995, 0)
+caida = 50.0
+lampadas = 24
+
+[node name="varal3" type="Node2D" parent="decoracao"]
+material = ExtResource("72_sem_luz")
+position = Vector2(852, 1040)
+script = ExtResource("69_varal")
+fim = Vector2(186, 0)
+caida = 22.0
+lampadas = 6
+
+[node name="teia1" type="Node2D" parent="decoracao"]
+material = ExtResource("72_sem_luz")
+position = Vector2(239, 197)
+script = ExtResource("68_teia")
+direcao = 45.0
+
+[node name="teia2" type="Node2D" parent="decoracao"]
+material = ExtResource("72_sem_luz")
+position = Vector2(576, 72)
+script = ExtResource("68_teia")
+direcao = 45.0
+
+[node name="teia3" type="Node2D" parent="decoracao"]
+material = ExtResource("72_sem_luz")
+position = Vector2(1185, 72)
+script = ExtResource("68_teia")
+direcao = 135.0
+
+[node name="teia4" type="Node2D" parent="decoracao"]
+material = ExtResource("72_sem_luz")
+position = Vector2(1520, 135)
+script = ExtResource("68_teia")
+direcao = 135.0
+
+[node name="teia5" type="Node2D" parent="decoracao"]
+material = ExtResource("72_sem_luz")
+position = Vector2(497, 775)
+script = ExtResource("68_teia")
+direcao = 45.0
+
+[node name="teia6" type="Node2D" parent="decoracao"]
+material = ExtResource("72_sem_luz")
+position = Vector2(1456, 775)
+script = ExtResource("68_teia")
+direcao = 135.0
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=2079252784]
 navigation_polygon = SubResource("NavigationPolygon_6hm8r")
@@ -551,6 +791,192 @@ tempo_max = 25.0
 
 [node name="PontoFuga" type="Marker2D" parent="." unique_id=241806709]
 position = Vector2(945, 1195)
+
+[node name="luzes" type="Node2D" parent="."]
+
+[node name="lareira" type="PointLight2D" parent="luzes"]
+position = Vector2(861, 120)
+color = Color(1, 0.5, 0.18, 1)
+energy = 1.3
+texture = ExtResource("62_luz_tex")
+texture_scale = 1.6
+script = ExtResource("61_luz")
+tremor = 0.35
+velocidade_tremor = 1.2
+
+[node name="pista1" type="PointLight2D" parent="luzes"]
+position = Vector2(880, 270)
+color = Color(1, 0.5, 0.1, 1)
+energy = 1.8
+texture = ExtResource("62_luz_tex")
+texture_scale = 1.15
+script = ExtResource("61_luz")
+tremor = 0.0
+cores = Array[Color]([Color(1, 0.5, 0.1, 1), Color(0.7, 0.3, 1, 1), Color(0.45, 1, 0.3, 1)])
+bpm = 118.0
+raio_orbita = 140.0
+velocidade_orbita = 0.12
+fase = 0.0
+
+[node name="pista2" type="PointLight2D" parent="luzes"]
+position = Vector2(880, 270)
+color = Color(1, 0.5, 0.1, 1)
+energy = 1.8
+texture = ExtResource("62_luz_tex")
+texture_scale = 1.15
+script = ExtResource("61_luz")
+tremor = 0.0
+cores = Array[Color]([Color(1, 0.5, 0.1, 1), Color(0.7, 0.3, 1, 1), Color(0.45, 1, 0.3, 1)])
+bpm = 118.0
+raio_orbita = 140.0
+velocidade_orbita = 0.12
+fase = 0.333
+
+[node name="pista3" type="PointLight2D" parent="luzes"]
+position = Vector2(880, 270)
+color = Color(1, 0.5, 0.1, 1)
+energy = 1.8
+texture = ExtResource("62_luz_tex")
+texture_scale = 1.15
+script = ExtResource("61_luz")
+tremor = 0.0
+cores = Array[Color]([Color(1, 0.5, 0.1, 1), Color(0.7, 0.3, 1, 1), Color(0.45, 1, 0.3, 1)])
+bpm = 118.0
+raio_orbita = 140.0
+velocidade_orbita = 0.12
+fase = 0.667
+
+[node name="quarto" type="PointLight2D" parent="luzes"]
+position = Vector2(330, 300)
+color = Color(1, 0.68, 0.38, 1)
+energy = 1.0
+texture = ExtResource("62_luz_tex")
+texture_scale = 2.2
+script = ExtResource("61_luz")
+
+[node name="escritorio" type="PointLight2D" parent="luzes"]
+position = Vector2(1360, 280)
+color = Color(1, 0.85, 0.55, 1)
+energy = 1.1
+texture = ExtResource("62_luz_tex")
+texture_scale = 2.0
+script = ExtResource("61_luz")
+tremor = 0.06
+
+[node name="banheiro" type="PointLight2D" parent="luzes"]
+position = Vector2(1612, 400)
+color = Color(0.62, 0.9, 1, 1)
+energy = 0.9
+texture = ExtResource("62_luz_tex")
+texture_scale = 1.3
+script = ExtResource("61_luz")
+tremor = 0.02
+falha = 0.5
+
+[node name="corredor1" type="PointLight2D" parent="luzes"]
+position = Vector2(430, 610)
+color = Color(1, 0.58, 0.3, 1)
+energy = 0.9
+texture = ExtResource("62_luz_tex")
+texture_scale = 1.6
+script = ExtResource("61_luz")
+tremor = 0.12
+
+[node name="corredor2" type="PointLight2D" parent="luzes"]
+position = Vector2(820, 610)
+color = Color(1, 0.58, 0.3, 1)
+energy = 0.9
+texture = ExtResource("62_luz_tex")
+texture_scale = 1.6
+script = ExtResource("61_luz")
+tremor = 0.12
+
+[node name="corredor3" type="PointLight2D" parent="luzes"]
+position = Vector2(1180, 610)
+color = Color(1, 0.58, 0.3, 1)
+energy = 0.9
+texture = ExtResource("62_luz_tex")
+texture_scale = 1.6
+script = ExtResource("61_luz")
+tremor = 0.12
+
+[node name="corredor4" type="PointLight2D" parent="luzes"]
+position = Vector2(1560, 640)
+color = Color(1, 0.58, 0.3, 1)
+energy = 0.9
+texture = ExtResource("62_luz_tex")
+texture_scale = 1.6
+script = ExtResource("61_luz")
+tremor = 0.12
+
+[node name="quarto_roxo" type="PointLight2D" parent="luzes"]
+position = Vector2(650, 880)
+color = Color(0.78, 0.3, 1, 1)
+energy = 0.7
+texture = ExtResource("62_luz_tex")
+texture_scale = 1.9
+script = ExtResource("61_luz")
+tremor = 0.05
+
+[node name="cozinha" type="PointLight2D" parent="luzes"]
+position = Vector2(1270, 820)
+color = Color(0.92, 0.95, 1, 1)
+energy = 0.35
+texture = ExtResource("62_luz_tex")
+texture_scale = 2.0
+script = ExtResource("61_luz")
+tremor = 0.04
+
+[node name="ponche" type="PointLight2D" parent="luzes"]
+position = Vector2(1270, 860)
+color = Color(0.4, 1, 0.35, 1)
+energy = 0.6
+texture = ExtResource("62_luz_tex")
+texture_scale = 0.8
+script = ExtResource("61_luz")
+tremor = 0.35
+velocidade_tremor = 0.8
+
+[node name="corredor_porta" type="PointLight2D" parent="luzes"]
+position = Vector2(945, 860)
+color = Color(1, 0.6, 0.3, 1)
+energy = 0.7
+texture = ExtResource("62_luz_tex")
+texture_scale = 1.5
+script = ExtResource("61_luz")
+
+[node name="varanda" type="PointLight2D" parent="luzes"]
+position = Vector2(945, 1080)
+color = Color(1, 0.66, 0.38, 1)
+energy = 0.95
+texture = ExtResource("62_luz_tex")
+texture_scale = 1.7
+script = ExtResource("61_luz")
+tremor = 0.05
+
+[node name="lua" type="PointLight2D" parent="luzes"]
+position = Vector2(2150, -200)
+color = Color(0.55, 0.65, 1, 1)
+energy = 0.55
+texture = ExtResource("62_luz_tex")
+texture_scale = 14.0
+script = ExtResource("61_luz")
+tremor = 0.0
+
+[node name="noite" type="CanvasModulate" parent="."]
+color = Color(0.42, 0.38, 0.6, 1)
+
+[node name="pos" type="CanvasLayer" parent="."]
+
+[node name="tela" type="ColorRect" parent="pos"]
+material = SubResource("ShaderMaterial_pos")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("65_pos_script")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1801471344]
 position = Vector2(960, 540)

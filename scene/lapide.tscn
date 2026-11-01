@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" uid="uid://btpkmr0kdu5sj" path="res://assets/Tileset_HouseHounted.webp" id="1_tiles"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lapide"]
+atlas = ExtResource("1_tiles")
+region = Rect2(648, 7, 48, 54)
+
+[node name="lapide" type="Sprite2D"]
+texture_filter = 1
+scale = Vector2(0.75, 0.75)
+texture = SubResource("AtlasTexture_lapide")
+offset = Vector2(0, -27)

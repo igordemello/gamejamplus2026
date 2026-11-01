@@ -45,9 +45,20 @@ var tween_negar: Tween
 var tween_aparecer: Tween
 # escala do nó como veio da cena; com o mouse em cima ele cresce um pouco a partir dela
 var escala_raiz: Vector2 = Vector2.ZERO
+# brilho de ectoplasma em volta, pulsando devagar (no escuro é por ele que se acha o fantasma)
+var luz: PointLight2D
+var tempo_luz: float = randf() * TAU
 
 func _enter_tree() -> void:
 	add_to_group("fantasma")
+	if luz == null:
+		var sprite: AnimatedSprite2D = $AnimatedSprite2D
+		luz = PointLight2D.new()
+		luz.texture = preload("res://assets/luz.tres")
+		luz.color = Color(0.55, 1.0, 0.8)
+		luz.texture_scale = 0.9
+		luz.position = sprite.position + sprite.offset * sprite.scale
+		add_child(luz)
 
 func _process(delta: float) -> void:
 	for acao in recarga_restante:
@@ -56,6 +67,9 @@ func _process(delta: float) -> void:
 		# piscadinha avisando que a ação ficou pronta de novo
 		if antes > 0.0 and recarga_restante[acao] == 0.0:
 			piscar(1, 0.08)
+
+	tempo_luz += delta
+	luz.energy = 0.55 + 0.15 * sin(tempo_luz * 1.5)
 
 	var destaque = selecionado or mouse_em_cima()
 	$AnimatedSprite2D.material = material_fantasma
@@ -85,6 +99,8 @@ func executar(acao: Acao) -> void:
 	if recarga_restante.get(acao, 0.0) <= 0.0 and call(acao.metodo):
 		recarga_restante[acao] = acao.recarga
 		pulinho()
+		# a casa sente: as luzes em volta piscam
+		GameManager.house.piscar_luzes(global_position, 0.25)
 	else:
 		negar()
 

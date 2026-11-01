@@ -2,6 +2,29 @@
 
 [ext_resource type="Script" uid="uid://cmvaasri3mbyr" path="res://scripts/menu.gd" id="1_e5g8k"]
 [ext_resource type="PackedScene" path="res://scene/config.tscn" id="2_config"]
+[ext_resource type="Shader" path="res://assets/neblina.gdshader" id="3_neblina"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_neblina"]
+frequency = 0.012
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_neblina"]
+width = 256
+height = 256
+seamless = true
+noise = SubResource("FastNoiseLite_neblina")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_neblina"]
+shader = ExtResource("3_neblina")
+shader_parameter/ruido = SubResource("NoiseTexture2D_neblina")
+shader_parameter/cor = Color(0.85, 0.85, 0.85, 1)
+shader_parameter/densidade = 0.15
+shader_parameter/vento = Vector2(0.012, 0.003)
+shader_parameter/escala = 0.8
+shader_parameter/tamanho = Vector2(1920, 1080)
+shader_parameter/pixel = 8.0
+shader_parameter/degraus = 4.0
+shader_parameter/borda = 0.0
 
 [node name="Menu" type="Control" unique_id=1065229293]
 layout_mode = 3
@@ -17,6 +40,16 @@ layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
 color = Color(0, 0, 0, 1)
+
+[node name="neblina" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_neblina")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="Label" type="Label" parent="." unique_id=635670435]
 layout_mode = 1

@@ -1,6 +1,10 @@
 extends CharacterBody2D
 class_name Npc
 
+# o que é informação (medidor, "!") e a alma ignoram a noite e as luzes
+const SEM_LUZ = preload("res://assets/sem_luz.tres")
+const ALMA = preload("res://assets/alma.gdshader")
+
 @export var house: House
 # animações desse npc (gotica.tres, cheerleader.tres...), precisa ter "andar" desenhada virada pra direita
 @export var visual: SpriteFrames
@@ -90,8 +94,17 @@ func _ready() -> void:
 	medidor = Node2D.new()
 	medidor.z_index = 2
 	medidor.position = Vector2(0, -90)
+	medidor.material = SEM_LUZ
 	add_child(medidor)
 	medidor.draw.connect(_desenhar_medidor)
+	# sombra no chão, embaixo dos pés (fica no lugar quando ele pula de susto)
+	var sombra = Node2D.new()
+	sombra.position = Vector2(0, altura_sprite)
+	sombra.draw.connect(func():
+		sombra.draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, 0.35))
+		sombra.draw_circle(Vector2.ZERO, 16.0, Color(0, 0, 0, 0.35)))
+	add_child(sombra)
+	move_child(sombra, 0)
 	if preferencia == "aleatória":
 		preferencia = ["dançar", "beber", "conversar", "descansar"].pick_random()
 	# cada um no seu passo
@@ -352,6 +365,8 @@ func tomar_susto(susto: String, pontosDeSusto: int, fantasma: Fantasma = null) -
 		house.camera.tremer(7.0 if foge else 3.0)
 		house.camera.chutar(0.07 if foge else 0.03)
 		GameManager.hitstop(0.15 if foge else 0.06)
+		house.pos.chutar(5.0 if foge else 2.5)
+		house.piscar_luzes(global_position, 0.6 if foge else 0.3)
 		if nivel_medo == 1 or nivel_medo == 2:
 			current_estado = Estado.Normal
 		elif nivel_medo == 3 or nivel_medo == 4:
@@ -382,6 +397,7 @@ func mostrar_exclamacao(texto: String) -> void:
 	if exclamacao == null:
 		exclamacao = Label.new()
 		exclamacao.z_index = 2
+		exclamacao.material = SEM_LUZ
 		exclamacao.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		exclamacao.add_theme_font_size_override("font_size", 40)
 		exclamacao.add_theme_constant_override("outline_size", 10)
@@ -514,6 +530,8 @@ func infartar() -> void:
 	house.camera.tremer(8.0)
 	house.camera.chutar(0.1)
 	GameManager.hitstop(0.25)
+	house.pos.chutar(7.0)
+	house.piscar_luzes(global_position, INFARTO_PARA)
 
 	var lado = -1.0 if sprite.flip_h else 1.0
 	var tween = create_tween()
@@ -569,6 +587,7 @@ func bater_no_chao(lado: float) -> void:
 	house.camera.tremer(6.0)
 	house.camera.chutar(0.05)
 	GameManager.hitstop(0.08)
+	house.pos.chutar(4.0)
 	var poeira = Fantasma.FUMACA.instantiate()
 	poeira.position = get_parent().to_local(global_position + Vector2(lado * 40.0, 25.0))
 	get_parent().add_child(poeira)
@@ -585,8 +604,8 @@ func soltar_alma() -> void:
 	alma.scale = escala_sprite
 	alma.position = sprite.position
 	alma.z_index = 1
-	alma.material = Fantasma.CONTORNO.duplicate()
-	alma.material.set_shader_parameter("brilho", 1.0)
+	alma.material = ShaderMaterial.new()
+	alma.material.shader = ALMA
 	alma.modulate.a = 0.0
 	add_child(alma)
 	var tween = alma.create_tween().set_parallel()

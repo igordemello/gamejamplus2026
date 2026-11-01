@@ -9,11 +9,19 @@ var regionsHouse: Array[NavigationRegion2D] = []
 @onready var camera = $Camera2D
 # ui_main.gd (contador de sustos)
 @onready var ui = $UI_main
+# pos.gd, o pós-processamento: pos.chutar(forca) dá um tranco de aberração cromática
+@onready var pos = $pos/tela
+@onready var noite: CanvasModulate = $noite
 
 @export var ponto_fuga: Marker2D
 @export var chao: Sprite2D
 # fantasmas e comida criados durante o jogo entram aqui pra ordenar com NPCs e paredes
 @export var y_sort: Node2D
+
+# cor da noite com a festa cheia e com todo mundo já ido embora: a casa escurece e avermelha
+@export var cor_festa: Color = Color(0.42, 0.38, 0.6)
+@export var cor_vazia: Color = Color(0.3, 0.16, 0.22)
+var npcs_no_comeco: int = 0
 
 func _ready() -> void:
 	GameManager.house = self
@@ -23,6 +31,19 @@ func _ready() -> void:
 			# à malha principal e os NPCs ficam presos dentro deles.
 			region.enabled = false
 			regionsHouse.append(region)
+	npcs_no_comeco = get_tree().get_nodes_in_group("npc").size()
+	noite.color = cor_festa
+
+func _process(delta: float) -> void:
+	var foram = 1.0 - get_tree().get_nodes_in_group("npc").size() / float(maxi(npcs_no_comeco, 1))
+	noite.color = noite.color.lerp(cor_festa.lerp(cor_vazia, clampf(foram, 0.0, 1.0)), minf(delta, 1.0))
+
+# susto por perto: as luzes do cômodo (ou a até 300 px) piscam
+func piscar_luzes(pos_susto: Vector2, duracao: float) -> void:
+	var comodo = comodo_em(pos_susto)
+	for luz in get_tree().get_nodes_in_group("luz"):
+		if luz.global_position.distance_to(pos_susto) < 300.0 or (comodo != "" and comodo_em(luz.global_position) == comodo):
+			luz.piscar(duracao)
 
 # nome do cômodo que contém pos, ou "" se não estiver em nenhum
 func comodo_em(pos: Vector2) -> String:

@@ -1,0 +1,33 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/abobora.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://btpkmr0kdu5sj" path="res://assets/Tileset_HouseHounted.webp" id="2_tiles"]
+[ext_resource type="Script" path="res://scripts/luz.gd" id="3_luz"]
+[ext_resource type="Texture2D" path="res://assets/luz.tres" id="4_luz"]
+[ext_resource type="Material" path="res://assets/sem_luz.tres" id="5_sem_luz"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_abobora"]
+atlas = ExtResource("2_tiles")
+region = Rect2(519, 17, 51, 40)
+
+[node name="abobora" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="sprite" type="Sprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(0.7, 0.7)
+texture = SubResource("AtlasTexture_abobora")
+offset = Vector2(0, -20)
+
+[node name="rosto" type="Node2D" parent="sprite"]
+material = ExtResource("5_sem_luz")
+position = Vector2(0, -20)
+
+[node name="luz" type="PointLight2D" parent="."]
+position = Vector2(0, -12)
+color = Color(1, 0.5, 0.12, 1)
+energy = 1.1
+texture = ExtResource("4_luz")
+script = ExtResource("3_luz")
+tremor = 0.45
+velocidade_tremor = 1.5
