@@ -112,11 +112,8 @@ func soltar() -> void:
 # para de levitar e de receber clique. quem pegou cuida do resto
 func ser_pego() -> void:
 	segurando = false
-<<<<<<< Updated upstream
 	GameManager.som.parar(som_levitando)
-=======
 	remove_from_group("levitavel")
->>>>>>> Stashed changes
 	for tween in [tween_queda, tween_escala]:
 		if tween:
 			tween.kill()
