@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bqagv5f2s4uk"
+path="res://.godot/imported/caveira ahhaha.mp3-0a69d2cc0096649b2f3734e7d72f00c5.mp3str"
+
+[deps]
+
+source_file="res://assets/sons/caveira ahhaha.mp3"
+dest_files=["res://.godot/imported/caveira ahhaha.mp3-0a69d2cc0096649b2f3734e7d72f00c5.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

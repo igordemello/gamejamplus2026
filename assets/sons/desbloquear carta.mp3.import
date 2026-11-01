@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dkqfevfvrmjwu"
+path="res://.godot/imported/desbloquear carta.mp3-7ab85ac8e6b87e0a8268f139be6c6395.mp3str"
+
+[deps]
+
+source_file="res://assets/sons/desbloquear carta.mp3"
+dest_files=["res://.godot/imported/desbloquear carta.mp3-7ab85ac8e6b87e0a8268f139be6c6395.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dhidbthyfg4rl"
+path="res://.godot/imported/zumbi bafo.mp3-f6ac6f20e9747abbefce7194cb28d14a.mp3str"
+
+[deps]
+
+source_file="res://assets/sons/zumbi bafo.mp3"
+dest_files=["res://.godot/imported/zumbi bafo.mp3-f6ac6f20e9747abbefce7194cb28d14a.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

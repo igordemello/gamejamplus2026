@@ -12,6 +12,7 @@ func _physics_process(_delta: float) -> void:
 	for npc in get_tree().get_nodes_in_group("npc"):
 		if global_position.distance_to(npc.global_position) <= raio:
 			Onomatopeia.soltar("BLERGH!", global_position + Vector2(0, -60), Color(0.6, 1, 0.4))
+			GameManager.som.tocar("geleia_regurgitar")
 			npc.tomar_susto("comida", medo, fantasma)
 			npc.atordoar(tempo_vomitando)
 			# vira a poça de vômito e some quando ele termina de vomitar

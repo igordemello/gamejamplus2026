@@ -97,7 +97,7 @@ metodo = &"susto_de_espada"
 
 [node name="Cavaleiro" type="Node2D"]
 script = ExtResource("1_script")
-custo = 4
+custo = 3
 tipo = 2
 pontos_spawn = &"armadura"
 acoes = Array[ExtResource("2_acao")]([SubResource("Resource_espada")])

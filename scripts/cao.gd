@@ -4,10 +4,10 @@ extends Fantasma
 @export var velocidade_giro: float = 12.0
 @export var alcance_mordida: float = 30.0
 
-@export var medo_mastigar: int = 35
+@export var medo_mastigar: int = 70
 @export var duracao_mastigar: float = 2.5
 
-@export var medo_latido: int = 18
+@export var medo_latido: int = 35
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
@@ -40,6 +40,7 @@ func latido_feral() -> bool:
 		return false
 	sprite.play("latir")
 	onomatopeia("AU AU!", Color(1, 0.65, 0.3))
+	GameManager.som.tocar("cao_latido")
 	var meu_comodo = GameManager.house.comodo_em(global_position)
 	for npc in get_tree().get_nodes_in_group("npc"):
 		if GameManager.house.comodo_em(npc.global_position) == meu_comodo:
@@ -70,6 +71,7 @@ func ir_ate_alvo(delta: float) -> void:
 func _on_animacao_acabou() -> void:
 	if sprite.animation == &"agarrar" and is_instance_valid(alvo):
 		onomatopeia("NHAC NHAC", Color(1, 0.4, 0.4))
+		GameManager.som.tocar("cao_nhac", duracao_mastigar, 0.3)
 		alvo.tomar_susto("mastigar", medo_mastigar, self)
 		alvo = null
 		sprite.play("mastigar")

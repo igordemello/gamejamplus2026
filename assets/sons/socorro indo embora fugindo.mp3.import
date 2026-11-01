@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dfcejet1sdcxy"
+path="res://.godot/imported/socorro indo embora fugindo.mp3-bd62b06b4875e154af559dfef11d9f55.mp3str"
+
+[deps]
+
+source_file="res://assets/sons/socorro indo embora fugindo.mp3"
+dest_files=["res://.godot/imported/socorro indo embora fugindo.mp3-bd62b06b4875e154af559dfef11d9f55.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

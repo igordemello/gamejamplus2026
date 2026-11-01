@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cti27bu6m3ren"
+path="res://.godot/imported/vush invocação.mp3-3425268e175dd2d7ba808564f5812aa8.mp3str"
+
+[deps]
+
+source_file="res://assets/sons/vush invocação.mp3"
+dest_files=["res://.godot/imported/vush invocação.mp3-3425268e175dd2d7ba808564f5812aa8.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

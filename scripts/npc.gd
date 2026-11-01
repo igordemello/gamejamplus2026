@@ -7,6 +7,8 @@ const ALMA = preload("res://assets/alma.gdshader")
 const PAPEL = Color(0.86, 0.84, 0.76)
 # nível de medo que libera cada pedaço da lore (a árvore que abre no clique)
 const NIVEIS_LORE = [1, 3, 4]
+# a partir desse nível de medo, o fantasma certo mata do coração
+const NIVEL_INFARTO = 2
 
 @export var house: House
 # animações desse npc (gotica.tres, cheerleader.tres...), precisa ter "andar" desenhada virada pra direita
@@ -55,8 +57,8 @@ var alfa_anel: float = 0.0
 var infarto_tipo: String = ""
 var infarto_tier: int = 0
 # sustos a mais (além do +1 do nível) quando ele infarta
-@export var bonus_infarto: int = 2
-# os pontos de susto são divididos por isso (o policial tem 2)
+@export var bonus_infarto: int = 3
+# os pontos de susto são divididos por isso (o policial tem 1,5)
 @export var resistencia: float = 1.0
 # chamado quando as mortes chegam no limite: azulado, com sirene; infarta com o Cavaleiro
 @export var policial: bool = false
@@ -380,8 +382,8 @@ func get_random_point_in_region(region: NavigationRegion2D) -> Vector2:
 
 	return region.global_position
 
-# fantasma = quem assustou (null no objeto levitável). se ele chegar no nível 5 pelo
-# fantasma do tipo e do tier que matam ele do coração, infarta em vez de fugir
+# fantasma = quem assustou (null no objeto levitável). a partir de NIVEL_INFARTO, um susto do
+# fantasma do tipo e do tier que matam ele do coração faz ele infartar na hora
 func tomar_susto(susto: String, pontosDeSusto: int, fantasma: Fantasma = null) -> void:
 	if current_estado == Estado.Infarta:
 		return
@@ -397,18 +399,24 @@ func tomar_susto(susto: String, pontosDeSusto: int, fantasma: Fantasma = null) -
 	pular_de_susto()
 	house.registrar_susto(global_position)
 
+	if nivel_medo >= NIVEL_INFARTO and nivel_medo < 5 and mata_do_coracao(fantasma):
+		infartar()
+		return
+
 	barra_susto = minf(barra_susto + pontos_recebidos, 100.0)
+	# o objeto levitável não expulsa ninguém: o último nível sempre vem de um fantasma
+	if fantasma == null and nivel_medo == 4:
+		barra_susto = minf(barra_susto, 99.0)
 
 	if barra_susto >= 100.0:
 		barra_susto = 0.0
 		nivel_medo += 1
-		if nivel_medo == 5 and mata_do_coracao(fantasma):
-			infartar()
-			return
 		GameManager.sustos += 1
 		# o +1 sai da cabeça e voa até o contador
 		house.ui.voar_susto(get_global_transform_with_canvas() * Vector2(0, -100))
 		mostrar_exclamacao("!!")
+		if nivel_medo < 5:
+			GameManager.som.gritar()
 		Onomatopeia.soltar("SOCORRO!" if nivel_medo >= 5 else ["AAAH!", "EEEK!", "AI AI AI!", "SOCORRO!"].pick_random(),
 			global_position + Vector2(randf_range(-40.0, 40.0), -175.0), Color(1, 0.95, 0.6), 4.0 if nivel_medo >= 5 else 3.0)
 		# peso: tela treme, câmera dá um tranco e o jogo congela um instante (mais forte quando ele foge)
@@ -541,6 +549,7 @@ func fugir() -> void:
 
 	current_estado = Estado.Foge
 	sair_do_ponto()
+	GameManager.som.tocar("socorro", 4.85, 0.8)
 
 	agent.target_position = house.ponto_fuga.global_position
 
@@ -679,6 +688,7 @@ func parar_coracao() -> void:
 	house.ui.focar(self, 0.13)
 	house.camera.tremer(5.0)
 	house.ui.letreiro("INFARTO!", get_global_transform_with_canvas() * Vector2(0, -170))
+	GameManager.som.tocar("infarto")
 
 func bater_no_chao(lado: float) -> void:
 	house.camera.tremer(6.0)

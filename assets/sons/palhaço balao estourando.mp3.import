@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://wlsdfuejw271"
+path="res://.godot/imported/palhaço balao estourando.mp3-91cc2c0374b4917fb4ea0b34df86d70e.mp3str"
+
+[deps]
+
+source_file="res://assets/sons/palhaço balao estourando.mp3"
+dest_files=["res://.godot/imported/palhaço balao estourando.mp3-91cc2c0374b4917fb4ea0b34df86d70e.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

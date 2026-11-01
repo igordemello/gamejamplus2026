@@ -2,10 +2,10 @@ extends Fantasma
 
 @export var velocidade: float = 200.0
 
-@export var medo_comida: int = 25
+@export var medo_comida: int = 50
 @export var cena_comida: PackedScene
 
-@export var medo_lambida: int = 35
+@export var medo_lambida: int = 70
 @export var alcance_lambida: float = 40.0
 
 @export var amplitude_balanco: float = 1.0
@@ -35,6 +35,7 @@ func comer_e_regorfar() -> bool:
 		return false
 	sprite.play("mordida")
 	onomatopeia("NHAC!", Color(0.8, 0.5, 1))
+	GameManager.som.tocar("geleia_nhac")
 	return true
 
 func lambidao() -> bool:
@@ -66,6 +67,7 @@ func lamber() -> void:
 
 func _on_animacao_acabou() -> void:
 	if sprite.animation == &"mordida":
+		GameManager.som.tocar("geleia_regurgitar")
 		var comida = cena_comida.instantiate()
 		comida.medo = medo_comida
 		comida.fantasma = self

@@ -18,13 +18,14 @@ var segurando : bool = false
 var primeiro_susto: bool = false
 
 @export var tipo_susto: String = "objeto"
-@export var pontos_susto: int = 15
+@export var pontos_susto: int = 20
 @export var intervalo_susto: float = 1.0
 
 var tempo_susto: float = 0.0
 
 var tween_escala: Tween
 var tween_queda: Tween
+var som_levitando: AudioStreamPlayer
 # o próprio desenho escuro e achatado, que fica no chão enquanto o objeto sobe
 var sombra: Sprite2D
 
@@ -93,12 +94,14 @@ func levantar() -> void:
 	tempo_susto = 0.0
 	if tween_queda:
 		tween_queda.kill()
+	som_levitando = GameManager.som.tocar("levitando")
 	# estica pra cima no puxão
 	esticar(Vector2(0.8, 1.25))
 
 # cai quicando e amassa quando bate no chão
 func soltar() -> void:
 	segurando = false
+	GameManager.som.parar(som_levitando)
 	tween_queda = create_tween()
 	tween_queda.tween_property(self, "position", posicao_original, 0.45).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
 	tween_queda.parallel().tween_property(self, "rotation", 0.0, 0.2)
@@ -109,6 +112,7 @@ func soltar() -> void:
 # para de levitar e de receber clique. quem pegou cuida do resto
 func ser_pego() -> void:
 	segurando = false
+	GameManager.som.parar(som_levitando)
 	for tween in [tween_queda, tween_escala]:
 		if tween:
 			tween.kill()
@@ -128,6 +132,7 @@ func pulsar() -> void:
 	if primeiro_susto:
 		primeiro_susto = false
 		Onomatopeia.soltar("BUUU!", global_position + Vector2(0, -40), Color(0.8, 1, 1))
+		GameManager.som.tocar("buu_levitavel")
 
 # deforma rapidinho e volta pro tamanho normal com um pulinho
 func esticar(forma: Vector2) -> void:

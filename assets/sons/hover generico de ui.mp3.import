@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://pkkujo32xmbc"
+path="res://.godot/imported/hover generico de ui.mp3-b7c94cd0c1c09f9706305cae5aa4d4a1.mp3str"
+
+[deps]
+
+source_file="res://assets/sons/hover generico de ui.mp3"
+dest_files=["res://.godot/imported/hover generico de ui.mp3-b7c94cd0c1c09f9706305cae5aa4d4a1.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

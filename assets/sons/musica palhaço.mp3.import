@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://338glob0o8y"
+path="res://.godot/imported/musica palhaço.mp3-6d25fbcefeda6c1b2730332ce84967a2.mp3str"
+
+[deps]
+
+source_file="res://assets/sons/musica palhaço.mp3"
+dest_files=["res://.godot/imported/musica palhaço.mp3-6d25fbcefeda6c1b2730332ce84967a2.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

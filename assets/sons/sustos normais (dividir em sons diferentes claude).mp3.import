@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://covwt8r2kxxa7"
+path="res://.godot/imported/sustos normais (dividir em sons diferentes claude).mp3-e7fd14a9d86f7f9760d525e4836024cd.mp3str"
+
+[deps]
+
+source_file="res://assets/sons/sustos normais (dividir em sons diferentes claude).mp3"
+dest_files=["res://.godot/imported/sustos normais (dividir em sons diferentes claude).mp3-e7fd14a9d86f7f9760d525e4836024cd.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

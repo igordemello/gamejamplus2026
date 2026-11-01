@@ -2,17 +2,20 @@ extends Node
 
 var wander_radius: float = 200.0
 
-const SUSTOS_INICIAIS = 0
+const SUSTOS_INICIAIS = 5
 var sustos: int = SUSTOS_INICIAIS
 # quantos npcs infartaram nesta partida
 var mortes: int = 0
 
 var house: House
+# música e efeitos sonoros
+var som: Node = preload("res://scripts/som.gd").new()
 # um tween só mexe no time_scale da câmera lenta (menu de ações e arraste de carta): quem pede por último vale
 var tween_tempo: Tween
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	add_child(som)
 	Config.carregar()
 
 # a casa chama quando começa (também no Jogar de novo)

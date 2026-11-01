@@ -9,9 +9,9 @@ const ESTILHACOS = preload("res://scene/estilhacos.tscn")
 @export var peito: Vector2 = Vector2(0, 3)
 @export var altura_levantar: float = 40.0
 
-@export var medo_quebra: int = 25
-@export var raio_quebra: float = 180.0
-@export var max_assustados: int = 3
+@export var medo_quebra: int = 50
+@export var raio_quebra: float = 280.0
+@export var max_assustados: int = 5
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var brasas: CPUParticles2D = $brasas
@@ -88,6 +88,7 @@ func quebrar(objeto: Node2D) -> void:
 	)
 	assustados.sort_custom(func(a, b): return objeto.global_position.distance_to(a.global_position) < objeto.global_position.distance_to(b.global_position))
 	Onomatopeia.soltar("CRASH!", objeto.global_position + Vector2(0, -40), Color(1, 0.6, 0.25), 4.0)
+	GameManager.som.tocar("diabrete_quebra")
 	for npc in assustados.slice(0, max_assustados):
 		npc.tomar_susto("quebra", medo_quebra, self)
 

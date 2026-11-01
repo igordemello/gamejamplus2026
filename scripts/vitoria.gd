@@ -26,6 +26,8 @@ func mostrar(fugiram: int, mortes: int, tempo: float, venceu: bool) -> void:
 	%tempo.text = "Tempo: %d:%02d" % [int(tempo) / 60, int(tempo) % 60]
 	get_tree().paused = true
 	GameManager.tempo_normal()
+	if venceu:
+		GameManager.som.tocar_ui("vitoria")
 	show()
 	fundo.modulate.a = 0.0
 	caixa.modulate.a = 0.0
