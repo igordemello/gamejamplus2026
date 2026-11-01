@@ -18,7 +18,7 @@ var segurando : bool = false
 var primeiro_susto: bool = false
 
 @export var tipo_susto: String = "objeto"
-@export var pontos_susto: int = 15
+@export var pontos_susto: int = 20
 @export var intervalo_susto: float = 1.0
 
 var tempo_susto: float = 0.0

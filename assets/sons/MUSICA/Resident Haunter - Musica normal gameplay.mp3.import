@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://82lnowus3hb4"
+path="res://.godot/imported/Resident Haunter - Musica normal gameplay.mp3-650ccd541135bbff1ef2c05e32092f00.mp3str"
+
+[deps]
+
+source_file="res://assets/sons/MUSICA/Resident Haunter - Musica normal gameplay.mp3"
+dest_files=["res://.godot/imported/Resident Haunter - Musica normal gameplay.mp3-650ccd541135bbff1ef2c05e32092f00.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

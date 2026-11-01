@@ -2,10 +2,10 @@ extends Fantasma
 
 @export var velocidade: float = 200.0
 
-@export var medo_comida: int = 25
+@export var medo_comida: int = 50
 @export var cena_comida: PackedScene
 
-@export var medo_lambida: int = 35
+@export var medo_lambida: int = 70
 @export var alcance_lambida: float = 40.0
 
 @export var amplitude_balanco: float = 1.0

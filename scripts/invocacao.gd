@@ -5,7 +5,7 @@ extends Node2D
 
 # quem estiver a esse raio do pentagrama leva um susto pequeno quando o fantasma sai
 @export var raio_susto: float = 160.0
-@export var medo_susto: int = 10
+@export var medo_susto: int = 20
 
 var fantasma: Fantasma
 var tempo: float = 0.0

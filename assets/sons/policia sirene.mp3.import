@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cqfl7hdhbnkfj"
+path="res://.godot/imported/policia sirene.mp3-114b51b9060f793b098c4d94fdae4659.mp3str"
+
+[deps]
+
+source_file="res://assets/sons/policia sirene.mp3"
+dest_files=["res://.godot/imported/policia sirene.mp3-114b51b9060f793b098c4d94fdae4659.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

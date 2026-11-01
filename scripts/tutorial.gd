@@ -38,7 +38,7 @@ func comecar(casa) -> void:
 		{"texto": "Assuste todo mundo da festa até a casa ficar vazia."},
 		{"texto": "Segure o botão esquerdo no objeto que flutua: ele assusta quem estiver no cômodo.",
 			"alvo": func(): return get_tree().get_first_node_in_group("levitavel"),
-			"feito": func(): return GameManager.sustos >= 1},
+			"feito": func(): return get_tree().get_nodes_in_group("npc").any(func(n): return n.nivel_medo >= 1)},
 		{"texto": "Cada nível de medo vale 1 susto.",
 			"destaque": house.ui.get_node("contadores/sustos"), "auto": 4.0},
 		{"texto": "Junte sustos e arraste uma carta do baralho pra casa.",
@@ -49,7 +49,7 @@ func comecar(casa) -> void:
 			"feito": func(): return get_tree().get_nodes_in_group("fantasma").any(func(f): return f.recarga_restante.values().any(func(r): return r > 0.0))},
 		{"texto": "Rodinha: zoom. Botão direito: arrasta a câmera.",
 			"feito": func(): return absf(cam.zoom_alvo - zoom_inicial) > 0.01 or cam.arrastado - arrastado_inicial > 100.0},
-		{"texto": "Mate os marcados com caveira ou outro objetivo. Clique num convidado pra ver como.",
+		{"texto": "Mate quem tem a caveira ou outro objetivo. Clique num convidado pra ver como.",
 			"destaque": house.ui.get_node("objetivos"), "abrir_objetivos": true},
 		{"texto": "Com %d mortes a polícia vem. Esc pausa. Boa assombração!" % house.limite_mortes},
 	]

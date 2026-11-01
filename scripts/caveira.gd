@@ -1,10 +1,10 @@
 extends Fantasma
 
 @export var raio_risada: float = 220.0
-@export var medo_risada: int = 20
+@export var medo_risada: int = 40
 
 @export var raio_mordida: float = 160.0
-@export var medo_mordida: int = 32
+@export var medo_mordida: int = 65
 @export var max_mordidos: int = 2
 @export var tempo_fugindo: float = 4.0
 # onde e de que tamanho os dentes aparecem no npc mordido
@@ -14,7 +14,7 @@ extends Fantasma
 @export var velocidade: float = 260.0
 @export var alcance_cabecada: float = 30.0
 @export var tempo_max_perseguindo: float = 6.0
-@export var medo_cabecada: int = 55
+@export var medo_cabecada: int = 110
 @export var duracao_stun_cabecada: float = 10.0
 # quanto do medo a pessoa perde por segundo enquanto está tonta da cabeçada
 @export var dreno_cabecada: float = 1.5

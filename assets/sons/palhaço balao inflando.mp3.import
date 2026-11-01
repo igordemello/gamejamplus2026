@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://btnsca4kblpn"
+path="res://.godot/imported/palhaço balao inflando.mp3-3c95f503ba451af817150ec99a4b0364.mp3str"
+
+[deps]
+
+source_file="res://assets/sons/palhaço balao inflando.mp3"
+dest_files=["res://.godot/imported/palhaço balao inflando.mp3-3c95f503ba451af817150ec99a4b0364.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -177,7 +177,7 @@ animations = [{
 [node name="Geleia Roxa" type="Node2D" unique_id=1509536684]
 script = ExtResource("1_geleia")
 cena_comida = ExtResource("4_comida")
-custo = 9
+custo = 5
 tier = 2
 comodo_spawn = "cozinha"
 acoes = Array[ExtResource("5_acao")]([SubResource("Resource_comer"), SubResource("Resource_lambidao")])

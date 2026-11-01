@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://753bwd6le1sd"
+path="res://.godot/imported/criança buaaa.mp3-7c6a29376e03d8a05a6e1e4c1b965a18.mp3str"
+
+[deps]
+
+source_file="res://assets/sons/criança buaaa.mp3"
+dest_files=["res://.godot/imported/criança buaaa.mp3-7c6a29376e03d8a05a6e1e4c1b965a18.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

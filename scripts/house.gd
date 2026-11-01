@@ -26,12 +26,12 @@ var regionsHouse: Array[NavigationRegion2D] = []
 @export var cor_vazia: Color = Color(0.3, 0.16, 0.22)
 
 # quantos infartos até chamarem a polícia
-@export var limite_mortes: int = 5
+@export var limite_mortes: int = 2
 @export var cena_policial: PackedScene
 # objetivos: além de esvaziar a casa, precisa cumprir um deles
-@export var quantos_marcados: int = 3
+@export var quantos_marcados: int = 1
 # "todos os cômodos ao mesmo tempo" = todos com susto dentro dessa janela, em segundos
-@export var janela_comodos: float = 4.0
+@export var janela_comodos: float = 8.0
 
 var npcs_no_comeco: int = 0
 var acabou: bool = false
@@ -83,17 +83,25 @@ func terminar() -> void:
 	await get_tree().create_timer(0.8).timeout
 	$vitoria.mostrar(npcs_no_comeco - GameManager.mortes, GameManager.mortes, tempo_partida, objetivo_cumprido())
 
-# sorteia quem tem que morrer, só entre quem algum fantasma da loja consegue matar do coração
+# sorteia quem tem que morrer
 func marcar_alvos() -> void:
-	var matadores = {}
-	for card in ui.get_node("painel_fantasmas/lista").get_children():
-		matadores["%s %d" % [Fantasma.Tipo.find_key(card.tipo), card.tier]] = true
-	var candidatos = get_tree().get_nodes_in_group("npc").filter(func(n): return matadores.has("%s %d" % [n.infarto_tipo, n.infarto_tier]))
-	candidatos.shuffle()
-	for npc in candidatos.slice(0, quantos_marcados):
+	var novos = candidatos_a_marcado().slice(0, quantos_marcados)
+	for npc in novos:
 		npc.marcar()
 		marcados.append(npc)
-	ui.mostrar_marcados(marcados)
+	ui.mostrar_marcados(novos)
+
+# só quem um fantasma já liberado na loja consegue matar do coração (e ainda não está fugindo).
+# o policial fica de fora: ele já tem objetivo próprio
+func candidatos_a_marcado() -> Array:
+	var matadores = {}
+	for card in ui.get_node("painel_fantasmas/lista").get_children():
+		if not card.travada():
+			matadores["%s %d" % [Fantasma.Tipo.find_key(card.tipo), card.tier]] = true
+	var candidatos = get_tree().get_nodes_in_group("npc").filter(func(n):
+		return not n.marcado and not n.policial and n.current_estado != Npc.Estado.Foge and matadores.has("%s %d" % [n.infarto_tipo, n.infarto_tier]))
+	candidatos.shuffle()
+	return candidatos
 
 # todo susto que pegou em alguém passa aqui (objetivo dos cômodos)
 func registrar_susto(pos_susto: Vector2) -> void:
@@ -112,16 +120,23 @@ func registrar_morte(npc) -> void:
 	if npc.marcado:
 		marcados_mortos += 1
 		ui.marcar_retrato(npc, true)
-		if marcados_mortos == marcados.size():
+		if marcados_mortos == quantos_marcados:
 			objetivo_marcados = true
 	if npc.policial:
 		objetivo_policial = true
 	if GameManager.mortes == limite_mortes and not policia_chamada:
 		chamar_policia()
 
+# marcado fugiu vivo: outro convidado é marcado no lugar. só falha se não sobrar gente pra completar
 func marcado_fugiu(npc) -> void:
-	marcado_escapou = true
 	ui.marcar_retrato(npc, false)
+	var candidatos = candidatos_a_marcado()
+	if not candidatos.is_empty():
+		candidatos[0].marcar()
+		marcados.append(candidatos[0])
+		ui.mostrar_marcados([candidatos[0]])
+	var vivos = marcados.filter(func(n): return is_instance_valid(n) and n.is_in_group("npc"))
+	marcado_escapou = marcados_mortos + vivos.size() < quantos_marcados
 
 # a polícia chega pela porta da frente com sirene e vai olhar onde foi a última morte
 func chamar_policia() -> void:

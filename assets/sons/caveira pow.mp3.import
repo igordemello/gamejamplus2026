@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bvem6iqdim0mx"
+path="res://.godot/imported/caveira pow.mp3-21902c8d12d977efe2e029ecc51c97d2.mp3str"
+
+[deps]
+
+source_file="res://assets/sons/caveira pow.mp3"
+dest_files=["res://.godot/imported/caveira pow.mp3-21902c8d12d977efe2e029ecc51c97d2.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

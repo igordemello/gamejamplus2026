@@ -146,7 +146,7 @@ func atualizar_objetivos() -> void:
 	var h = get_parent()
 	var restam = get_tree().get_nodes_in_group("npc").size()
 	objetivos.get_node("casa").text = "Tirar todo mundo da casa (restam %d)" % restam
-	linha(objetivos.get_node("marcados"), "Matar os %d marcados (%d/%d)" % [h.marcados.size(), h.marcados_mortos, h.marcados.size()],
+	linha(objetivos.get_node("marcados"), ("Matar o marcado" if h.quantos_marcados == 1 else "Matar os %d marcados (%d/%d)" % [h.quantos_marcados, h.marcados_mortos, h.quantos_marcados]),
 		h.objetivo_marcados, h.marcado_escapou)
 	linha(objetivos.get_node("comodos"), "Assustar em todos os cômodos juntos (%d/%d)" % [h.comodos_assustados(), h.regionsHouse.size()],
 		h.objetivo_comodos, false)

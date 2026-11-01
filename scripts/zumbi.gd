@@ -2,7 +2,7 @@ extends Fantasma
 
 # o bafo sai em volta dele: todo mundo nesse círculo se assusta e fica paralisado
 @export var raio_bafo: float = 220.0
-@export var medo_bafo: int = 20
+@export var medo_bafo: int = 40
 @export var paralisia_bafo: float = 2.0
 @export var nuvens_bafo: int = 8
 
@@ -13,7 +13,7 @@ extends Fantasma
 @export var alcance_arranhao: float = 2500.0
 @export var tempo_max_perseguindo: float = 30.0
 @export var distancia_arranhao: float = 30.0
-@export var medo_arranhao: int = 45
+@export var medo_arranhao: int = 90
 # quadro da animação em que a garra desce
 @export var quadro_arranhao: int = 4
 

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cwmcly1dvo1ki"
+path="res://.godot/imported/zumbi scratch.mp3-323bfbff832d8f71bd3a83784c441275.mp3str"
+
+[deps]
+
+source_file="res://assets/sons/zumbi scratch.mp3"
+dest_files=["res://.godot/imported/zumbi scratch.mp3-323bfbff832d8f71bd3a83784c441275.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dl5ci6xnhrp1f"
+path="res://.godot/imported/carta pegar.mp3-6b48931b27c93fc082b49515476c1ac2.mp3str"
+
+[deps]
+
+source_file="res://assets/sons/carta pegar.mp3"
+dest_files=["res://.godot/imported/carta pegar.mp3-6b48931b27c93fc082b49515476c1ac2.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

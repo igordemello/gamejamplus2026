@@ -3,7 +3,7 @@ extends Fantasma
 @export var velocidade: float = 120.0
 @export var raio_colisao: float = 20.0
 
-@export var medo_bater_asas: int = 20
+@export var medo_bater_asas: int = 40
 @export var forca_empurrao: float = 250.0
 # todo mundo nesse raio em volta dele se assusta e é empurrado pra longe
 @export var raio_bater_asas: float = 100.0

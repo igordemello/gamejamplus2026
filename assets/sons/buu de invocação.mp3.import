@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://blnsqsyqhahn6"
+path="res://.godot/imported/buu de invocação.mp3-564f62b848e889dce7ec826c76d0c202.mp3str"
+
+[deps]
+
+source_file="res://assets/sons/buu de invocação.mp3"
+dest_files=["res://.godot/imported/buu de invocação.mp3-564f62b848e889dce7ec826c76d0c202.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

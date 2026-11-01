@@ -56,7 +56,7 @@ animations = [{
 
 [node name="Morcego" type="Node2D" unique_id=494321899]
 script = ExtResource("1_4norb")
-custo = 4
+custo = 2
 acoes = Array[ExtResource("2_acao")]([SubResource("Resource_bater_asas")])
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=990475690]
