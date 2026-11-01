@@ -34,7 +34,11 @@ func verificar() -> void:
 	exigir(npcs.size() == 9, "A casa precisa começar com 9 NPCs")
 	exigir(get_nodes_in_group("policial").is_empty(), "Policial presente no início")
 	var nomes = {}
+	var modelo = load("res://scene/npc.tscn").instantiate()
+	var escala_padrao = modelo.get_node("AnimatedSprite2D").scale
+	modelo.free()
 	for npc in npcs:
+		exigir(npc.escala_sprite.is_equal_approx(escala_padrao), "Escala diferente do padrão: " + npc.dados_lore().nome)
 		verificar_infarto(npc)
 		var nome = npc.visual.get_meta("nome_tipo")
 		exigir(not nomes.has(nome), "NPC repetido: " + nome)

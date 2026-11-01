@@ -9,9 +9,16 @@ const ESTILHACOS = preload("res://scene/estilhacos.tscn")
 @export var peito: Vector2 = Vector2(0, 3)
 @export var altura_levantar: float = 40.0
 
+<<<<<<< Updated upstream
 @export var medo_quebra: int = 50
 @export var raio_quebra: float = 280.0
 @export var max_assustados: int = 5
+=======
+@export var medo_quebra: int = 25
+@export var raio_quebra: float = 180.0
+@export var max_assustados: int = 3
+@export var tempo_reaparecer: float = 30.0
+>>>>>>> Stashed changes
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var brasas: CPUParticles2D = $brasas
@@ -54,6 +61,17 @@ func pegar() -> void:
 	# prop que também levita: sai do mouse e volta pro chão antes de ser levado
 	if objeto.has_method("ser_pego"):
 		objeto.ser_pego()
+	# guarda o estado no chão, antes de carregar, girar e deformar o objeto
+	var pai_original = objeto.get_parent()
+	var transform_original = objeto.transform
+	var cor_original = objeto.modulate
+	var restaurar = func():
+		objeto.reparent(pai_original)
+		objeto.transform = transform_original
+		objeto.modulate = cor_original
+		objeto.add_to_group("quebravel")
+		if objeto.has_method("reaparecer"):
+			objeto.reaparecer()
 	var chao = objeto.global_position
 	objeto.reparent(self)
 	objeto.position = peito
@@ -67,9 +85,9 @@ func pegar() -> void:
 	altura_subida = maxf(altura_subida, 0.0)
 	var tween = create_tween()
 	tween.tween_property(self, "global_position:y", global_position.y - altura_subida, 0.45).set_ease(Tween.EASE_OUT)
-	tween.tween_callback(soltar.bind(objeto, chao))
+	tween.tween_callback(soltar.bind(objeto, chao, restaurar))
 
-func soltar(objeto: Node2D, chao: Vector2) -> void:
+func soltar(objeto: Node2D, chao: Vector2, restaurar: Callable) -> void:
 	objeto.reparent(GameManager.house.y_sort)
 	sprite.play("voar")
 	brasas.emitting = false
@@ -77,12 +95,12 @@ func soltar(objeto: Node2D, chao: Vector2) -> void:
 	var queda = create_tween()
 	queda.tween_property(objeto, "global_position", chao, 0.3).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	queda.parallel().tween_property(objeto, "rotation", randf_range(-1.5, 1.5), 0.3)
-	queda.tween_callback(quebrar.bind(objeto))
+	queda.tween_callback(quebrar.bind(objeto, restaurar))
 
 	# volta pra altura de antes
 	create_tween().tween_property(self, "global_position:y", global_position.y + altura_subida, 0.4)
 
-func quebrar(objeto: Node2D) -> void:
+func quebrar(objeto: Node2D, restaurar: Callable) -> void:
 	var assustados = get_tree().get_nodes_in_group("npc").filter(
 		func(npc): return objeto.global_position.distance_to(npc.global_position) <= raio_quebra
 	)
@@ -102,5 +120,7 @@ func quebrar(objeto: Node2D) -> void:
 	var tween = objeto.create_tween().set_parallel()
 	tween.tween_property(objeto, "scale", objeto.scale * 1.6, 0.15)
 	tween.tween_property(objeto, "modulate:a", 0.0, 0.15)
-	tween.chain().tween_callback(objeto.queue_free)
+	# conserva o nó invisível para restaurar o mesmo objeto, sem duplicar scripts ou sombras
+	tween.chain().tween_interval(tempo_reaparecer)
+	tween.chain().tween_callback(restaurar)
 	segurando = false
