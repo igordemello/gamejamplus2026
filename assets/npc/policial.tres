@@ -51,7 +51,7 @@ animations = [{
 "name": &"andar",
 "speed": 8.0
 }]
-metadata/infarto_tipo = "Aparicao"
-metadata/infarto_tier = 3
-metadata/lore = ["", "", ""]
+metadata/infarto_tipo = "Espectro"
+metadata/infarto_tier = 1
+metadata/lore = ["Ouvi algo rangendo mais cedo, preciso ficar atento...", "Eu jurava que essa armadura estava em outra pose.", "O QUE MINHA ARMA DEVE FAZER CONTRA ESSA COISA DE METAL?!"]
 metadata/nome_tipo = "Policial"

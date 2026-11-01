@@ -51,7 +51,7 @@ animations = [{
 "name": &"andar",
 "speed": 8.0
 }]
-metadata/infarto_tipo = "Poltergeist"
+metadata/infarto_tipo = "Aparicao"
 metadata/infarto_tier = 2
-metadata/lore = ["", "", ""]
+metadata/lore = ["Por mais que eu não acredite em fantasmas, admito que amo Ghostbusters.", "Essa sobremesa de gelatina não parece nem um pouco apetitosa.", "Este composto roxo é estranho, o que deve ser isto?"]
 metadata/nome_tipo = "Cientista"

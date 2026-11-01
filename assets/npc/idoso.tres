@@ -51,7 +51,7 @@ animations = [{
 "name": &"andar",
 "speed": 8.0
 }]
-metadata/infarto_tipo = "Poltergeist"
+metadata/infarto_tipo = "Demonio"
 metadata/infarto_tier = 2
-metadata/lore = ["", "", ""]
+metadata/lore = ["Esta juventude está com fantasias muito realistas, tem gente que se pintou inteiro só para a festa.", "Vi um convidado esperando fora de casa, vou abrir a porta para ele.", "Será que aquele senhor pintado de verde está bem? Vi ele tossindo muito."]
 metadata/nome_tipo = "Idoso"

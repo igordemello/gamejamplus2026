@@ -51,7 +51,7 @@ animations = [{
 "name": &"andar",
 "speed": 8.0
 }]
-metadata/infarto_tipo = "Poltergeist"
-metadata/infarto_tier = 1
-metadata/lore = ["", "", ""]
+metadata/infarto_tipo = "Aparicao"
+metadata/infarto_tier = 2
+metadata/lore = ["Mais alguém está sentindo esse fedor?", "Quem é o egoísta que está comendo toda a comida da casa?", "QUE NOJO, QUEM SUJOU A COZINHA TODA DESSA MELECA ROXA?!"]
 metadata/nome_tipo = "Gótica"

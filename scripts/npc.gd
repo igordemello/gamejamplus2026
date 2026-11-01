@@ -58,7 +58,7 @@ var infarto_tier: int = 0
 @export var bonus_infarto: int = 2
 # os pontos de susto são divididos por isso (o policial tem 2)
 @export var resistencia: float = 1.0
-# chamado quando as mortes chegam no limite: azulado, com sirene, e qualquer fantasma mata ele do coração
+# chamado quando as mortes chegam no limite: azulado, com sirene; infarta com o Cavaleiro
 @export var policial: bool = false
 # um dos marcados pra morrer (objetivo): caveira vermelha em cima da cabeça
 var marcado: bool = false
@@ -121,7 +121,6 @@ func _ready() -> void:
 	infarto_tier = sprite.sprite_frames.get_meta("infarto_tier", 0)
 	if policial:
 		add_to_group("policial")
-		infarto_tipo = "qualquer"
 		cor_sprite = Color(0.55, 0.7, 1.3)
 		sprite.self_modulate = cor_sprite
 		sirene = PointLight2D.new()
@@ -598,7 +597,7 @@ var quebra: float = 0.0
 func mata_do_coracao(fantasma: Fantasma) -> bool:
 	if fantasma == null:
 		return false
-	return infarto_tipo == "qualquer" or (Fantasma.Tipo.find_key(fantasma.tipo) == infarto_tipo and fantasma.tier == infarto_tier)
+	return Fantasma.Tipo.find_key(fantasma.tipo) == infarto_tipo and fantasma.tier == infarto_tier
 
 func infartar() -> void:
 	current_estado = Estado.Infarta

@@ -51,7 +51,7 @@ animations = [{
 "name": &"andar",
 "speed": 8.0
 }]
-metadata/infarto_tipo = "Espectro"
+metadata/infarto_tipo = "Poltergeist"
 metadata/infarto_tier = 3
-metadata/lore = ["", "", ""]
+metadata/lore = ["Tem que ser muito sem graça pra se fantasiar de palhaço, aff.", "Quem está colocando essas músicas macabras? Eu pensei que isso aqui era uma festa, não um circo.", "A mão falsa que aquele palhaço está carregando parece real até demais..."]
 metadata/nome_tipo = "Atleta"

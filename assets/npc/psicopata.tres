@@ -52,6 +52,6 @@ animations = [{
 "speed": 8.0
 }]
 metadata/infarto_tipo = "Poltergeist"
-metadata/infarto_tier = 3
-metadata/lore = ["", "", ""]
+metadata/infarto_tier = 1
+metadata/lore = ["Tenho saudades do meu filho...", "Os quartos dessa casa me parecem ser muito mais vazios do que deveriam.", "De onde está vindo este choro?"]
 metadata/nome_tipo = "Psicopata"

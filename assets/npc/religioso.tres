@@ -51,7 +51,7 @@ animations = [{
 "name": &"andar",
 "speed": 8.0
 }]
-metadata/infarto_tipo = "Aparicao"
-metadata/infarto_tier = 3
-metadata/lore = ["", "", ""]
-metadata/nome_tipo = "Religioso"
+metadata/infarto_tipo = "Demonio"
+metadata/infarto_tier = 1
+metadata/lore = ["Não preciso sentir medo dessas coisas, Deus está comigo, pelo menos eu acho...", "Quem foi que jogou e quebrou isso?", "DEUS ME PROTEJA CONTRA OS DEMÔNIOS PRESENTES NESTE RECINTO!"]
+metadata/nome_tipo = "Adulto religioso"

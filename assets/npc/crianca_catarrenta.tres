@@ -51,7 +51,7 @@ animations = [{
 "name": &"andar",
 "speed": 8.0
 }]
-metadata/infarto_tipo = "Poltergeist"
+metadata/infarto_tipo = "Aparicao"
 metadata/infarto_tier = 1
-metadata/lore = ["", "", ""]
-metadata/nome_tipo = "Criança Catarrenta"
+metadata/lore = ["Acho que vi algo passando pela janela, vou manter distância.", "Pessoas que sugam seu sangue e não podem sair na luz do sol? Que medo!", "Meu herói favorito com certeza não é o Batman."]
+metadata/nome_tipo = "Criança"

@@ -10,6 +10,21 @@ func exigir(condicao: bool, mensagem: String) -> void:
 		push_error(mensagem)
 		falhas += 1
 
+func verificar_infarto(npc) -> void:
+	var esperados = {
+		"Policial": "cavaleiro", "Advogado": "caveira", "Gótica": "geleia",
+		"Psicopata": "crianca", "Adulto religioso": "diabrete", "Atleta": "palhaco",
+		"Hippie": "cao", "Idoso": "zumbi", "Cientista": "geleia", "Criança": "morcego",
+	}
+	var dados = npc.dados_lore()
+	exigir(dados.lore.size() == 3, "Lore incompleta: " + dados.nome)
+	for frase in dados.lore:
+		exigir(not frase.is_empty(), "Frase vazia: " + dados.nome)
+	for nome in ["cavaleiro", "caveira", "geleia", "crianca", "diabrete", "palhaco", "cao", "zumbi", "morcego"]:
+		var fantasma = load("res://scene/%s.tscn" % nome).instantiate()
+		exigir(npc.mata_do_coracao(fantasma) == (nome == esperados[dados.nome]), "Relação de infarto incorreta: %s / %s" % [dados.nome, nome])
+		fantasma.free()
+
 func verificar() -> void:
 	await process_frame
 	var house = load("res://scene/house.tscn").instantiate()
@@ -20,6 +35,7 @@ func verificar() -> void:
 	exigir(get_nodes_in_group("policial").is_empty(), "Policial presente no início")
 	var nomes = {}
 	for npc in npcs:
+		verificar_infarto(npc)
 		var nome = npc.visual.get_meta("nome_tipo")
 		exigir(not nomes.has(nome), "NPC repetido: " + nome)
 		nomes[nome] = true
@@ -28,7 +44,7 @@ func verificar() -> void:
 			var quadro = npc.visual.get_frame_texture("andar", i)
 			exigir(quadro.region == Rect2(i * 32, 0, 32, 64), "Recorte incorreto: " + nome)
 			exigir(quadro.atlas.resource_path.begins_with("res://assets/REFACTOR NPCs/"), "Sprite antigo: " + nome)
-	for nome in ["Advogado", "Atleta", "Cientista", "Criança Catarrenta", "Gótica", "Hippie", "Idoso", "Psicopata", "Religioso"]:
+	for nome in ["Advogado", "Atleta", "Cientista", "Criança", "Gótica", "Hippie", "Idoso", "Psicopata", "Adulto religioso"]:
 		exigir(nomes.has(nome), "NPC ausente: " + nome)
 	var gm = root.get_node("GameManager")
 	gm.mortes = house.limite_mortes - 1
@@ -39,12 +55,13 @@ func verificar() -> void:
 	await process_frame
 	var policiais = get_nodes_in_group("policial")
 	exigir(policiais.size() == 1, "Polícia não chegou no limite de mortes")
+	verificar_infarto(policiais[0])
 	exigir(policiais[0].visual.resource_path == "res://assets/npc/policial.tres", "Visual errado do policial")
 	exigir(policiais[0].visual.get_frame_count("andar") == 6, "Animação incompleta do policial")
 	house.registrar_morte(npcs[0])
 	exigir(get_nodes_in_group("policial").size() == 1, "Polícia duplicada")
 	if falhas == 0:
-		print("OK: 9 NPCs únicos, sprites novos com 6 quadros e policial separado no limite de mortes.")
+		print("OK: 9 NPCs únicos, sprites novos, 30 frases, 90 relações de infarto e policial separado no limite de mortes.")
 	house.queue_free()
 	await process_frame
 	quit(1 if falhas > 0 else 0)

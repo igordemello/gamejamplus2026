@@ -53,5 +53,5 @@ animations = [{
 }]
 metadata/infarto_tipo = "Espectro"
 metadata/infarto_tier = 2
-metadata/lore = ["", "", ""]
+metadata/lore = ["Vi um cachorro fofinho andando pela casa há pouco.", "Não sabia que podíamos trazer animais para a festa, fantasiados ainda por cima.", "ISSO NÃO É UMA FANTASIA, O QUE É ESSA COISA?!"]
 metadata/nome_tipo = "Hippie"

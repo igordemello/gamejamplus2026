@@ -54,5 +54,5 @@ animations = [{
 metadata/escala = 0.18
 metadata/infarto_tipo = "Aparicao"
 metadata/infarto_tier = 3
-metadata/lore = ["", "", ""]
+metadata/lore = ["Sendo advogado, aprendi a ler uma pessoa como um raio-x de mentiras.", "Ser atacado por um zumbi ou esqueleto? Essa é fácil, o que a caveira faria com sua cabeça?", "Não está muito calor para deixar a lareira ligada, não?"]
 metadata/nome_tipo = "Advogado"
