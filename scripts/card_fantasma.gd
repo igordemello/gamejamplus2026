@@ -51,7 +51,7 @@ func _ready() -> void:
 	$nome.text = fantasma.name.replace(" ", "\n")
 	caber($nome, area_nome, 32)
 	# tipo e tier numa linha discreta logo abaixo do nome, de uma ou duas linhas
-	$tipo.text = "%s · tier %d" % [Fantasma.NOME_TIPO[tipo], tier]
+	$tipo.text = "%s - tier %d" % [Fantasma.NOME_TIPO[tipo], tier]
 	$tipo.position.y = $nome.position.y + $nome.get_minimum_size().y - 6.0
 	# nome de duas linhas: a arte desce pra não bater na linha do tipo
 	$arte.offset_top = maxf($arte.offset_top, $tipo.position.y + $tipo.get_minimum_size().y)

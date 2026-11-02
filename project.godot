@@ -27,14 +27,14 @@ window/size/mode=3
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
-[gui]
-
-theme/custom="res://assets/tema.tres"
-
 [global_group]
 
 npc=""
 quebravel="Objetos do cenário que o diabrete pode pegar e quebrar"
+
+[gui]
+
+theme/custom="res://assets/tema.tres"
 
 [physics]
 
