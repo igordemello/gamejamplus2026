@@ -31,7 +31,7 @@ var regionsHouse: Array[NavigationRegion2D] = []
 @export var limite_mortes: int = 3
 @export var cena_policial: PackedScene
 # em segundos de partida: quando acaba amanhece, e quem ainda está na festa vai embora
-@export var tempo_limite: float = 720.0
+@export var tempo_limite: float = 1080.0
 # só sobrou o policial, que não foge: amanhece logo, senão a partida fica parada esperando o relógio
 @export var tempo_so_policial: float = 90.0
 # dois (npc ou fantasma) em cima um do outro por esse tempo: um deles muda de rumo

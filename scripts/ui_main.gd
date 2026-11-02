@@ -33,6 +33,8 @@ var retratos: Dictionary = {}
 var relogio: Label
 # o poder do jogador, embaixo do relógio
 var poder: Control
+# os fantasmas que estão na casa, embaixo do ímã
+var lista_fantasmas: Control
 var sustos_antes: int = 0
 var mortes_antes: int = 0
 var tween_sustos: Tween
@@ -60,6 +62,8 @@ func _ready() -> void:
 	$contadores.add_child(relogio)
 	poder = preload("res://scripts/poder_atrair.gd").new()
 	add_child(poder)
+	lista_fantasmas = preload("res://scripts/lista_fantasmas.gd").new()
+	add_child(lista_fantasmas)
 	sustos_antes = GameManager.sustos
 	mortes_antes = GameManager.mortes
 	$contadores/mortes.tooltip_text = "Mortes\nQuantas pessoas morreram de susto. Com %d mortes a polícia é chamada." % get_parent().limite_mortes
