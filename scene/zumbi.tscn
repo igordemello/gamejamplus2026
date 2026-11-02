@@ -19,6 +19,7 @@ resumo = "Bafo em volta dele que assusta e paralisa"
 propriedade_medo = &"medo_bafo"
 recarga = 12.0
 metodo = &"bafo_do_medo"
+em_grupo = true
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_icone_arranhao"]
 atlas = ExtResource("4_arranhao")
@@ -278,7 +279,7 @@ animations = [{
 
 [node name="Zumbi" type="Node2D" unique_id=1550264278]
 script = ExtResource("1_script")
-custo = 6
+custo = 8
 passeia = true
 tier = 2
 tipo = 3

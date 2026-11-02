@@ -9,9 +9,9 @@ const ESTILHACOS = preload("res://scene/estilhacos.tscn")
 @export var peito: Vector2 = Vector2(0, 3)
 @export var altura_levantar: float = 40.0
 
-@export var medo_quebra: int = 50
-@export var raio_quebra: float = 280.0
-@export var max_assustados: int = 5
+@export var medo_quebra: int = 30
+@export var raio_quebra: float = 220.0
+@export var max_assustados: int = 4
 @export var tempo_reaparecer: float = 30.0
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -41,6 +41,11 @@ func quebrar_objetos() -> bool:
 	# já é dele: outro diabrete não vem atrás do mesmo objeto (quebrado, ele fica invisível até reaparecer)
 	alvo.remove_from_group("quebravel")
 	return true
+
+# o susto sai onde o objeto cair: mostra em volta do objeto que ele pegaria
+func area_de(_acao: Acao) -> Dictionary:
+	var objeto = alvo if is_instance_valid(alvo) else objeto_mais_perto()
+	return {"centro": objeto.global_position, "raio": raio_quebra} if objeto else {}
 
 func ocupado() -> bool:
 	return segurando or is_instance_valid(alvo)
@@ -108,8 +113,11 @@ func quebrar(objeto: Node2D, restaurar: Callable) -> void:
 	assustados.sort_custom(func(a, b): return objeto.global_position.distance_to(a.global_position) < objeto.global_position.distance_to(b.global_position))
 	Onomatopeia.soltar("CRASH!", objeto.global_position + Vector2(0, -40), Color(1, 0.6, 0.25), 4.0)
 	GameManager.som.tocar("diabrete_quebra")
-	for npc in assustados.slice(0, max_assustados):
-		npc.tomar_susto("quebra", medo_quebra, self)
+	var atingidos = assustados.slice(0, max_assustados)
+	var medo = medo_em_grupo(medo_quebra, atingidos.size())
+	sentir_grupo(atingidos, objeto.global_position)
+	for npc in atingidos:
+		npc.tomar_susto("quebra", medo, self)
 
 	# posição antes do add_child: os cacos já saem no _ready, e sairiam no canto da casa
 	var cacos = ESTILHACOS.instantiate()

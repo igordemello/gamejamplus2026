@@ -8,7 +8,7 @@ extends Fantasma
 @export var duracao_nota: float = 1.4
 
 @export var raio_balao: float = 250.0
-@export var medo_balao: int = 60
+@export var medo_balao: int = 36
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var notas: Node2D = $notas
@@ -31,6 +31,9 @@ func _ready() -> void:
 	sprite.frame_changed.connect(_on_quadro_mudou)
 	sprite.animation_finished.connect(sprite.play.bind("parado"))
 	notas.draw.connect(_desenhar_notas)
+
+func area_de(acao: Acao) -> Dictionary:
+	return area_comodo() if acao.metodo == &"musica_de_circo" else area_raio(raio_balao)
 
 func ocupado() -> bool:
 	return sprite.animation == &"balao"

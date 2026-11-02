@@ -53,6 +53,9 @@ func _soltar_fantasma() -> void:
 	luz.energy = 3.0
 	brasas.emitting = false
 	house.camera.tremer(4.0)
+	# o zumbi fica lá fora: a câmera afasta pra mostrar onde ele está
+	if fantasma.fora_de_casa:
+		house.camera.mostrar_exterior()
 	house.pos.chutar(3.0)
 	house.piscar_luzes(global_position, 0.3)
 	Onomatopeia.soltar("VUUSH!", global_position + Vector2(0, -90), Color(1, 0.35, 0.3))
@@ -61,11 +64,11 @@ func _soltar_fantasma() -> void:
 
 # o clarão assusta quem está em volta do pentagrama
 func assustar_perto() -> void:
-	var assustou = false
-	for npc in get_tree().get_nodes_in_group("npc"):
-		if pentagrama.global_position.distance_to(npc.global_position) <= raio_susto:
-			npc.tomar_susto("invocacao", medo_susto, fantasma)
-			assustou = true
-	if assustou:
+	var perto = get_tree().get_nodes_in_group("npc").filter(func(npc): return pentagrama.global_position.distance_to(npc.global_position) <= raio_susto)
+	var medo = fantasma.medo_em_grupo(medo_susto, perto.size())
+	fantasma.sentir_grupo(perto, pentagrama.global_position)
+	for npc in perto:
+		npc.tomar_susto("invocacao", medo, fantasma)
+	if not perto.is_empty():
 		GameManager.som.tocar("buu_invocacao")
 		Onomatopeia.soltar(["BU!", "AAAH!"].pick_random(), global_position + Vector2(randf_range(-70.0, 70.0), -150.0), Color(1, 0.95, 0.6))

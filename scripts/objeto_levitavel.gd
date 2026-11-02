@@ -18,7 +18,7 @@ var segurando : bool = false
 var primeiro_susto: bool = false
 
 @export var tipo_susto: String = "objeto"
-@export var pontos_susto: int = 20
+@export var pontos_susto: int = 15
 # a partir desse nível de medo o objeto quase não faz efeito: quem termina o serviço são os fantasmas
 @export var nivel_fraco: int = 2
 @export var pontos_susto_fraco: int = 3
@@ -31,6 +31,8 @@ var tween_queda: Tween
 var som_levitando: AudioStreamPlayer
 # o próprio desenho escuro e achatado, que fica no chão enquanto o objeto sobe
 var sombra: Sprite2D
+# borda clara quando o mouse passa por cima, mostrando que dá pra pegar
+const CONTORNO = preload("res://assets/contorno_levitavel.gdshader")
 
 func _ready() -> void:
 	add_to_group("levitavel")
@@ -42,10 +44,13 @@ func _ready() -> void:
 	# no chão (levantado, o objeto fica uma camada acima)
 	sombra.z_index = -1
 	add_child(sombra)
+	material = ShaderMaterial.new()
+	material.shader = CONTORNO
 
 func _process(delta: float) -> void:
 	# fora do chão fica por cima: o Y-sort usa a posição, e subir faria ele passar pra trás da parede
 	z_index = 1 if segurando or posicao_original.y - position.y > 0.5 else 0
+	atualizar_marca()
 	if segurando:
 		tempo += delta
 		# quanto mais tempo segurando, mais treme e balança
@@ -86,13 +91,17 @@ func _process(delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.pressed and mouse_em_cima():
+		if event.pressed and mouse_em_cima() and not GameManager.house.mirando:
 			levantar()
 		elif not event.pressed and segurando:
 			soltar()
 
 func mouse_em_cima() -> bool:
 	return get_rect().has_point(to_local(get_global_mouse_position()))
+
+func atualizar_marca() -> void:
+	material.set_shader_parameter("cor", Color(1, 1, 1, 1.0 if segurando or mouse_em_cima() else 0.0))
+	material.set_shader_parameter("noite", GameManager.house.noite.color)
 
 func levantar() -> void:
 	segurando = true
@@ -128,6 +137,7 @@ func ser_pego() -> void:
 	scale = escala_original
 	rotation = 0.0
 	sombra.hide()
+	material.set_shader_parameter("cor", Color(1, 1, 1, 0))
 	z_index = 0
 	set_process(false)
 	set_process_input(false)

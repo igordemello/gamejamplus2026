@@ -8,7 +8,7 @@ const PASTA = "res://assets/sons/"
 # nome: [arquivo, volume em dB]
 const MUSICAS = {
 	"menu": ["MUSICA/Resident Haunter - Menu.mp3", 0.0],
-	"jogo": ["MUSICA/Resident Haunter - Musica normal gameplay.mp3", -12.0],
+	"jogo": ["MUSICA/Resident Haunter - Musica normal gameplay.mp3", -7.0],
 }
 
 # nome: [arquivo, volume em dB, de onde começa (alguns arquivos abrem com silêncio)]
@@ -119,6 +119,11 @@ func tocar_musica(nome: String) -> void:
 		sai.tween_property(antiga, "volume_linear", 0.001, FADE_MUSICA)
 		sai.tween_callback(antiga.queue_free)
 	var stream: AudioStream = load(PASTA + MUSICAS[nome][0])
+	# arquivo com a importação quebrada: fica sem música, mas o jogo segue
+	if stream == null:
+		push_warning("Música não carregou: " + MUSICAS[nome][0])
+		musica_atual = null
+		return
 	stream.loop = true
 	musica_atual = AudioStreamPlayer.new()
 	musica_atual.stream = stream
@@ -133,8 +138,12 @@ func criar(nome: String, pai: Node, duracao: float, fade: float) -> AudioStreamP
 	if ativos.get(nome, 0) >= MAX_JUNTOS or agora - ultima_vez.get(nome, -INTERVALO_MINIMO) < INTERVALO_MINIMO:
 		return null
 	ultima_vez[nome] = agora
+	var stream: AudioStream = load(PASTA + SONS[nome][0])
+	if stream == null:
+		push_warning("Som não carregou: " + SONS[nome][0])
+		return null
 	var player = AudioStreamPlayer.new()
-	player.stream = load(PASTA + SONS[nome][0])
+	player.stream = stream
 	player.volume_db = SONS[nome][1]
 	player.finished.connect(player.queue_free)
 	ativos[nome] = ativos.get(nome, 0) + 1

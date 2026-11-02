@@ -29,6 +29,8 @@ var estado_linhas: Dictionary = {}
 # retrato de cada marcado no painel de objetivos
 var retratos: Dictionary = {}
 
+# o tempo que falta até amanhecer, embaixo dos contadores
+var relogio: Label
 var sustos_antes: int = 0
 var mortes_antes: int = 0
 var tween_sustos: Tween
@@ -49,6 +51,11 @@ func _ready() -> void:
 	botao_objetivos.draw.connect(desenhar_seta)
 	restante_objetivos = tempo_objetivos
 	mostrar_objetivos(1.0)
+	relogio = Label.new()
+	relogio.add_theme_font_size_override("font_size", 34)
+	relogio.mouse_filter = Control.MOUSE_FILTER_PASS
+	relogio.tooltip_text = "Tempo\nQuando acabar, amanhece e todo mundo vai embora da festa."
+	$contadores.add_child(relogio)
 	sustos_antes = GameManager.sustos
 	mortes_antes = GameManager.mortes
 	$contadores/mortes.tooltip_text = "Mortes\nQuantas pessoas morreram de susto. Com %d mortes a polícia é chamada." % get_parent().limite_mortes
@@ -69,6 +76,7 @@ func _process(delta: float) -> void:
 	# fica mais vermelho conforme chega perto do limite (a polícia)
 	lbl_mortes.add_theme_color_override("font_color", Color.WHITE.lerp(Color(1, 0.15, 0.15), clampf(GameManager.mortes / float(get_parent().limite_mortes), 0.0, 1.0)))
 	atualizar_objetivos()
+	atualizar_relogio()
 	if objetivos_abertos:
 		# com o mouse em cima não fecha: some uns instantes depois que ele sair
 		if painel_objetivos.get_global_rect().has_point(get_viewport().get_mouse_position()):
@@ -103,6 +111,15 @@ func mostrar_marcados(marcados: Array) -> void:
 func marcar_retrato(npc, morreu: bool) -> void:
 	if retratos.has(npc):
 		retratos[npc].modulate = Color(1, 0.25, 0.25, 0.7) if morreu else Color(0.4, 0.4, 0.4, 0.4)
+
+# no último minuto o relógio fica vermelho e pulsa
+func atualizar_relogio() -> void:
+	var casa = get_parent()
+	var falta = maxf(casa.tempo_limite - casa.tempo_partida, 0.0)
+	relogio.text = "%d:%02d" % [int(ceilf(falta)) / 60, int(ceilf(falta)) % 60]
+	if falta <= 60.0:
+		relogio.add_theme_color_override("font_color", Color(1, 0.25, 0.25))
+		relogio.modulate.a = 0.75 + 0.25 * sin(Time.get_ticks_msec() / 150.0)
 
 # fechado fica só a barrinha do cabeçalho (título, resumo e botão); abre e fecha deslizando
 func abrir_objetivos(abrir: bool = true, tempo: float = -1.0) -> void:

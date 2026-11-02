@@ -125,7 +125,7 @@ offset_top = 476.0
 offset_right = 374.0
 offset_bottom = 494.0
 theme_override_font_sizes/font_size = 19
-text = "Pode ser spawnado:"
+text = "Pode ser colocado:"
 horizontal_alignment = 1
 vertical_alignment = 1
 

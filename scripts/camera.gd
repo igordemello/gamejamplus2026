@@ -1,6 +1,16 @@
 extends Camera2D
 
-@export var zoom_min: float = 0.8
+@export var zoom_min: float = 0.62
+# como a partida começa (o limite continua vindo do enquadramento do editor, mais afastado)
+@export var zoom_inicial: float = 0.8
+@export var posicao_inicial: Vector2 = Vector2(990, 620)
+# zoom acima disso é o jogador olhando algo de perto: o lembrete do zumbi não atrapalha
+@export var zoom_de_perto: float = 1.15
+# quanto cada lembrete afasta, no mínimo
+@export var passo_lembrete: float = 0.1
+@export var suavidade_conducao: float = 3.0
+# segundos sem mexer na câmera até um lembrete poder afastar ela
+@export var calma_lembrete: float = 6.0
 @export var zoom_max: float = 1.5
 @export var passo_zoom: float = 0.1
 # quanto maior, mais rápido o zoom chega onde o scroll mandou
@@ -28,13 +38,20 @@ var foco_lado: float = 1.0
 # onde a câmera estava antes do foco; volta = ainda deslizando de volta pra lá
 var posicao_antes: Vector2
 var volta: bool = false
+# o jogo está levando a câmera até um lugar (mexer no scroll ou arrastar cancela)
+var conduzindo: bool = false
+var posicao_conduzida: Vector2
+# quando o jogador mexeu na câmera pela última vez, em ms
+var mexeu_em: int = 0
 
 func _ready() -> void:
 	var tela = Vector2(ProjectSettings.get_setting("display/window/size/viewport_width"), ProjectSettings.get_setting("display/window/size/viewport_height"))
 	var visivel = tela / zoom
 	limite = Rect2(position - visivel / 2, visivel)
-	zoom_alvo = zoom.x
-	zoom_atual = zoom.x
+	zoom_alvo = zoom_inicial
+	zoom_atual = zoom_inicial
+	zoom = Vector2.ONE * zoom_inicial
+	position = limitar(posicao_inicial, zoom_inicial)
 
 func _process(delta: float) -> void:
 	# tremida e tranco em tempo real: continuam durante o hitstop e a câmera lenta
@@ -55,7 +72,7 @@ func _process(delta: float) -> void:
 		if absf(novo - zoom_destino) < 0.001:
 			novo = zoom_destino
 		# aproxima na direção do mouse: o ponto embaixo dele não sai do lugar
-		if not focando and not volta:
+		if not focando and not volta and not conduzindo:
 			var mouse = get_viewport().get_mouse_position() - get_viewport_rect().size / 2
 			position += mouse / zoom_atual - mouse / novo
 		zoom_atual = novo
@@ -65,6 +82,12 @@ func _process(delta: float) -> void:
 		position = position.lerp(destino, minf(suavidade_foco * real, 1.0))
 		if not focando and position.distance_to(destino) < 1.0 and is_equal_approx(zoom_atual, zoom_alvo):
 			volta = false
+		prender()
+	elif conduzindo:
+		var destino = limitar(posicao_conduzida, zoom_atual)
+		position = position.lerp(destino, minf(suavidade_conducao * real, 1.0))
+		if position.distance_to(destino) < 1.0 and is_equal_approx(zoom_atual, zoom_alvo):
+			conduzindo = false
 		prender()
 	elif zoom.x != zoom_antes:
 		prender()
@@ -76,15 +99,57 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			zoom_alvo = clampf(zoom_alvo + passo_zoom, zoom_min, zoom_max)
+			jogador_mexeu()
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			zoom_alvo = clampf(zoom_alvo - passo_zoom, zoom_min, zoom_max)
+			jogador_mexeu()
 
 	# segurando o botão direito arrasta o mapa junto com o mouse
 	elif event is InputEventMouseMotion and event.button_mask & MOUSE_BUTTON_MASK_RIGHT:
 		volta = false
+		jogador_mexeu()
 		position -= event.relative / zoom
 		prender()
 		arrastado += event.relative.length()
+
+func jogador_mexeu() -> void:
+	conduzindo = false
+	mexeu_em = Time.get_ticks_msec()
+
+# afasta até mostrar tudo, inclusive o lado de fora da casa (ganhou o zumbi)
+func mostrar_exterior() -> void:
+	if focando:
+		return
+	zoom_alvo = zoom_min
+	posicao_conduzida = Vector2(960, 540)
+	conduzindo = true
+	volta = false
+
+# um ponto está na vista nesse zoom e nessa posição? (as cartas tampam a parte de baixo da tela)
+func ponto_na_vista(ponto: Vector2, zoom_ref: float, centro: Vector2) -> bool:
+	var tela = get_viewport_rect().size
+	var tela_ponto = (ponto - centro) * zoom_ref + tela / 2.0
+	return Rect2(60, 40, tela.x - 120, tela.y - 200).has_point(tela_ponto)
+
+# lembra o jogador de algo fora da vista com um afastamento leve, só o que precisar pra aparecer.
+# não faz nada se ele está olhando de perto, mexeu na câmera agora há pouco ou o ponto já aparece.
+# devolve se mexeu na câmera
+func lembrar_de(ponto: Vector2) -> bool:
+	if focando or volta or conduzindo or zoom_alvo > zoom_de_perto:
+		return false
+	if Time.get_ticks_msec() - mexeu_em < calma_lembrete * 1000.0 or ponto_na_vista(ponto, zoom_alvo, position):
+		return false
+	var novo_zoom = maxf(zoom_alvo - passo_lembrete, zoom_min)
+	var centro = limitar(position, novo_zoom)
+	while not ponto_na_vista(ponto, novo_zoom, centro) and novo_zoom > zoom_min:
+		# puxa a vista na direção dele e, se não bastar, afasta mais
+		centro = limitar(centro.lerp(ponto, 0.25), novo_zoom)
+		if not ponto_na_vista(ponto, novo_zoom, centro):
+			novo_zoom = maxf(novo_zoom - 0.03, zoom_min)
+	zoom_alvo = novo_zoom
+	posicao_conduzida = centro.lerp(ponto, 0.2) if not ponto_na_vista(ponto, novo_zoom, centro) else centro
+	conduzindo = true
+	return true
 
 # onde a câmera fica pro alvo aparecer no meio de uma metade da tela (lado 1: a esquerda, -1: a direita),
 # já respeitando o limite. centro é o ponto do desenho do alvo, relativo à origem dele

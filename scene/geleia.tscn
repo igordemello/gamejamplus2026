@@ -14,11 +14,12 @@ region = Rect2(208, 10, 43, 43)
 script = ExtResource("5_acao")
 nome = "Comer e regorfar"
 icone = SubResource("AtlasTexture_icone_comer")
-descricao = "Come e regorfa a comida no chão. Quem comer vai vomitar."
+descricao = "Come e regorfa a comida no lugar que você escolher. Quem comer vai vomitar."
 resumo = "Come e regorfa a comida no chão, quem comer vai vomitar"
 propriedade_medo = &"medo_comida"
 recarga = 8.0
 metodo = &"comer_e_regorfar"
+mira = true
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_icone_lambida"]
 atlas = ExtResource("3_lambida")
@@ -177,7 +178,7 @@ animations = [{
 [node name="Geleia Roxa" type="Node2D" unique_id=1509536684]
 script = ExtResource("1_geleia")
 cena_comida = ExtResource("4_comida")
-custo = 5
+custo = 7
 passeia = true
 tier = 2
 comodo_spawn = "cozinha"

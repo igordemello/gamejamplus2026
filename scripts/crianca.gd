@@ -1,7 +1,8 @@
 extends Fantasma
 
-@export var raio_choro: float = 150.0
-@export var medo_choro: int = 60
+# no corredor, que não é cômodo, vale esse raio
+@export var raio_choro: float = 250.0
+@export var medo_choro: int = 36
 @export var duracao_choro: float = 1.5
 
 @onready var lagrimas: AnimatedSprite2D = $lagrimas
@@ -9,12 +10,19 @@ extends Fantasma
 func ocupado() -> bool:
 	return lagrimas.visible
 
-# só chora se tiver exatamente uma pessoa perto
+func area_de(_acao: Acao) -> Dictionary:
+	return area_comodo(raio_choro)
+
+# só chora se tiver exatamente uma pessoa no cômodo dela
 func chorar() -> bool:
-	var perto = get_tree().get_nodes_in_group("npc").filter(
-		func(npc): return global_position.distance_to(npc.global_position) <= raio_choro
+	var house = GameManager.house
+	var comodo = house.comodo_em(global_position)
+	var perto = get_tree().get_nodes_in_group("npc").filter(func(npc):
+		return house.comodo_em(npc.global_position) == comodo if comodo != "" else global_position.distance_to(npc.global_position) <= raio_choro
 	)
 	if perto.size() != 1:
+		# o motivo aparece em cima dela (a fonte das onomatopeias não tem acento)
+		onomatopeia("MUITA GENTE!" if perto.size() > 1 else "NINGUEM AQUI!", Color(0.6, 0.85, 1))
 		return false
 
 	# some por tempo, assim funciona com a animação em loop ou não

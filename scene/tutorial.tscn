@@ -12,16 +12,16 @@ script = ExtResource("1_tutorial")
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -400.0
+offset_left = -500.0
 offset_top = 16.0
-offset_right = 400.0
-offset_bottom = 110.0
+offset_right = 500.0
+offset_bottom = 130.0
 grow_horizontal = 2
 
 [node name="margem" type="MarginContainer" parent="painel"]
 layout_mode = 2
 theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 10
+theme_override_constants/margin_top = 32
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 10
 
@@ -31,11 +31,12 @@ theme_override_constants/separation = 18
 
 [node name="texto" type="Label" parent="painel/margem/linha"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(560, 0)
+custom_minimum_size = Vector2(700, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(0.08, 0.08, 0.08, 1)
 text = "Texto do passo"
 autowrap_mode = 3
 

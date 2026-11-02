@@ -3,10 +3,10 @@ extends Fantasma
 @export var velocidade: float = 120.0
 @export var raio_colisao: float = 20.0
 
-@export var medo_bater_asas: int = 40
+@export var medo_bater_asas: int = 24
 @export var forca_empurrao: float = 250.0
 # todo mundo nesse raio em volta dele se assusta e é empurrado pra longe
-@export var raio_bater_asas: float = 100.0
+@export var raio_bater_asas: float = 150.0
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
@@ -14,7 +14,8 @@ var direcao: Vector2 = Vector2.from_angle(randf() * TAU)
 # onde ele estava há pouco: sem sair de perto daqui, procura um caminho aberto
 var ancora: Vector2 = Vector2.INF
 var tempo_ancora: float = 0.0
-var tempo_em_parede: float = 0.0
+# o último lugar sem parede: encostou em parede, volta pra cá. a casa é toda cercada, então não tem como sair
+var ultimo_bom: Vector2 = Vector2.INF
 
 func _physics_process(delta: float) -> void:
 	var house = GameManager.house
@@ -22,15 +23,10 @@ func _physics_process(delta: float) -> void:
 
 	# se por algum motivo entrou numa parede, segue reto até sair; quicar ali dentro prende ele
 	if house.eh_parede(global_position):
-		global_position += passo
-		tempo_em_parede += delta
-		# entrou fundo demais (seguindo reto ia sair da casa): volta pra dentro
-		if tempo_em_parede > 0.5:
-			global_position = NavigationServer2D.map_get_closest_point(get_world_2d().navigation_map, global_position)
-			direcao = direcao_livre()
-			tempo_em_parede = 0.0
+		global_position = ultimo_bom if ultimo_bom != Vector2.INF else house.ponto_na_casa(global_position)
+		direcao = direcao_livre()
 		return
-	tempo_em_parede = 0.0
+	ultimo_bom = global_position
 
 	var frente = direcao.sign() * raio_colisao
 
@@ -60,6 +56,10 @@ func _physics_process(delta: float) -> void:
 		ancora = global_position
 		tempo_ancora = 0.0
 
+func redirecionar() -> bool:
+	direcao = direcao_livre()
+	return true
+
 # a direção com mais espaço aberto pela frente (entre as melhores, uma sorteada)
 func direcao_livre() -> Vector2:
 	var opcoes = []
@@ -79,15 +79,20 @@ func parede_adiante(desvio: Vector2) -> bool:
 			return true
 	return false
 
+func area_de(_acao: Acao) -> Dictionary:
+	return area_raio(raio_bater_asas)
+
 func bater_asas() -> bool:
 	onomatopeia("FLAP FLAP", Color(0.75, 0.6, 1))
 	GameManager.som.tocar("morcego")
 	# duas piscadas brancas, cada uma do tamanho de um quadro do voo
 	piscar(2, 1.0 / sprite.sprite_frames.get_animation_speed(sprite.animation))
 
-	for npc in get_tree().get_nodes_in_group("npc"):
-		if global_position.distance_to(npc.global_position) <= raio_bater_asas:
-			npc.velocity += global_position.direction_to(npc.global_position) * forca_empurrao
-			npc.tomar_susto("morcego", medo_bater_asas, self)
+	var perto = get_tree().get_nodes_in_group("npc").filter(func(npc): return global_position.distance_to(npc.global_position) <= raio_bater_asas)
+	var medo = medo_em_grupo(medo_bater_asas, perto.size())
+	sentir_grupo(perto)
+	for npc in perto:
+		npc.velocity += global_position.direction_to(npc.global_position) * forca_empurrao
+		npc.tomar_susto("morcego", medo, self)
 
 	return true

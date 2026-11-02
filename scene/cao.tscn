@@ -267,11 +267,17 @@ resumo = "Latido invertido que assusta todo mundo no cômodo"
 propriedade_medo = &"medo_latido"
 recarga = 6.0
 metodo = &"latido_feral"
+em_grupo = true
 
 [node name="Cão Possuído" type="Node2D"]
 script = ExtResource("1_script")
-custo = 6
+custo = 8
 passeia = true
+velocidade_passeio = 100.0
+raio_passeio = 500.0
+passeio_casa = true
+espera_passeio_min = 0.5
+espera_passeio_max = 2.0
 tier = 2
 tipo = 2
 comodos_proibidos = Array[String](["quarto"])

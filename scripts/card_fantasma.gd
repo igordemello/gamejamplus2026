@@ -92,14 +92,14 @@ func inicial(texto: String) -> String:
 # as duas linhas de baixo da carta, conforme onde o fantasma pode ser colocado
 func rodape() -> Array[String]:
 	if comodo_spawn != "":
-		return ["Só pode ser spawnado em:", inicial(comodo_spawn)]
+		return ["Só pode ser colocado em:", inicial(comodo_spawn)]
 	if fora_de_casa:
-		return ["Só pode ser spawnado:", "Do lado de fora"]
+		return ["Só pode ser colocado:", "Do lado de fora"]
 	if pontos_spawn != &"":
-		return ["Só pode ser spawnado nos pontos de:", inicial(pontos_spawn)]
+		return ["Só pode ser colocado:", {&"lareira": "Na lareira", &"armadura": "Nas armaduras"}.get(pontos_spawn, inicial(pontos_spawn))]
 	if not comodos_proibidos.is_empty():
-		return ["Não pode ser spawnado em:", ", ".join(comodos_proibidos.map(inicial))]
-	return ["Pode ser spawnado:", "Em qualquer lugar"]
+		return ["Não pode ser colocado em:", ", ".join(comodos_proibidos.map(inicial))]
+	return ["Pode ser colocado:", "Em qualquer lugar"]
 
 # resumo da ação à esquerda, medo à direita
 func criar_habilidade(acao: Acao, fantasma: Fantasma, altura: float, fonte_resumo: int, fonte_medo: int) -> void:

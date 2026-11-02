@@ -96,10 +96,10 @@ metodo = &"balao"
 
 [node name="Palhaço" type="Node2D"]
 script = ExtResource("1_script")
-custo = 10
+custo = 14
 passeia = true
 tier = 3
-mortes_para_liberar = 1
+mortes_para_liberar = 2
 tipo = 1
 comodo_spawn = "quarto"
 acoes = Array[ExtResource("2_acao")]([SubResource("Resource_musica"), SubResource("Resource_balao")])

@@ -15,6 +15,8 @@ var regionsHouse: Array[NavigationRegion2D] = []
 @onready var tutorial = $tutorial
 # pentagrama da invocação e outros efeitos no chão (por baixo de todo mundo)
 @onready var efeitos_chao: Node2D = $efeitos_chao
+# a malha de dentro da casa (a da grama é outra região, no mesmo mapa)
+@onready var malha_casa: NavigationRegion2D = $NavigationRegion2D
 
 @export var ponto_fuga: Marker2D
 @export var chao: Sprite2D
@@ -26,12 +28,19 @@ var regionsHouse: Array[NavigationRegion2D] = []
 @export var cor_vazia: Color = Color(0.3, 0.16, 0.22)
 
 # quantos infartos até chamarem a polícia
-@export var limite_mortes: int = 2
+@export var limite_mortes: int = 3
 @export var cena_policial: PackedScene
+# em segundos de partida: quando acaba amanhece, e quem ainda está na festa vai embora
+@export var tempo_limite: float = 720.0
+# só sobrou o policial, que não foge: amanhece logo, senão a partida fica parada esperando o relógio
+@export var tempo_so_policial: float = 90.0
+# dois (npc ou fantasma) em cima um do outro por esse tempo: um deles muda de rumo
+@export var tempo_sobreposicao: float = 20.0
+@export var distancia_sobreposicao: float = 40.0
 # objetivos: além de esvaziar a casa, precisa cumprir um deles
-@export var quantos_marcados: int = 1
+@export var quantos_marcados: int = 2
 # "todos os cômodos ao mesmo tempo" = todos com susto dentro dessa janela, em segundos
-@export var janela_comodos: float = 8.0
+@export var janela_comodos: float = 6.0
 
 var npcs_no_comeco: int = 0
 var acabou: bool = false
@@ -43,6 +52,12 @@ var objetivo_marcados: bool = false
 var objetivo_comodos: bool = false
 var objetivo_policial: bool = false
 var policia_chamada: bool = false
+var amanheceu: bool = false
+# [a, b] -> segundos juntos
+var sobrepostos: Dictionary = {}
+var proxima_vigia: float = 0.0
+# uma ação com mira está esperando o clique no mapa
+var mirando: bool = false
 # nome do cômodo -> tempo_partida do último susto nele
 var ultimo_susto_comodo: Dictionary = {}
 var ultima_morte: Vector2
@@ -60,6 +75,9 @@ func _ready() -> void:
 	npcs_no_comeco = get_tree().get_nodes_in_group("npc").size()
 	noite.color = cor_festa
 	marcar_alvos()
+	var areas = preload("res://scripts/areas_chao.gd").new()
+	efeitos_chao.add_child(areas)
+	efeitos_chao.move_child(areas, 0)
 	tutorial.comecar(self)
 
 func _process(delta: float) -> void:
@@ -68,12 +86,48 @@ func _process(delta: float) -> void:
 	noite.color = noite.color.lerp(cor_festa.lerp(cor_vazia, clampf(foram, 0.0, 1.0)), minf(delta, 1.0))
 	if not acabou:
 		tempo_partida += delta
+		if restantes == 1 and policia_chamada and not amanheceu and get_tree().get_nodes_in_group("policial").size() == 1:
+			tempo_limite = minf(tempo_limite, tempo_partida + tempo_so_policial)
+		if tempo_partida >= tempo_limite and not amanheceu:
+			amanhecer()
+		proxima_vigia -= delta
+		if proxima_vigia <= 0.0:
+			proxima_vigia = 0.5
+			vigiar_sobreposicao(0.5)
 		if npcs_no_comeco > 0 and restantes == 0:
 			acabou = true
 			terminar()
 
 func objetivo_cumprido() -> bool:
 	return objetivo_marcados or objetivo_comodos or objetivo_policial
+
+# o ponto da malha da casa mais perto. não usa o mapa inteiro: a grama está no mesmo mapa,
+# e de cima de uma parede o mais perto podia ser do lado de fora
+func ponto_na_casa(pos: Vector2) -> Vector2:
+	return NavigationServer2D.region_get_closest_point(malha_casa.get_rid(), pos)
+
+# npc com npc, npc com fantasma ou fantasma com fantasma colados há tempo demais: um deles muda de rumo
+func vigiar_sobreposicao(passo: float) -> void:
+	var todos = get_tree().get_nodes_in_group("npc") + get_tree().get_nodes_in_group("fantasma")
+	var agora = {}
+	for i in todos.size():
+		for j in range(i + 1, todos.size()):
+			if todos[i].global_position.distance_to(todos[j].global_position) >= distancia_sobreposicao:
+				continue
+			var par = [todos[i], todos[j]]
+			var tempo = sobrepostos.get(par, 0.0) + passo
+			if tempo >= tempo_sobreposicao and (todos[i].redirecionar() or todos[j].redirecionar()):
+				continue
+			agora[par] = tempo
+	sobrepostos = agora
+
+# acabou o tempo: todo mundo vai embora correndo (dá pra pegar quem ainda está passando)
+func amanhecer() -> void:
+	amanheceu = true
+	ui.letreiro("AMANHECEU!", get_viewport().get_visible_rect().size * Vector2(0.42, 0.3))
+	GameManager.som.tocar("objetivo")
+	for npc in get_tree().get_nodes_in_group("npc"):
+		npc.fugir()
 
 # casa vazia: vitória se cumpriu algum objetivo, senão fim de festa
 func terminar() -> void:
@@ -124,7 +178,7 @@ func registrar_morte(npc) -> void:
 			objetivo_marcados = true
 	if npc.policial:
 		objetivo_policial = true
-	if GameManager.mortes == limite_mortes and not policia_chamada:
+	if GameManager.mortes == limite_mortes and not policia_chamada and not amanheceu:
 		chamar_policia()
 
 # marcado fugiu vivo: outro convidado é marcado no lugar. só falha se não sobrar gente pra completar

@@ -87,6 +87,7 @@
 [ext_resource type="SpriteFrames" uid="uid://b6uf8awim6umn" path="res://assets/npc/crianca_catarrenta.tres" id="npc_crianca_catarrenta"]
 [ext_resource type="SpriteFrames" uid="uid://cusyb1q5jcg1p" path="res://assets/npc/idoso.tres" id="npc_idoso"]
 [ext_resource type="SpriteFrames" uid="uid://ts4girjdxpvk" path="res://assets/npc/religioso.tres" id="npc_religioso"]
+[ext_resource type="NavigationPolygon" path="res://assets/navegacao_casa.tres" id="nav_casa"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_morc0"]
 atlas = ExtResource("11_morc")
@@ -137,7 +138,7 @@ shader_parameter/cor = Color(0.72, 0.74, 0.92, 1)
 shader_parameter/densidade = 0.42
 shader_parameter/vento = Vector2(0.006, 0.002)
 shader_parameter/escala = 2.5
-shader_parameter/tamanho = Vector2(2480, 1420)
+shader_parameter/tamanho = Vector2(3520, 2100)
 shader_parameter/pixel = 4.0
 shader_parameter/degraus = 4.0
 shader_parameter/borda = 0.0
@@ -165,11 +166,6 @@ shader_parameter/borda = 0.18
 [sub_resource type="Gradient" id="Gradient_fogo"]
 offsets = PackedFloat32Array(0, 0.4, 1)
 colors = PackedColorArray(1, 0.9, 0.45, 1, 1, 0.45, 0.1, 0.9, 0.6, 0.1, 0.05, 0)
-
-[sub_resource type="NavigationPolygon" id="NavigationPolygon_6hm8r"]
-vertices = PackedVector2Array(1050, 739.2031, 984.84375, 930.8203, 898, 934.6875, 831.9375, 936.6797, 830.9531, 746.9531, 915.7578, 543.1094, 515.0625, 1066.9297, 516.9297, 793.3125, 581, 795.3203, 785.8906, 1065.0625, 783.10156, 794.0469, 607, 795.0625, 1150.0703, 96.03125, 1152.9219, 483.8672, 917.2422, 480.8828, 600.03906, 97.96094, 1050, 931.84375, 1224.1328, 539.89844, 1219.1328, 160, 1492.1875, 160, 1497.2109, 415.79688, 1489.9063, 433, 581, 740.96875, 264.0703, 741.96094, 267.9297, 228, 530.2578, 553.25, 607, 748.0469, 1248.2969, 598.02344, 1674.9219, 597.02344, 1674, 727.8828, 1488.2578, 734.75, 1247.3281, 741.2578, 1217.7422, 735.7969, 1429.9297, 1063.0469, 1111.0313, 1064.9375, 1111.9609, 794.89844, 1219.2578, 793.89844, 1428.0703, 790, 1245.6484, 790, 1557.5625, 342.22656, 1662.3672, 344.77344, 1667.6172, 481.32813, 1562.8672, 484.71094, 1556.9063, 433, 1554.6094, 411.27344, 1490.8984, 543.0781, 1246.6875, 545.0781, 787.78125, 481.89063, 601.9531, 483.89063, 789.21875, 546.75, 990, 978.59375, 995.77344, 1237.1875, 912.15625, 1238.8516, 881.14844, 1145.8281, 898, 970.47656, 529, 228, 529, 504.1328, 1673.1094, 800.09375, 1493.2734, 801.89844)
-polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3, 4, 5), PackedInt32Array(6, 7, 8, 9), PackedInt32Array(10, 9, 8, 11), PackedInt32Array(12, 13, 14, 15), PackedInt32Array(0, 16, 1), PackedInt32Array(17, 18, 19, 20, 21), PackedInt32Array(22, 23, 24, 25), PackedInt32Array(11, 8, 22, 26), PackedInt32Array(27, 28, 29, 30, 31, 32), PackedInt32Array(33, 34, 35, 36), PackedInt32Array(37, 33, 36, 38), PackedInt32Array(38, 36, 32, 31), PackedInt32Array(39, 40, 41, 42, 43, 44), PackedInt32Array(44, 43, 21, 20), PackedInt32Array(17, 21, 45, 46), PackedInt32Array(47, 48, 15), PackedInt32Array(47, 15, 14, 5), PackedInt32Array(49, 47, 5, 4), PackedInt32Array(50, 51, 52, 53, 54, 1), PackedInt32Array(1, 54, 2), PackedInt32Array(24, 55, 56), PackedInt32Array(29, 57, 58, 30), PackedInt32Array(27, 32, 0, 5, 17, 46), PackedInt32Array(25, 49, 4, 26, 22), PackedInt32Array(25, 24, 56)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(258, 218, 539, 218, 539, 504, 540, 543, 779, 537, 778, 492, 592, 494, 590, 88, 1160, 86, 1163, 494, 927, 491, 926, 533, 1214, 530, 1209, 150, 1502, 150, 1507, 405, 1545, 402, 1548, 332, 1672, 335, 1678, 491, 1554, 495, 1548, 443, 1500, 443, 1501, 553, 1257, 555, 1258, 588, 1685, 587, 1684, 728, 1683, 810, 1484, 812, 1479, 745, 1257, 751, 1256, 780, 1438, 780, 1440, 1073, 1101, 1075, 1102, 785, 1209, 784, 1208, 746, 1060, 749, 1060, 942, 996, 941, 1000, 978, 1006, 1247, 905, 1249, 871, 1147, 888, 970, 888, 945, 822, 947, 821, 757, 617, 758, 617, 785, 793, 784, 796, 1075, 505, 1077, 507, 783, 571, 785, 571, 751, 254, 752)])
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_d0u6y"]
 vertices = PackedVector2Array(516.1172, 241.88281, 521.8594, 677.7578, 279.09375, 672.21875, 282, 355.04688, 282, 239.10938)
@@ -480,10 +476,10 @@ texture = ExtResource("11_2iacw")
 
 [node name="neblina_fora" type="ColorRect" parent="." unique_id=1739269782]
 material = SubResource("ShaderMaterial_neblina_fora")
-offset_left = -280.0
-offset_top = -170.0
-offset_right = 2200.0
-offset_bottom = 1250.0
+offset_left = -800.0
+offset_top = -500.0
+offset_right = 2720.0
+offset_bottom = 1600.0
 mouse_filter = 2
 
 [node name="folhas" type="CPUParticles2D" parent="." unique_id=1674158153]
@@ -492,7 +488,7 @@ amount = 70
 lifetime = 9.0
 preprocess = 9.0
 emission_shape = 3
-emission_rect_extents = Vector2(1240, 710)
+emission_rect_extents = Vector2(1760, 1050)
 direction = Vector2(1, 0.35)
 spread = 25.0
 gravity = Vector2(10, 4)
@@ -512,7 +508,7 @@ amount = 18
 lifetime = 7.0
 preprocess = 7.0
 emission_shape = 3
-emission_rect_extents = Vector2(1240, 710)
+emission_rect_extents = Vector2(1760, 1050)
 direction = Vector2(0, -1)
 spread = 180.0
 gravity = Vector2(0, -2)
@@ -793,62 +789,62 @@ position = Vector2(1662, 593)
 texture = ExtResource("64_o622m")
 
 [node name="npc" parent="Y-sort" unique_id=815893788 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
-position = Vector2(308, 282)
+position = Vector2(308, 326)
 collision_layer = 2
 house = NodePath("../..")
 preferencia = "conversar"
 
 [node name="npc2" parent="Y-sort" unique_id=997912080 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
-position = Vector2(894, 366)
+position = Vector2(894, 410)
 collision_layer = 2
 house = NodePath("../..")
 visual = ExtResource("32_cheer")
 preferencia = "dançar"
 
 [node name="npc3" parent="Y-sort" unique_id=1187792258 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
-position = Vector2(963, 239)
+position = Vector2(963, 283)
 collision_layer = 2
 house = NodePath("../..")
 visual = ExtResource("33_hippie")
 preferencia = "descansar"
 
 [node name="npc4" parent="Y-sort" unique_id=2047802193 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
-position = Vector2(705, 287)
+position = Vector2(705, 331)
 collision_layer = 2
 house = NodePath("../..")
 visual = ExtResource("34_psicopata")
 preferencia = "beber"
 
 [node name="npc5" parent="Y-sort" unique_id=674207968 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
-position = Vector2(906, 796)
+position = Vector2(960, 720)
 collision_layer = 2
 house = NodePath("../..")
 visual = ExtResource("npc_crianca_catarrenta")
 preferencia = "descansar"
 
 [node name="npc6" parent="Y-sort" unique_id=560872406 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
-position = Vector2(1219, 909)
+position = Vector2(1219, 953)
 collision_layer = 2
 house = NodePath("../..")
 visual = ExtResource("npc_cientista")
 preferencia = "dançar"
 
 [node name="npc7" parent="Y-sort" unique_id=821055622 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
-position = Vector2(620, 931)
+position = Vector2(620, 975)
 collision_layer = 2
 house = NodePath("../..")
 visual = ExtResource("npc_idoso")
 preferencia = "dançar"
 
 [node name="npc8" parent="Y-sort" unique_id=1532609554 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
-position = Vector2(1453, 639)
+position = Vector2(1453, 683)
 collision_layer = 2
 house = NodePath("../..")
 visual = ExtResource("35_advogado")
 preferencia = "conversar"
 
 [node name="npc9" parent="Y-sort" unique_id=1190665817 node_paths=PackedStringArray("house") instance=ExtResource("1_atexv")]
-position = Vector2(1233, 344)
+position = Vector2(1233, 388)
 collision_layer = 2
 house = NodePath("../..")
 visual = ExtResource("npc_religioso")
@@ -920,7 +916,7 @@ scale_amount_max = 6.0
 color_ramp = SubResource("Gradient_fogo")
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=2079252784]
-navigation_polygon = SubResource("NavigationPolygon_6hm8r")
+navigation_polygon = ExtResource("nav_casa")
 
 [node name="navegacao_fora" type="NavigationRegion2D" parent="." unique_id=1093417781]
 navigation_polygon = ExtResource("60_nav_fora")
@@ -984,7 +980,7 @@ script = ExtResource("43_ponto")
 [node name="pontos_festa" type="Node2D" parent="." unique_id=1730245511]
 
 [node name="pista" type="Marker2D" parent="pontos_festa" unique_id=1730245512]
-position = Vector2(880, 300)
+position = Vector2(880, 344)
 script = ExtResource("57_festa")
 atividade = "dançar"
 vagas = 5
@@ -993,13 +989,13 @@ tempo_min = 15.0
 tempo_max = 40.0
 
 [node name="papo_sala" type="Marker2D" parent="pontos_festa" unique_id=1730245513]
-position = Vector2(700, 200)
+position = Vector2(700, 244)
 script = ExtResource("57_festa")
 tempo_min = 12.0
 tempo_max = 35.0
 
 [node name="bebidas" type="Marker2D" parent="pontos_festa" unique_id=1730245514]
-position = Vector2(1270, 860)
+position = Vector2(1270, 904)
 script = ExtResource("57_festa")
 atividade = "beber"
 vagas = 4
@@ -1008,14 +1004,14 @@ tempo_min = 8.0
 tempo_max = 20.0
 
 [node name="petiscos" type="Marker2D" parent="pontos_festa" unique_id=1730245515]
-position = Vector2(950, 900)
+position = Vector2(450, 620)
 script = ExtResource("57_festa")
 atividade = "beber"
 tempo_min = 8.0
 tempo_max = 20.0
 
 [node name="cama_quarto" type="Marker2D" parent="pontos_festa" unique_id=1730245516]
-position = Vector2(400, 330)
+position = Vector2(400, 374)
 script = ExtResource("57_festa")
 atividade = "descansar"
 raio = 60.0
@@ -1023,7 +1019,7 @@ tempo_min = 15.0
 tempo_max = 40.0
 
 [node name="cama_quarto_roxo" type="Marker2D" parent="pontos_festa" unique_id=1730245517]
-position = Vector2(650, 900)
+position = Vector2(650, 944)
 script = ExtResource("57_festa")
 atividade = "descansar"
 vagas = 2
@@ -1031,14 +1027,14 @@ tempo_min = 15.0
 tempo_max = 40.0
 
 [node name="papo_escritorio" type="Marker2D" parent="pontos_festa" unique_id=1730245518]
-position = Vector2(1355, 330)
+position = Vector2(1355, 374)
 script = ExtResource("57_festa")
 raio = 60.0
 tempo_min = 12.0
 tempo_max = 35.0
 
 [node name="banheiro" type="Marker2D" parent="pontos_festa" unique_id=1730245519]
-position = Vector2(1610, 420)
+position = Vector2(1610, 464)
 script = ExtResource("57_festa")
 atividade = "banheiro"
 vagas = 1
@@ -1047,13 +1043,13 @@ tempo_min = 4.0
 tempo_max = 8.0
 
 [node name="papo_corredor" type="Marker2D" parent="pontos_festa" unique_id=1730245520]
-position = Vector2(1000, 650)
+position = Vector2(1000, 694)
 script = ExtResource("57_festa")
 vagas = 4
 raio = 70.0
 
 [node name="papo_corredor2" type="Marker2D" parent="pontos_festa" unique_id=1730245521]
-position = Vector2(1500, 660)
+position = Vector2(1500, 704)
 script = ExtResource("57_festa")
 
 [node name="PontoFuga" type="Marker2D" parent="." unique_id=241806709]
@@ -1245,7 +1241,7 @@ script = ExtResource("65_pos_script")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1801471344]
 position = Vector2(960, 540)
-zoom = Vector2(0.8, 0.8)
+zoom = Vector2(0.62, 0.62)
 script = ExtResource("30_camera")
 
 [node name="pausa" parent="." unique_id=1771912377 instance=ExtResource("31_pausa")]

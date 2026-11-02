@@ -42,9 +42,11 @@ func soltar() -> void:
 	if fantasma == null:
 		return
 	var acao = acao_na_bolinha()
-	if acao and is_instance_valid(fantasma):
-		fantasma.executar(acao)
+	var quem = fantasma
+	# fecha antes: fechar devolve o tempo, e uma ação com mira deixa ele lento de novo
 	fechar()
+	if acao and is_instance_valid(quem):
+		quem.executar(acao)
 
 func fechar() -> void:
 	if is_instance_valid(fantasma):
@@ -84,6 +86,8 @@ func _process(delta: float) -> void:
 		descricao.text = acao.descricao
 		if acao.propriedade_medo != &"":
 			descricao.text += "\nMedo " + acao.texto_medo(fantasma)
+		if acao.em_grupo:
+			descricao.text += "\nQuanto mais gente pegar, mais forte!"
 		var borda = (distancia_icones + raio_icone + 14) * sentido
 		painel_descricao.position.x = -painel_descricao.size.x / 2
 		painel_descricao.position.y = borda - painel_descricao.size.y if sentido < 0 else borda

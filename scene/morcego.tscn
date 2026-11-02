@@ -17,6 +17,7 @@ descricao = "Bate as asas com força e o vento empurra e assusta quem estiver em
 resumo = "Bate as asas e o vento empurra quem está em volta"
 propriedade_medo = &"medo_bater_asas"
 metodo = &"bater_asas"
+em_grupo = true
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8h54h"]
 atlas = ExtResource("4_a3jf4")
@@ -56,7 +57,7 @@ animations = [{
 
 [node name="Morcego" type="Node2D" unique_id=494321899]
 script = ExtResource("1_4norb")
-custo = 2
+custo = 3
 acoes = Array[ExtResource("2_acao")]([SubResource("Resource_bater_asas")])
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=990475690]

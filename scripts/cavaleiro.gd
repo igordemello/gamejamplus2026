@@ -1,13 +1,16 @@
 extends Fantasma
 
 @export var raio_espada: float = 150.0
-@export var medo_espada: int = 50
+@export var medo_espada: int = 30
 @export var tempo_fuga: float = 3.0
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 func _ready() -> void:
 	sprite.animation_finished.connect(sprite.play.bind("parada"))
+
+func area_de(_acao: Acao) -> Dictionary:
+	return area_raio(raio_espada)
 
 # a estátua ataca quem estiver passando mais perto dela
 func susto_de_espada() -> bool:

@@ -77,10 +77,11 @@ resumo = "Derruba um objeto do cenário e assusta quem está perto"
 propriedade_medo = &"medo_quebra"
 recarga = 6.0
 metodo = &"quebrar_objetos"
+em_grupo = true
 
 [node name="Diabrete" type="Node2D"]
 script = ExtResource("1_script")
-custo = 3
+custo = 4
 passeia = true
 tipo = 3
 acoes = Array[ExtResource("2_acao")]([SubResource("Resource_quebrar")])

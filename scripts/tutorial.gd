@@ -26,12 +26,35 @@ var zoom_inicial: float
 var arrastado_inicial: float
 var fantasmas_inicial: int
 var concluido: bool = false
+# o painel é de papel. no primeiro passo ele fica no meio da tela, com o resto escurecido, e depois sobe pro topo
+const ALTURA_TOPO = 16.0
+@onready var painel: PanelContainer = $painel
+var estilo: StyleBoxFlat
+var fundo: ColorRect
+var contagem: Label
+var tween_painel: Tween
 
 func _ready() -> void:
 	hide()
 	%pular.pressed.connect(terminar)
 	proximo.pressed.connect(avancar)
 	seta.draw.connect(desenhar_seta)
+	estilo = StyleBoxFlat.new()
+	estilo.bg_color = Color(0.86, 0.84, 0.76)
+	painel.add_theme_stylebox_override("panel", estilo)
+	fundo = ColorRect.new()
+	fundo.color = Color(0, 0, 0, 0)
+	fundo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fundo.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(fundo)
+	move_child(fundo, 0)
+	contagem = Label.new()
+	contagem.add_theme_font_size_override("font_size", 22)
+	contagem.add_theme_color_override("font_color", Color(0.36, 0.34, 0.3))
+	contagem.position = Vector2(14, 2)
+	contagem.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	painel.add_child(contagem)
+	contagem.top_level = true
 
 func comecar(casa) -> void:
 	house = casa
@@ -57,6 +80,7 @@ func comecar(casa) -> void:
 	]
 	atual = -1
 	show()
+	fundo.color.a = 0.6
 	avancar()
 
 func avancar() -> void:
@@ -70,6 +94,7 @@ func avancar() -> void:
 	proximo.text = "Começar" if atual == passos.size() - 1 else "Próximo"
 	destaque = passo.get("destaque")
 	concluido = false
+	mostrar_painel()
 	tempo_passo = 0.0
 	zoom_inicial = house.camera.zoom_alvo
 	arrastado_inicial = house.camera.arrastado
@@ -78,9 +103,34 @@ func avancar() -> void:
 	if passo.get("abrir_objetivos", false):
 		house.ui.abrir_objetivos(true)
 
+# cada passo entra caindo e dando um tranco, com um somzinho
+func mostrar_painel() -> void:
+	GameManager.som.tocar_ui("carta_pegar")
+	contagem.text = "Tutorial %d/%d" % [atual + 1, passos.size()]
+	var tela = get_viewport().get_visible_rect().size
+	var altura = (tela.y - painel.size.y) * 0.4 if atual == 0 else ALTURA_TOPO
+	painel.pivot_offset = painel.size / 2.0
+	if tween_painel:
+		tween_painel.kill()
+	tween_painel = create_tween().set_parallel().set_ignore_time_scale()
+	painel.scale = Vector2.ONE * 1.25
+	tween_painel.tween_property(painel, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	if atual == 0:
+		painel.position.y = altura
+	else:
+		tween_painel.tween_property(painel, "position:y", altura, 0.35).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tween_painel.tween_property(fundo, "color:a", 0.0, 0.35)
+
 func _process(delta: float) -> void:
 	if atual < 0 or atual >= passos.size():
 		return
+	# a cada 4 s parado no mesmo passo, um tranquinho pra chamar o olho
+	contagem.global_position = painel.global_position + Vector2(16, 6)
+	if tempo_passo > 4.0 and fmod(tempo_passo, 4.0) < 0.05 and not (tween_painel and tween_painel.is_running()):
+		painel.pivot_offset = painel.size / 2.0
+		painel.scale = Vector2.ONE * 1.06
+		tween_painel = create_tween().set_ignore_time_scale()
+		tween_painel.tween_property(painel, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 	var real = minf(delta / maxf(Engine.time_scale, 0.01), 0.05)
 	tempo += real
 	tempo_passo += real
@@ -112,6 +162,7 @@ func _process(delta: float) -> void:
 
 func terminar() -> void:
 	apagar_destaques()
+	fundo.color.a = 0.0
 	atual = passos.size()
 	hide()
 

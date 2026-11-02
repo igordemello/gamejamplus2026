@@ -26,7 +26,7 @@ func lugar_livre() -> Vector2:
 	var folga = -1.0
 	for i in 8:
 		var lugar = global_position + Vector2.from_angle(randf() * TAU) * randf_range(raio * 0.4, raio)
-		if GameManager.house.eh_parede(lugar) or GameManager.house.eh_parede(lugar + Npc.ALTURA_PE):
+		if GameManager.house.eh_parede(lugar):
 			continue
 		var perto = INF
 		for npc in ocupantes:

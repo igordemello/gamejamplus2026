@@ -3,6 +3,12 @@ class_name Fantasma
 
 const CONTORNO = preload("res://assets/contorno.tres")
 const FUMACA = preload("res://scene/fumaca.tscn")
+const EFEITO_GRUPO = preload("res://scripts/efeito_grupo.gd")
+# susto em área: cada pessoa a mais soma isso ao medo de todas, até o máximo
+const BONUS_POR_PESSOA = 0.25
+const BONUS_MAXIMO = 2.0
+# da mais fraca (2 pessoas) pra mais forte (5 ou mais)
+const CORES_GRUPO = [Color(1, 0.85, 0.3), Color(1, 0.55, 0.15), Color(1, 0.25, 0.2), Color(1, 0.2, 0.7)]
 
 enum Tipo {
 	Aparicao,
@@ -40,6 +46,10 @@ const NOME_TIPO = {
 @export var passeia: bool = false
 @export var velocidade_passeio: float = 45.0
 @export var raio_passeio: float = 200.0
+# passeia pela casa toda em vez de ficar no próprio cômodo (nunca em cômodo proibido)
+@export var passeio_casa: bool = false
+@export var espera_passeio_min: float = 2.0
+@export var espera_passeio_max: float = 5.0
 
 var recarga_restante: Dictionary = {}
 var selecionado: bool = false
@@ -77,11 +87,11 @@ func _enter_tree() -> void:
 		add_child(luz)
 
 func _process(delta: float) -> void:
-	# em tempo real: a câmera lenta do menu de ações não pode atrasar a recarga
+	# a recarga anda no tempo do jogo: na câmera lenta ela também desacelera
 	var real = minf(delta / maxf(Engine.time_scale, 0.01), 0.05)
 	for acao in recarga_restante:
 		var antes = recarga_restante[acao]
-		recarga_restante[acao] = maxf(antes - real, 0.0)
+		recarga_restante[acao] = maxf(antes - delta, 0.0)
 		# piscadinha avisando que a ação ficou pronta de novo
 		if antes > 0.0 and recarga_restante[acao] == 0.0:
 			piscar(1, 0.08)
@@ -120,13 +130,81 @@ func mouse_em_cima() -> bool:
 	return centro.distance_to(get_global_mouse_position()) <= raio_clique * (1.25 if no_hover else 1.0)
 
 func executar(acao: Acao) -> void:
-	if recarga_restante.get(acao, 0.0) <= 0.0 and call(acao.metodo):
-		recarga_restante[acao] = acao.recarga
-		pulinho()
-		# a casa sente: as luzes em volta piscam
-		GameManager.house.piscar_luzes(global_position, 0.25)
+	if acao.mira and recarga_restante.get(acao, 0.0) <= 0.0:
+		GameManager.house.ui.get_node("area_jogo").comecar_mira(self, acao)
+	elif recarga_restante.get(acao, 0.0) <= 0.0 and call(acao.metodo):
+		acao_feita(acao)
 	else:
 		negar()
+
+# escolheu o lugar da ação com mira
+func executar_mira(acao: Acao, onde: Vector2) -> void:
+	if recarga_restante.get(acao, 0.0) <= 0.0 and call(acao.metodo, onde):
+		acao_feita(acao)
+	else:
+		negar()
+
+func acao_feita(acao: Acao) -> void:
+	recarga_restante[acao] = acao.recarga
+	pulinho()
+	# a casa sente: as luzes em volta piscam
+	GameManager.house.piscar_luzes(global_position, 0.25)
+
+# onde a ação pega, pra desenhar no chão: {"centro", "raio"}, {"comodo"} ou vazio se não tem área fixa
+func area_de(_acao: Acao) -> Dictionary:
+	return {}
+
+func area_raio(raio: float) -> Dictionary:
+	return {"centro": global_position, "raio": raio}
+
+# no corredor, que não é cômodo, a área é um círculo
+func area_comodo(raio_corredor: float = 250.0) -> Dictionary:
+	var comodo = GameManager.house.comodo_em(global_position)
+	return area_raio(raio_corredor) if comodo == "" else {"comodo": comodo}
+
+# quanto o susto em área vale pra cada um quando pega essa quantidade de gente
+func bonus_em_grupo(quantos: int) -> float:
+	return minf(1.0 + BONUS_POR_PESSOA * maxi(quantos - 1, 0), BONUS_MAXIMO)
+
+func medo_em_grupo(medo: int, quantos: int) -> int:
+	return roundi(medo * bonus_em_grupo(quantos))
+
+# pegou mais de um: raios até cada pessoa, impacto proporcional à quantidade e o multiplicador na tela.
+# chame antes de assustar (quem infarta ou foge muda de estado no susto)
+func sentir_grupo(npcs: Array, centro: Vector2 = Vector2.INF) -> void:
+	var quantos = npcs.size()
+	if quantos < 2:
+		return
+	var house = GameManager.house
+	if centro == Vector2.INF:
+		centro = global_position + luz.position * scale
+	var nivel = mini(quantos - 2, CORES_GRUPO.size() - 1)
+	var cor = CORES_GRUPO[nivel]
+	var efeito = EFEITO_GRUPO.new()
+	efeito.centro = centro
+	efeito.alvos = npcs
+	efeito.cor = cor
+	efeito.forca = float(nivel + 1)
+	house.y_sort.add_child(efeito)
+
+	# bem acima: logo abaixo fica a onomatopeia da própria ação
+	var acima = centro + Vector2(0, -210)
+	Onomatopeia.soltar("%d DE UMA VEZ!" % quantos, acima, cor, 4.0 + nivel)
+	Onomatopeia.soltar("MEDO X%s" % str(snappedf(bonus_em_grupo(quantos), 0.01)), acima + Vector2(0, 42.0 + 6.0 * nivel), Color.WHITE, 3.0 + 0.5 * nivel)
+
+	GameManager.hitstop(0.06 + 0.035 * nivel)
+	house.camera.tremer(5.0 + 3.0 * nivel)
+	house.camera.chutar(0.03 + 0.02 * nivel)
+	house.pos.chutar(3.0 + nivel)
+	house.piscar_luzes(centro, 0.3 + 0.1 * nivel)
+	# o mesmo sininho, mais agudo quanto mais gente
+	var som = GameManager.som.tocar("carta_liberada")
+	if som:
+		som.pitch_scale = 1.0 + 0.18 * nivel
+
+# ação com mira: dá pra escolher esse lugar?
+func mira_valida(_acao: Acao, _onde: Vector2) -> bool:
+	return false
 
 # chamado quando é solto da loja: cresce com um pulinho e aparece
 func aparecer() -> void:
@@ -176,7 +254,7 @@ func passear(delta: float) -> void:
 	if destino_passeio == Vector2.INF:
 		espera_passeio -= delta
 		if espera_passeio <= 0.0:
-			espera_passeio = randf_range(2.0, 5.0)
+			espera_passeio = randf_range(espera_passeio_min, espera_passeio_max)
 			destino_passeio = sortear_passeio()
 			tempo_passeio = 0.0
 		return
@@ -188,6 +266,14 @@ func passear(delta: float) -> void:
 	if global_position.distance_to(destino_passeio) <= 4.0 or tempo_passeio > 8.0:
 		destino_passeio = Vector2.INF
 
+# ficou tempo demais em cima de alguém: quem passeia vai pra outro lugar; parado por natureza, não muda
+func redirecionar() -> bool:
+	if not passeia or ocupado_agora():
+		return false
+	destino_passeio = sortear_passeio()
+	tempo_passeio = 0.0
+	return destino_passeio != Vector2.INF
+
 func ocupado_agora() -> bool:
 	return (has_method("ocupado") and call("ocupado")) or (has_method("ocupada") and call("ocupada"))
 
@@ -195,12 +281,34 @@ func ocupado_agora() -> bool:
 func sortear_passeio() -> Vector2:
 	var house = GameManager.house
 	var comodo = house.comodo_em(global_position)
-	for i in 8:
-		var longe = global_position + Vector2.from_angle(randf() * TAU) * randf_range(raio_passeio * 0.3, raio_passeio)
-		var ponto = NavigationServer2D.map_get_closest_point(get_world_2d().navigation_map, longe)
-		if house.comodo_em(ponto) == comodo and not house.eh_parede(ponto) and not house.comodo_proibido(ponto, comodos_proibidos):
+	# caiu num cômodo proibido (empurrado ou de um caminho antigo): o passeio é o jeito de sair de lá
+	var saindo = house.comodo_proibido(global_position, comodos_proibidos)
+	var alcance = raio_passeio * (3.0 if saindo else 1.0)
+	for i in 12:
+		var longe = global_position + Vector2.from_angle(randf() * TAU) * randf_range(alcance * 0.3, alcance)
+		var ponto = house.ponto_na_casa(longe)
+		if house.eh_parede(ponto) or house.comodo_proibido(ponto, comodos_proibidos):
+			continue
+		if not passeio_casa and not saindo and house.comodo_em(ponto) != comodo:
+			continue
+		if saindo or caminho_permitido(ponto, comodo):
 			return ponto
 	return Vector2.INF
+
+# o caminho até lá não passa por cômodo proibido nem, sem passeio_casa, por outro cômodo
+func caminho_permitido(ate: Vector2, comodo: String) -> bool:
+	var house = GameManager.house
+	var rota = NavigationServer2D.map_get_path(get_world_2d().navigation_map, global_position, ate, true, 1)
+	for i in range(1, rota.size()):
+		var trecho = rota[i - 1].distance_to(rota[i])
+		var passos = int(trecho / 30.0) + 1
+		for j in passos + 1:
+			var ponto = rota[i - 1].lerp(rota[i], j / float(passos))
+			if house.comodo_proibido(ponto, comodos_proibidos):
+				return false
+			if not passeio_casa and house.comodo_em(ponto) != comodo:
+				return false
+	return true
 
 func mover_passeio(destino: Vector2, passo: float) -> void:
 	andar_pelo_caminho(destino, passo)

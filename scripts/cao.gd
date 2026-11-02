@@ -4,10 +4,12 @@ extends Fantasma
 @export var velocidade_giro: float = 12.0
 @export var alcance_mordida: float = 30.0
 
-@export var medo_mastigar: int = 70
+@export var medo_mastigar: int = 42
 @export var duracao_mastigar: float = 2.5
 
-@export var medo_latido: int = 35
+@export var medo_latido: int = 22
+# até onde a onda do latido vai, só no desenho (o susto vale o cômodo inteiro)
+@export var raio_onda: float = 460.0
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
@@ -41,13 +43,41 @@ func latido_feral() -> bool:
 	if ocupado():
 		return false
 	sprite.play("latir")
-	onomatopeia("AU AU!", Color(1, 0.65, 0.3))
+	Onomatopeia.soltar("AU AU!", global_position + luz.position * scale - Vector2(0, 70), Color(1, 0.65, 0.3), 7.0)
+	soltar_onda()
+	GameManager.house.camera.tremer(8.0)
+	GameManager.house.pos.chutar(4.0)
 	GameManager.som.tocar("cao_latido")
 	var meu_comodo = GameManager.house.comodo_em(global_position)
-	for npc in get_tree().get_nodes_in_group("npc"):
-		if GameManager.house.comodo_em(npc.global_position) == meu_comodo:
-			npc.tomar_susto("latido", medo_latido, self)
+	var perto = get_tree().get_nodes_in_group("npc").filter(func(npc): return GameManager.house.comodo_em(npc.global_position) == meu_comodo)
+	var medo = medo_em_grupo(medo_latido, perto.size())
+	sentir_grupo(perto)
+	for npc in perto:
+		npc.tomar_susto("latido", medo, self)
 	return true
+
+# anéis grossos saindo dele, um atrás do outro
+func soltar_onda() -> void:
+	var onda = Node2D.new()
+	onda.material = preload("res://assets/sem_luz.tres")
+	onda.z_index = 2
+	onda.global_position = global_position
+	GameManager.house.y_sort.add_child(onda)
+	var progresso = [0.0]
+	onda.draw.connect(func():
+		for i in 3:
+			var t = clampf(progresso[0] * 1.5 - i * 0.25, 0.0, 1.0)
+			if t > 0.0:
+				var cor = Color(1, 0.65, 0.3, (1.0 - t) * 0.8)
+				onda.draw_arc(Vector2.ZERO, t * raio_onda, 0.0, TAU, 72, cor, 14.0 * (1.0 - t) + 2.0))
+	var tween = onda.create_tween()
+	tween.tween_method(func(t):
+		progresso[0] = t
+		onda.queue_redraw(), 0.0, 1.0, 0.7)
+	tween.tween_callback(onda.queue_free)
+
+func area_de(_acao: Acao) -> Dictionary:
+	return area_comodo()
 
 func ir_ate_alvo(delta: float) -> void:
 	var house = GameManager.house
@@ -67,7 +97,8 @@ func ir_ate_alvo(delta: float) -> void:
 	# pelo caminho da casa, contornando parede; cômodo proibido e caminho travado fazem ele desistir
 	var antes = global_position
 	andar_pelo_caminho(alvo.global_position, velocidade * delta)
-	if house.comodo_proibido(global_position, comodos_proibidos):
+	# (quem já está lá dentro pode sair)
+	if house.comodo_proibido(global_position, comodos_proibidos) and not house.comodo_proibido(antes, comodos_proibidos):
 		global_position = antes
 		desistir()
 		return

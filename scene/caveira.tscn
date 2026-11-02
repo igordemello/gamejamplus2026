@@ -264,6 +264,7 @@ resumo = "Ri e assusta todo mundo num círculo em volta"
 propriedade_medo = &"medo_risada"
 recarga = 10.0
 metodo = &"risada_maligna"
+em_grupo = true
 
 [sub_resource type="Resource" id="Resource_mordida"]
 script = ExtResource("2_acao")
@@ -274,6 +275,7 @@ resumo = "Morde até duas pessoas, que fogem pra outro cômodo"
 propriedade_medo = &"medo_mordida"
 recarga = 14.0
 metodo = &"mordida_de_fogo"
+em_grupo = true
 
 [sub_resource type="Resource" id="Resource_cabecada"]
 script = ExtResource("2_acao")
@@ -287,9 +289,9 @@ metodo = &"cabecada"
 
 [node name="Caveira" type="Node2D"]
 script = ExtResource("1_script")
-custo = 9
+custo = 12
 tier = 3
-mortes_para_liberar = 1
+mortes_para_liberar = 2
 pontos_spawn = &"lareira"
 acoes = Array[ExtResource("2_acao")]([SubResource("Resource_risada"), SubResource("Resource_mordida"), SubResource("Resource_cabecada")])
 raio_clique = 50.0

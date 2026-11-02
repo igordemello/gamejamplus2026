@@ -7,5 +7,5 @@
 collision_layer = 2
 visual = ExtResource("2_visual")
 nome_tipo = "Policial"
-resistencia = 1.5
+resistencia = 2.0
 policial = true

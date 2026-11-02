@@ -1,20 +1,20 @@
 extends Fantasma
 
 @export var raio_risada: float = 220.0
-@export var medo_risada: int = 40
+@export var medo_risada: int = 24
 
 @export var raio_mordida: float = 160.0
-@export var medo_mordida: int = 65
+@export var medo_mordida: int = 38
 @export var max_mordidos: int = 2
 @export var tempo_fugindo: float = 4.0
 # onde e de que tamanho os dentes aparecem no npc mordido
-@export var posicao_dentes: Vector2 = Vector2(0, -45)
+@export var posicao_dentes: Vector2 = Vector2(0, -89)
 @export var escala_dentes: float = 2.0
 
 @export var velocidade: float = 260.0
 @export var alcance_cabecada: float = 30.0
 @export var tempo_max_perseguindo: float = 6.0
-@export var medo_cabecada: int = 110
+@export var medo_cabecada: int = 66
 @export var duracao_stun_cabecada: float = 10.0
 # quanto do medo a pessoa perde por segundo enquanto está tonta da cabeçada
 @export var dreno_cabecada: float = 1.5
@@ -67,6 +67,14 @@ func npcs_perto(raio: float) -> Array:
 	perto.sort_custom(func(a, b): return global_position.distance_to(a.global_position) < global_position.distance_to(b.global_position))
 	return perto
 
+func area_de(acao: Acao) -> Dictionary:
+	match acao.metodo:
+		&"risada_maligna":
+			return area_raio(raio_risada)
+		&"mordida_de_fogo":
+			return area_raio(raio_mordida)
+	return {}
+
 # todo mundo no círculo em volta se assusta
 func risada_maligna() -> bool:
 	if ocupada():
@@ -74,8 +82,11 @@ func risada_maligna() -> bool:
 	sprite.play("rir")
 	onomatopeia("HAHAHA!", Color(0.85, 0.5, 1))
 	GameManager.som.tocar("caveira_risada")
-	for npc in npcs_perto(raio_risada):
-		npc.tomar_susto("risada", medo_risada, self)
+	var perto = npcs_perto(raio_risada)
+	var medo = medo_em_grupo(medo_risada, perto.size())
+	sentir_grupo(perto)
+	for npc in perto:
+		npc.tomar_susto("risada", medo, self)
 	return true
 
 # morde até duas pessoas perto, que saem correndo pra outro cômodo
@@ -87,9 +98,11 @@ func mordida_de_fogo() -> bool:
 		return false
 	onomatopeia("NHAC!", Color(1, 0.55, 0.2))
 	GameManager.som.tocar("caveira_mordida")
+	var medo = medo_em_grupo(medo_mordida, mordidos.size())
+	sentir_grupo(mordidos)
 	for npc in mordidos:
 		mostrar_dentes(npc)
-		npc.tomar_susto("mordida", medo_mordida, self)
+		npc.tomar_susto("mordida", medo, self)
 		npc.correr_para_outro_comodo(tempo_fugindo)
 	return true
 
@@ -115,7 +128,6 @@ func mostrar_dentes(npc: Node2D) -> void:
 	dentes.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	dentes.position = posicao_dentes
 	dentes.scale = Vector2(escala_dentes, escala_dentes)
-	# o npc ordena pelo pé: sem isso os dentes ficam atrás do desenho dele
 	dentes.z_index = 1
 	npc.add_child(dentes)
 	dentes.play("mordida")

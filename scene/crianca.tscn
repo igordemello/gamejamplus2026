@@ -13,7 +13,7 @@ region = Rect2(378, 844, 320, 320)
 script = ExtResource("2_acao")
 nome = "Chorar"
 icone = SubResource("AtlasTexture_icone_chorar")
-descricao = "Só funciona com uma única pessoa perto: a criança começa a chorar de um jeito muito bizarro."
+descricao = "Só funciona com uma única pessoa no cômodo: a criança começa a chorar de um jeito muito bizarro."
 resumo = "Chora de um jeito bizarro, só funciona com uma pessoa perto"
 propriedade_medo = &"medo_choro"
 recarga = 8.0
@@ -177,7 +177,7 @@ animations = [{
 
 [node name="Criança Medonha" type="Node2D" unique_id=120000610]
 script = ExtResource("1_script")
-custo = 3
+custo = 4
 passeia = true
 tipo = 1
 acoes = Array[ExtResource("2_acao")]([SubResource("Resource_chorar")])

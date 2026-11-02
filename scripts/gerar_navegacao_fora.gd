@@ -8,7 +8,7 @@ extends SceneTree
 
 const PASSO = 4
 # um pouco além do que a câmera mostra, pra caber o caminho até a porta
-const AREA = Rect2i(-320, -220, 2560, 1560)
+const AREA = Rect2i(-800, -500, 3520, 2100)
 # pedaço do corredor de fuga que fica na grama (já é da malha da casa, não pode sobrepor);
 # os links porta_esquerda/porta_direita da casa ligam as duas malhas pelos lados dele
 const CORREDOR = Rect2(866, 1030, 145, 230)

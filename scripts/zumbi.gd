@@ -2,7 +2,7 @@ extends Fantasma
 
 # o bafo sai em volta dele: todo mundo nesse círculo se assusta e fica paralisado
 @export var raio_bafo: float = 220.0
-@export var medo_bafo: int = 40
+@export var medo_bafo: int = 24
 @export var paralisia_bafo: float = 2.0
 @export var nuvens_bafo: int = 8
 
@@ -13,7 +13,7 @@ extends Fantasma
 @export var alcance_arranhao: float = 2500.0
 @export var tempo_max_perseguindo: float = 30.0
 @export var distancia_arranhao: float = 30.0
-@export var medo_arranhao: int = 90
+@export var medo_arranhao: int = 54
 # quadro da animação em que a garra desce
 @export var quadro_arranhao: int = 4
 
@@ -23,11 +23,16 @@ extends Fantasma
 
 var alvo: Npc
 var perseguindo: bool = false
+# a garra já desceu nessa perseguição: daí em diante a recarga conta
+var golpeou: bool = false
 var tempo_perseguindo: float = 0.0
 var tempo_andando: float = 0.0
 var voltando: bool = false
 # onde estava quando saiu pra arranhar; volta pra cá depois
 var casa: Vector2
+# lá fora, de vez em quando a câmera afasta de leve pra lembrar que ele existe
+@export var intervalo_lembrete: float = 30.0
+var proximo_lembrete: float = 0.0
 
 func _ready() -> void:
 	sprite.frame_changed.connect(_on_quadro_mudou)
@@ -40,9 +45,10 @@ func _process(delta: float) -> void:
 	var andando = andando_atras() or voltando
 	sprite.rotation = sin(tempo_andando * 5.0) * 0.12 if andando else 0.0
 	sprite.speed_scale = 2.0 if andando else 1.0
-	# a recarga do arranhão só começa quando ele termina de atacar, não no clique
-	if perseguindo:
-		segurar_recarga(&"arranhao")
+	# a recarga do arranhão começa no golpe, não no clique: até lá ela nem aparece
+	if perseguindo and not golpeou:
+		liberar_recarga(&"arranhao")
+	lembrar_jogador(delta)
 
 func _physics_process(delta: float) -> void:
 	if andando_atras():
@@ -90,6 +96,16 @@ func distancia_andando(ate: Vector2) -> float:
 		total += caminho[i - 1].distance_to(caminho[i])
 	return total
 
+# em tempo real não importa: só conta enquanto o jogo roda normal (menu, carta e mira deixam lento)
+func lembrar_jogador(delta: float) -> void:
+	proximo_lembrete -= delta
+	if proximo_lembrete > 0.0 or Engine.time_scale < 1.0 or not GameManager.house.fora_de_casa(global_position):
+		return
+	proximo_lembrete = intervalo_lembrete if GameManager.house.camera.lembrar_de(global_position) else 1.0
+
+func area_de(acao: Acao) -> Dictionary:
+	return area_raio(raio_bafo) if acao.metodo == &"bafo_do_medo" else {}
+
 func ocupado_agora() -> bool:
 	return ocupado() or voltando
 
@@ -126,8 +142,10 @@ func bafo_do_medo() -> bool:
 	sprite.flip_h = perto[0].global_position.x > global_position.x
 	onomatopeia("HUAAAA", Color(0.6, 1, 0.45))
 	GameManager.som.tocar("zumbi_bafo")
+	var medo = medo_em_grupo(medo_bafo, perto.size())
+	sentir_grupo(perto)
 	for npc in perto:
-		npc.tomar_susto("bafo", medo_bafo, self)
+		npc.tomar_susto("bafo", medo, self)
 		npc.atordoar(paralisia_bafo)
 	soltar_nuvens()
 	return true
@@ -171,6 +189,7 @@ func arranhao() -> bool:
 		return false
 	alvo = mais_perto
 	perseguindo = true
+	golpeou = false
 	tempo_perseguindo = 0.0
 	# se já estava voltando, a casa continua sendo a de antes
 	if not voltando:
@@ -183,6 +202,8 @@ func _on_quadro_mudou() -> void:
 		onomatopeia("SCRATCH!", Color(1, 0.35, 0.35))
 		GameManager.som.tocar("zumbi_scratch")
 		alvo.tomar_susto("arranhao", medo_arranhao, self)
+		golpeou = true
+		segurar_recarga(&"arranhao")
 		GameManager.house.camera.tremer(4.0)
 
 func _on_animacao_acabou() -> void:

@@ -8,7 +8,7 @@ const PAPEL = Color(0.86, 0.84, 0.76)
 # nível de medo que libera cada pedaço da lore (a árvore que abre no clique)
 const NIVEIS_LORE = [1, 3, 4]
 # a partir desse nível de medo, o fantasma certo mata do coração
-const NIVEL_INFARTO = 2
+const NIVEL_INFARTO = 3
 
 @export var house: House
 # animações desse npc (gotica.tres, cheerleader.tres...), precisa ter "andar" desenhada virada pra direita
@@ -24,8 +24,12 @@ const NIVEL_INFARTO = 2
 
 # gosto pessoal: a atividade da festa que ele escolhe mais vezes
 @export_enum("aleatória", "dançar", "beber", "conversar", "descansar") var preferencia: String = "aleatória"
+# a comida da geleia até onde ele está indo
+var indo_comer: Node2D
 # chance de, em vez de ir pra um ponto da festa, só dar uma volta por algum cômodo
 @export var chance_zanzar: float = 0.1
+# nunca fica mais que isso parado no mesmo lugar, seja qual for o ponto da festa
+@export var tempo_max_parado: float = 12.0
 
 # ponto da festa (ponto_festa.gd) onde ele está ou pra onde está indo
 var ponto
@@ -57,7 +61,7 @@ var alfa_anel: float = 0.0
 var infarto_tipo: String = ""
 var infarto_tier: int = 0
 # sustos a mais (além do +1 do nível) quando ele infarta
-@export var bonus_infarto: int = 3
+@export var bonus_infarto: int = 2
 # os pontos de susto são divididos por isso (o policial tem 1,5)
 @export var resistencia: float = 1.0
 # chamado quando as mortes chegam no limite: azulado, com sirene; infarta com o Cavaleiro
@@ -112,13 +116,8 @@ var tempo_correndo: float = 0.0
 @export var tempo_fuga_comodo: float = 3.0
 # segundos tentando andar sem sair do lugar até desistir do destino
 const TEMPO_TRAVADO = 3.0
-const RECUO_CHAO = 20.0
-# do meio do npc até o pé (a posição do desenho na cena)
-const ALTURA_PE = Vector2(0, 44)
-# travou tentando respeitar o pé: esse tempo sem a regra, pra nunca ficar preso numa porta
-var tempo_sem_pe: float = 0.0
 # parado, abre espaço de quem estiver mais perto que isso, pra dar pra ver cada um
-const DISTANCIA_SOCIAL = 56.0
+const DISTANCIA_SOCIAL = 72.0
 const VELOCIDADE_AFASTAR = 70.0
 var tempo_sem_andar: float = 0.0
 var ultimo_lugar: Vector2
@@ -143,7 +142,7 @@ func _ready() -> void:
 		sirene.texture = preload("res://assets/luz.tres")
 		sirene.texture_scale = 1.3
 		sirene.energy = 1.4
-		sirene.position = Vector2(0, -60)
+		sirene.position = Vector2(0, -104)
 		add_child(sirene)
 	medidor = Node2D.new()
 	medidor.z_index = 2
@@ -153,28 +152,28 @@ func _ready() -> void:
 	medidor.draw.connect(_desenhar_medidor)
 	# sombra no chão, embaixo dos pés (fica no lugar quando ele pula de susto)
 	var sombra = Node2D.new()
-	# o npc ordena pelo pé (y_sort_enabled na raiz): sombra e anel ficam acima do pé e desenham
-	# de volta nele, pra continuarem atrás do desenho quando ele pula
-	sombra.position = Vector2(0, altura_sprite - RECUO_CHAO)
+	sombra.position = Vector2(0, altura_sprite)
 	sombra.draw.connect(func():
-		sombra.draw_set_transform(Vector2(0, RECUO_CHAO), 0.0, Vector2(1.0, 0.35))
+		sombra.draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, 0.35))
 		sombra.draw_circle(Vector2.ZERO, 16.0, Color(0, 0, 0, 0.35)))
 	add_child(sombra)
 	move_child(sombra, 0)
 	anel = Node2D.new()
-	anel.position = Vector2(0, altura_sprite - RECUO_CHAO)
+	anel.position = Vector2(0, altura_sprite)
 	anel.material = SEM_LUZ
 	anel.draw.connect(_desenhar_anel)
 	add_child(anel)
 	move_child(anel, 1)
 	if preferencia == "aleatória":
 		preferencia = ["dançar", "beber", "conversar", "descansar"].pick_random()
+	# não tem física de parede, e um npc parado numa porta não pode travar quem vem atrás
+	collision_mask = 0
 	# cada um no seu passo
 	speed *= randf_range(0.85, 1.15)
 	await initialize_navigation()
 	# já está na festa: fica um tempo onde foi colocado antes de sair, cada um no seu tempo
 	agent.target_position = global_position
-	tempo_atividade = randf_range(0.0, 20.0)
+	tempo_atividade = randf_range(0.0, tempo_max_parado)
 	navigation_ready = true
 
 func _process(delta: float) -> void:
@@ -225,16 +224,12 @@ func _physics_process(delta: float) -> void:
 	tempo_correndo = maxf(tempo_correndo - delta, 0.0)
 
 	if direcao_correr != Vector2.ZERO:
-		if house.eh_parede(global_position + direcao_correr * 20.0) or house.eh_parede(global_position + ALTURA_PE + direcao_correr * 20.0):
+		if house.eh_parede(global_position + direcao_correr * 20.0):
 			direcao_correr = Vector2.ZERO
 			atordoar(duracao_stun)
 			return
 		velocity = direcao_correr * velocidade_correr
 		move_and_slide()
-		# bateu em outra pessoa: para como se fosse parede, senão fica empurrando pra sempre
-		if get_slide_collision_count() > 0:
-			direcao_correr = Vector2.ZERO
-			atordoar(duracao_stun)
 		return
 
 	# FUGA
@@ -265,7 +260,8 @@ func _physics_process(delta: float) -> void:
 
 func mover_npc(delta: float) -> void:
 	var next_point = agent.get_next_path_position()
-	var direction = global_position.direction_to(next_point)
+	# desvia de leve de quem está colado, sem sair do caminho
+	var direction = (global_position.direction_to(next_point) + abrir_espaco() * 0.4).normalized()
 
 	var rapido = 2.0 if tempo_correndo > 0.0 or current_estado == Estado.Foge else 1.0
 	var target_velocity = direction * speed * rapido
@@ -275,34 +271,17 @@ func mover_npc(delta: float) -> void:
 		acceleration * rapido * delta
 	)
 
-	var antes = global_position
 	move_and_slide()
 	ficar_na_malha()
-	nao_afundar(antes, delta)
 	verificar_travado(delta)
 
-# não tem física de parede: com inércia ele cortava as quinas e entrava nelas. a malha é o limite
+# não tem física de parede: com inércia ele cortava as quinas e entrava nelas. a malha da casa é o limite
 func ficar_na_malha() -> void:
-	var ponto_malha = NavigationServer2D.map_get_closest_point(get_world_2d().navigation_map, global_position)
+	var ponto_malha = house.ponto_na_casa(global_position)
 	# só corrige o que dá pra ter andado num quadro: com a malha ainda carregando o ponto vem (0, 0)
 	var distancia = global_position.distance_to(ponto_malha)
 	if distancia > 2.0 and distancia < 40.0:
 		global_position = ponto_malha
-
-# a malha vale pro meio do npc: sem isso o pé entrava na parede de baixo e as pernas sumiam nela.
-# desliza pelo eixo que dá; quem já está com o pé na parede pode sair
-func nao_afundar(antes: Vector2, delta: float) -> void:
-	tempo_sem_pe = maxf(tempo_sem_pe - delta, 0.0)
-	if tempo_sem_pe > 0.0 or not house.eh_parede(global_position + ALTURA_PE) or house.eh_parede(antes + ALTURA_PE):
-		return
-	var so_x = Vector2(global_position.x, antes.y)
-	var so_y = Vector2(antes.x, global_position.y)
-	if not house.eh_parede(so_x + ALTURA_PE):
-		global_position = so_x
-	elif not house.eh_parede(so_y + ALTURA_PE):
-		global_position = so_y
-	else:
-		global_position = antes
 
 # direção pra longe de quem está colado nele (zero se ninguém está)
 func abrir_espaco() -> Vector2:
@@ -326,7 +305,6 @@ func verificar_travado(delta: float) -> void:
 	if tempo_sem_andar < TEMPO_TRAVADO:
 		return
 	tempo_sem_andar = 0.0
-	tempo_sem_pe = 2.0
 	if current_estado == Estado.Foge:
 		agent.target_position = house.ponto_fuga.global_position
 	else:
@@ -342,6 +320,7 @@ func initialize_navigation() -> void:
 # escolhe o que fazer agora: quase sempre um ponto da festa com vaga (o gosto dele pesa mais),
 # às vezes só dar uma volta. outro_comodo = tem que ser longe do cômodo onde ele está
 func escolher_atividade(outro_comodo: bool = false) -> void:
+	indo_comer = null
 	sair_do_ponto()
 	var meu_comodo = house.comodo_em(global_position)
 	var opcoes = get_tree().get_nodes_in_group("ponto_festa").filter(func(p):
@@ -361,7 +340,7 @@ func escolher_atividade(outro_comodo: bool = false) -> void:
 			break
 	ponto.ocupantes.append(self)
 	agent.target_position = ponto.lugar_livre()
-	tempo_atividade = randf_range(ponto.tempo_min, ponto.tempo_max)
+	tempo_atividade = minf(randf_range(ponto.tempo_min, ponto.tempo_max), tempo_max_parado)
 
 # quanto ele quer ir pra esse ponto
 func peso_do_ponto(p) -> float:
@@ -472,8 +451,9 @@ func tomar_susto(susto: String, pontosDeSusto: int, fantasma: Fantasma = null) -
 		return
 
 	barra_susto = minf(barra_susto + pontos_recebidos, 100.0)
-	# o objeto levitável não expulsa ninguém: o último nível sempre vem de um fantasma
-	if fantasma == null and nivel_medo == 4:
+	# o objeto levitável não expulsa ninguém: o último nível sempre vem de um fantasma.
+	# o policial não foge de jeito nenhum: só sai infartado
+	if (fantasma == null or policial) and nivel_medo == 4:
 		barra_susto = minf(barra_susto, 99.0)
 
 	var subiu = barra_susto >= 100.0
@@ -482,12 +462,12 @@ func tomar_susto(susto: String, pontosDeSusto: int, fantasma: Fantasma = null) -
 		nivel_medo += 1
 		GameManager.sustos += 1
 		# o +1 sai da cabeça e voa até o contador
-		house.ui.voar_susto(get_global_transform_with_canvas() * Vector2(0, -100))
+		house.ui.voar_susto(get_global_transform_with_canvas() * Vector2(0, -144))
 		mostrar_exclamacao("!!")
 		if nivel_medo < 5:
 			GameManager.som.gritar()
 		Onomatopeia.soltar("SOCORRO!" if nivel_medo >= 5 else ["AAAH!", "EEEK!", "AI AI AI!", "SOCORRO!"].pick_random(),
-			global_position + Vector2(randf_range(-40.0, 40.0), -175.0), Color(1, 0.95, 0.6), 4.0 if nivel_medo >= 5 else 3.0)
+			global_position + Vector2(randf_range(-40.0, 40.0), -219.0), Color(1, 0.95, 0.6), 4.0 if nivel_medo >= 5 else 3.0)
 		# peso: tela treme, câmera dá um tranco e o jogo congela um instante (mais forte quando ele foge)
 		var foge = nivel_medo >= 5
 		house.camera.tremer(7.0 if foge else 3.0)
@@ -495,7 +475,10 @@ func tomar_susto(susto: String, pontosDeSusto: int, fantasma: Fantasma = null) -
 		GameManager.hitstop(0.15 if foge else 0.06)
 		house.pos.chutar(5.0 if foge else 2.5)
 		house.piscar_luzes(global_position, 0.6 if foge else 0.3)
-		if nivel_medo == 1 or nivel_medo == 2:
+		# quem já está fugindo (amanheceu) continua fugindo, mesmo subindo de nível
+		if current_estado == Estado.Foge:
+			pass
+		elif nivel_medo == 1 or nivel_medo == 2:
 			current_estado = Estado.Normal
 		elif nivel_medo == 3 or nivel_medo == 4:
 			current_estado = Estado.Assustado
@@ -525,7 +508,7 @@ func _desenhar_anel() -> void:
 	if alfa_anel <= 0.01:
 		return
 	var raio = 30.0 * (1.0 + sin(Time.get_ticks_msec() / 1000.0 * 5.0) * 0.06)
-	anel.draw_set_transform(Vector2(0, RECUO_CHAO), 0.0, Vector2(1.0, 0.4))
+	anel.draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, 0.4))
 	anel.draw_circle(Vector2.ZERO, raio, Color(PAPEL, 0.14 * alfa_anel))
 	anel.draw_arc(Vector2.ZERO, raio, 0.0, TAU, 48, Color(PAPEL, alfa_anel), 3.0, true)
 
@@ -556,7 +539,7 @@ func mostrar_exclamacao(texto: String) -> void:
 		exclamacao.add_theme_font_size_override("font_size", 40)
 		exclamacao.size = Vector2(60, 56)
 		exclamacao.pivot_offset = Vector2(30, 56)
-		exclamacao.position = Vector2(-30, -160)
+		exclamacao.position = Vector2(-30, -204)
 		add_child(exclamacao)
 	exclamacao.text = texto
 	exclamacao.modulate.a = 1.0
@@ -605,6 +588,23 @@ func atordoar(tempo: float, dreno: float = 0.0) -> void:
 	dreno_medo = dreno
 	velocity = Vector2.ZERO
 
+func pode_ir_comer() -> bool:
+	return current_estado != Estado.Foge and current_estado != Estado.Infarta and tempo_stun <= 0.0 and direcao_correr == Vector2.ZERO and tempo_correndo <= 0.0 and not is_instance_valid(indo_comer)
+
+# sentiu o cheiro da comida da geleia: larga o que estava fazendo e vai até ela
+func ir_comer(comida: Node2D) -> void:
+	sair_do_ponto()
+	indo_comer = comida
+	agent.target_position = comida.global_position
+	tempo_atividade = 1.0
+
+# ficou tempo demais em cima de outro (House.vigiar_sobreposicao): vai pra outro lugar
+func redirecionar() -> bool:
+	if current_estado == Estado.Foge or current_estado == Estado.Infarta or tempo_stun > 0.0:
+		return false
+	escolher_atividade()
+	return true
+
 # levou um susto: se está num cômodo e já não está correndo, sai dele
 func fugir_do_comodo() -> void:
 	if tempo_correndo <= 0.0 and house.comodo_em(global_position) != "":
@@ -619,6 +619,9 @@ func correr_para_outro_comodo(tempo: float) -> void:
 
 func fugir() -> void:
 	if current_estado == Estado.Foge:
+		return
+	# o policial só vai embora se amanhecer
+	if policial and not house.amanheceu:
 		return
 
 	if house.ponto_fuga == null:
@@ -715,7 +718,7 @@ func infartar() -> void:
 	GameManager.hitstop(0.25)
 	house.pos.chutar(7.0)
 	house.piscar_luzes(global_position, INFARTO_PARA)
-	Onomatopeia.soltar("TUM TUM", global_position + Vector2(60, -110), Color(1, 0.3, 0.3))
+	Onomatopeia.soltar("TUM TUM", global_position + Vector2(60, -154), Color(1, 0.3, 0.3))
 
 	var lado = -1.0 if sprite.flip_h else 1.0
 	var tween = create_tween()
@@ -765,7 +768,7 @@ func parar_coracao() -> void:
 	create_tween().tween_property(self, "quebra", 1.0, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	house.ui.focar(self, 0.13)
 	house.camera.tremer(5.0)
-	house.ui.letreiro("INFARTO!", get_global_transform_with_canvas() * Vector2(0, -170))
+	house.ui.letreiro("INFARTO!", get_global_transform_with_canvas() * Vector2(0, -214))
 	GameManager.som.tocar("infarto")
 
 func bater_no_chao(lado: float) -> void:
@@ -773,15 +776,15 @@ func bater_no_chao(lado: float) -> void:
 	house.camera.chutar(0.05)
 	GameManager.hitstop(0.08)
 	house.pos.chutar(4.0)
-	Onomatopeia.soltar("PLOFT!", global_position + Vector2(lado * 50.0, -10.0), Color(0.85, 0.85, 0.9), 4.0)
+	Onomatopeia.soltar("PLOFT!", global_position + Vector2(lado * 50.0, -54.0), Color(0.85, 0.85, 0.9), 4.0)
 	var poeira = Fantasma.FUMACA.instantiate()
-	poeira.position = get_parent().to_local(global_position + Vector2(lado * 40.0, 25.0))
+	poeira.position = get_parent().to_local(global_position + Vector2(lado * 40.0, -19.0))
 	get_parent().add_child(poeira)
 	# a recompensa sai do corpo caído
 	GameManager.sustos += 1 + bonus_infarto
 	GameManager.mortes += 1
 	house.registrar_morte(self)
-	house.ui.voar_susto(get_global_transform_with_canvas() * Vector2(lado * 40.0, 0), 1 + bonus_infarto)
+	house.ui.voar_susto(get_global_transform_with_canvas() * Vector2(lado * 40.0, -44.0), 1 + bonus_infarto)
 
 # a alma sai do corpo: o mesmo desenho em branco, meio transparente, subindo e balançando
 func soltar_alma() -> void:
