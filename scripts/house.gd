@@ -78,14 +78,16 @@ func _ready() -> void:
 	var areas = preload("res://scripts/areas_chao.gd").new()
 	efeitos_chao.add_child(areas)
 	efeitos_chao.move_child(areas, 0)
-	tutorial.comecar(self)
+	tutorial.comecar(self, true)
 
 func _process(delta: float) -> void:
 	var restantes = get_tree().get_nodes_in_group("npc").size()
 	var foram = 1.0 - restantes / float(maxi(npcs_no_comeco, 1))
 	noite.color = noite.color.lerp(cor_festa.lerp(cor_vazia, clampf(foram, 0.0, 1.0)), minf(delta, 1.0))
 	if not acabou:
-		tempo_partida += delta
+		# o relógio espera o tutorial acabar: ler não pode custar tempo
+		if not tutorial.rodando():
+			tempo_partida += delta
 		if restantes == 1 and policia_chamada and not amanheceu and get_tree().get_nodes_in_group("policial").size() == 1:
 			tempo_limite = minf(tempo_limite, tempo_partida + tempo_so_policial)
 		if tempo_partida >= tempo_limite and not amanheceu:

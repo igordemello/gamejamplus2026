@@ -31,6 +31,8 @@ var retratos: Dictionary = {}
 
 # o tempo que falta até amanhecer, embaixo dos contadores
 var relogio: Label
+# o poder do jogador, embaixo do relógio
+var poder: Control
 var sustos_antes: int = 0
 var mortes_antes: int = 0
 var tween_sustos: Tween
@@ -56,6 +58,8 @@ func _ready() -> void:
 	relogio.mouse_filter = Control.MOUSE_FILTER_PASS
 	relogio.tooltip_text = "Tempo\nQuando acabar, amanhece e todo mundo vai embora da festa."
 	$contadores.add_child(relogio)
+	poder = preload("res://scripts/poder_atrair.gd").new()
+	add_child(poder)
 	sustos_antes = GameManager.sustos
 	mortes_antes = GameManager.mortes
 	$contadores/mortes.tooltip_text = "Mortes\nQuantas pessoas morreram de susto. Com %d mortes a polícia é chamada." % get_parent().limite_mortes

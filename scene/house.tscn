@@ -31,7 +31,6 @@
 [ext_resource type="PackedScene" uid="uid://smibflxwsbi4" path="res://scene/crianca.tscn" id="40_crianca"]
 [ext_resource type="PackedScene" path="res://scene/cavaleiro.tscn" id="41_cavaleiro"]
 [ext_resource type="PackedScene" path="res://scene/cao.tscn" id="42_cao"]
-[ext_resource type="Texture2D" uid="uid://nlklpo7gmnhf" path="res://assets/PROPS/PORTAS.png" id="43_ihe6e"]
 [ext_resource type="Script" uid="uid://1ycno03slfgr" path="res://scripts/ponto_spawn.gd" id="43_ponto"]
 [ext_resource type="Texture2D" uid="uid://8tjqsgm1j18h" path="res://assets/criança medonha/criança.png" id="44_crianca_tex"]
 [ext_resource type="Texture2D" uid="uid://dx3pcar65i4b6" path="res://assets/cavaleiro/Estatua_parada.png" id="45_estatua_tex"]
@@ -83,11 +82,11 @@
 [ext_resource type="PackedScene" path="res://scene/policial.tscn" id="77_policial"]
 [ext_resource type="Script" uid="uid://b6cshrshcjpw4" path="res://scripts/baralho.gd" id="78_baralho"]
 [ext_resource type="PackedScene" path="res://scene/lore.tscn" id="79_lore"]
+[ext_resource type="NavigationPolygon" path="res://assets/navegacao_casa.tres" id="nav_casa"]
 [ext_resource type="SpriteFrames" uid="uid://ryiviy1w12ku" path="res://assets/npc/cientista.tres" id="npc_cientista"]
 [ext_resource type="SpriteFrames" uid="uid://b6uf8awim6umn" path="res://assets/npc/crianca_catarrenta.tres" id="npc_crianca_catarrenta"]
 [ext_resource type="SpriteFrames" uid="uid://cusyb1q5jcg1p" path="res://assets/npc/idoso.tres" id="npc_idoso"]
 [ext_resource type="SpriteFrames" uid="uid://ts4girjdxpvk" path="res://assets/npc/religioso.tres" id="npc_religioso"]
-[ext_resource type="NavigationPolygon" path="res://assets/navegacao_casa.tres" id="nav_casa"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_morc0"]
 atlas = ExtResource("11_morc")
@@ -596,12 +595,6 @@ offset = Vector2(20.999939, -424)
 texture_filter = 1
 position = Vector2(1586, 836)
 texture = ExtResource("18_7jo04")
-offset = Vector2(-626.00006, -296)
-
-[node name="paredes8" type="Sprite2D" parent="Y-sort" unique_id=1945839136 groups=["parede"]]
-texture_filter = 1
-position = Vector2(1586, 836)
-texture = ExtResource("43_ihe6e")
 offset = Vector2(-626.00006, -296)
 
 [node name="Sprite2D2" type="Sprite2D" parent="Y-sort" unique_id=1756773224 groups=["quebravel"]]

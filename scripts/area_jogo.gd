@@ -17,6 +17,11 @@ func _process(_delta: float) -> void:
 	if mira_fantasma != null:
 		processar_mira()
 		return
+	var poder = GameManager.house.ui.poder
+	if poder.ativo():
+		poder.processar(self)
+		queue_redraw()
+		return
 	var sobre = viewport.gui_get_hovered_control()
 	var alvo: Npc = null
 	if not (viewport.gui_is_dragging() or menu_acoes.visible or (sobre != null and sobre != self) or fantasma_sob_mouse()):
@@ -32,6 +37,12 @@ func _process(_delta: float) -> void:
 # clicar e segurar num fantasma abre o menu de ações, soltar executa a que estiver no mouse;
 # clicar num npc (sem fantasma na frente) abre a lore dele
 func _gui_input(event: InputEvent) -> void:
+	var poder = GameManager.house.ui.poder
+	if poder.ativo():
+		if event is InputEventMouseButton and event.pressed:
+			poder.clique_no_mapa(event, self)
+			accept_event()
+		return
 	if mira_fantasma != null:
 		if event is InputEventMouseButton and event.pressed:
 			if event.button_index == MOUSE_BUTTON_LEFT:
@@ -115,15 +126,25 @@ func _input(event: InputEvent) -> void:
 	if mira_fantasma != null and event.is_action_pressed("ui_cancel"):
 		terminar_mira()
 		get_viewport().set_input_as_handled()
+	elif GameManager.house.ui.poder.ativo() and event.is_action_pressed("ui_cancel"):
+		GameManager.house.ui.poder.cancelar()
+		get_viewport().set_input_as_handled()
 
 func _draw() -> void:
+	var poder = GameManager.house.ui.poder
+	if poder.ativo():
+		desenhar_mira(poder.dica(), poder.no_mapa_ok)
+		return
 	if mira_fantasma == null:
 		return
+	desenhar_mira("Clique pra escolher o lugar" if mira_ok else "Aqui não dá", mira_ok)
+
+func desenhar_mira(texto: String, valido: bool) -> void:
 	var mouse = get_local_mouse_position()
-	var cor = Color(1, 1, 1, 0.9) if mira_ok else Color(1, 0.35, 0.35, 0.8)
+	var cor = Color(1, 1, 1, 0.9) if valido else Color(1, 0.35, 0.35, 0.8)
 	draw_arc(mouse, 26.0, 0.0, TAU, 40, cor, 3.0, true)
 	draw_circle(mouse, 4.0, cor)
-	draw_string(get_theme_default_font(), mouse + Vector2(36, 8), "Clique pra escolher o lugar" if mira_ok else "Aqui não dá", HORIZONTAL_ALIGNMENT_LEFT, -1, 24, cor)
+	draw_string(get_theme_default_font(), mouse + Vector2(36, 8), texto, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, cor)
 
 func _can_drop_data(_at_position: Vector2, card: Variant) -> bool:
 	var pode = pode_soltar(card)

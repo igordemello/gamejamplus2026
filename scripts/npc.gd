@@ -24,6 +24,10 @@ const NIVEL_INFARTO = 3
 
 # gosto pessoal: a atividade da festa que ele escolhe mais vezes
 @export_enum("aleatória", "dançar", "beber", "conversar", "descansar") var preferencia: String = "aleatória"
+# atraído pelo poder do jogador: vai até lá e fica preso, sem nada tirar ele de lá
+var atraido: bool = false
+var ponto_atraido: Vector2
+var tempo_preso: float = 0.0
 # a comida da geleia até onde ele está indo
 var indo_comer: Node2D
 # chance de, em vez de ir pra um ponto da festa, só dar uma volta por algum cômodo
@@ -198,6 +202,15 @@ func _process(delta: float) -> void:
 	medidor.scale = medidor.scale.lerp(Vector2.ONE, minf(10.0 * delta, 1.0))
 	medidor.queue_redraw()
 
+	# sendo arrastado pelo poder de atrair: inclina pra onde está indo; depois volta a ficar reto
+	var inclinacao = 0.0
+	if atraido and not agent.is_navigation_finished():
+		inclinacao = clampf(velocity.x / 800.0, -0.35, 0.35)
+	if inclinacao != 0.0 or sprite.rotation != 0.0:
+		sprite.rotation = lerpf(sprite.rotation, inclinacao, minf(12.0 * delta, 1.0))
+		if absf(sprite.rotation) < 0.005 and inclinacao == 0.0:
+			sprite.rotation = 0.0
+
 	# parado fica no primeiro quadro; andando vira pro lado que está indo
 	if velocity.length() > 10.0:
 		sprite.play("andar")
@@ -222,6 +235,12 @@ func _physics_process(delta: float) -> void:
 		return
 
 	tempo_correndo = maxf(tempo_correndo - delta, 0.0)
+
+	# ATRAÍDO
+	if atraido:
+		direcao_correr = Vector2.ZERO
+		processar_atraido(delta)
+		return
 
 	if direcao_correr != Vector2.ZERO:
 		if house.eh_parede(global_position + direcao_correr * 20.0):
@@ -305,7 +324,9 @@ func verificar_travado(delta: float) -> void:
 	if tempo_sem_andar < TEMPO_TRAVADO:
 		return
 	tempo_sem_andar = 0.0
-	if current_estado == Estado.Foge:
+	if atraido:
+		agent.target_position = ponto_atraido
+	elif current_estado == Estado.Foge:
 		agent.target_position = house.ponto_fuga.global_position
 	else:
 		escolher_atividade()
@@ -320,6 +341,8 @@ func initialize_navigation() -> void:
 # escolhe o que fazer agora: quase sempre um ponto da festa com vaga (o gosto dele pesa mais),
 # às vezes só dar uma volta. outro_comodo = tem que ser longe do cômodo onde ele está
 func escolher_atividade(outro_comodo: bool = false) -> void:
+	if atraido:
+		return
 	indo_comer = null
 	sair_do_ponto()
 	var meu_comodo = house.comodo_em(global_position)
@@ -453,7 +476,7 @@ func tomar_susto(susto: String, pontosDeSusto: int, fantasma: Fantasma = null) -
 	barra_susto = minf(barra_susto + pontos_recebidos, 100.0)
 	# o objeto levitável não expulsa ninguém: o último nível sempre vem de um fantasma.
 	# o policial não foge de jeito nenhum: só sai infartado
-	if (fantasma == null or policial) and nivel_medo == 4:
+	if (fantasma == null or policial or atraido) and nivel_medo == 4:
 		barra_susto = minf(barra_susto, 99.0)
 
 	var subiu = barra_susto >= 100.0
@@ -588,8 +611,45 @@ func atordoar(tempo: float, dreno: float = 0.0) -> void:
 	dreno_medo = dreno
 	velocity = Vector2.ZERO
 
+func pode_ser_atraido() -> bool:
+	return is_in_group("npc") and current_estado != Estado.Foge and current_estado != Estado.Infarta and not atraido
+
+# o poder do jogador: vai correndo até o ponto e só sai depois de ficar lá esse tempo
+func atrair(lugar: Vector2, tempo: float) -> void:
+	sair_do_ponto()
+	indo_comer = null
+	direcao_correr = Vector2.ZERO
+	atraido = true
+	ponto_atraido = lugar
+	tempo_preso = tempo
+	agent.target_position = lugar
+
+func soltar_atracao() -> void:
+	atraido = false
+	escolher_atividade()
+
+# o medo volta a zero (fim do tutorial). quem já está fugindo ou infartando segue o que estava fazendo
+func zerar_medo() -> void:
+	nivel_medo = 0
+	barra_susto = 0.0
+	if current_estado == Estado.Assustado:
+		current_estado = Estado.Normal
+
+func processar_atraido(delta: float) -> void:
+	if not agent.is_navigation_finished():
+		tempo_correndo = maxf(tempo_correndo, 0.1)
+		mover_npc(delta)
+		return
+	# freia na hora e fica em cima do ponto: correndo, a inércia levava ele até 100 px adiante,
+	# e o empurrão do morcego também não tira ele daqui
+	velocity = Vector2.ZERO
+	global_position = global_position.move_toward(ponto_atraido, speed * delta)
+	tempo_preso -= delta
+	if tempo_preso <= 0.0:
+		soltar_atracao()
+
 func pode_ir_comer() -> bool:
-	return current_estado != Estado.Foge and current_estado != Estado.Infarta and tempo_stun <= 0.0 and direcao_correr == Vector2.ZERO and tempo_correndo <= 0.0 and not is_instance_valid(indo_comer)
+	return not atraido and current_estado != Estado.Foge and current_estado != Estado.Infarta and tempo_stun <= 0.0 and direcao_correr == Vector2.ZERO and tempo_correndo <= 0.0 and not is_instance_valid(indo_comer)
 
 # sentiu o cheiro da comida da geleia: larga o que estava fazendo e vai até ela
 func ir_comer(comida: Node2D) -> void:
@@ -620,9 +680,10 @@ func correr_para_outro_comodo(tempo: float) -> void:
 func fugir() -> void:
 	if current_estado == Estado.Foge:
 		return
-	# o policial só vai embora se amanhecer
-	if policial and not house.amanheceu:
+	# o policial e quem está atraído só vão embora se amanhecer
+	if (policial or atraido) and not house.amanheceu:
 		return
+	atraido = false
 
 	if house.ponto_fuga == null:
 		push_error("Ponto de fuga não configurado!")
@@ -691,6 +752,7 @@ func mata_do_coracao(fantasma: Fantasma) -> bool:
 
 func infartar() -> void:
 	current_estado = Estado.Infarta
+	atraido = false
 	# já não conta como npc: nenhum fantasma mira nele nem assusta mais
 	remove_from_group("npc")
 	sair_do_ponto()

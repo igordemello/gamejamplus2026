@@ -1,4 +1,4 @@
-[gd_resource type="NavigationPolygon" format=3]
+[gd_resource type="NavigationPolygon" format=3 uid="uid://bxj8f55y1bvtg"]
 
 [resource]
 vertices = PackedVector2Array(2708, -488, 2708, 1588, 1724, 852, 1724, 232, 1548, 232, 1548, 40, 1212, 40, 1212, -24, 548, -24, 548, 104, 212, 104, -788, -488, 212, 788, 468, 788, 468, 1108, -788, 1588, 828, 1108, 828, 1044, 852, 1044, 852, 1272, 1024, 1272, 1024, 1044, 1060, 1044, 1060, 1108, 1484, 1108, 1484, 852)

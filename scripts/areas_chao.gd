@@ -6,6 +6,7 @@ extends Node2D
 const SEM_LUZ = preload("res://assets/sem_luz.tres")
 # tamanho de cada quadradinho do lugar onde a carta pode cair
 const CELULA = 24.0
+const MARCA = preload("res://scripts/marca_atracao.gd")
 
 var area_jogo: Control
 var menu_acoes: Control
@@ -34,9 +35,12 @@ func _process(delta: float) -> void:
 	tempo += minf(delta / maxf(Engine.time_scale, 0.01), 0.05)
 	atualizar_carta()
 	areas = areas_de_agora()
-	if not areas.is_empty() or mostrando:
+	# a prévia da corrente muda todo quadro
+	var poder = GameManager.house.ui.poder
+	var previa = poder.etapa == poder.Etapa.EscolheLugar
+	if not areas.is_empty() or mostrando or previa:
 		queue_redraw()
-	mostrando = not areas.is_empty()
+	mostrando = not areas.is_empty() or previa
 
 func atualizar_carta() -> void:
 	var viewport = get_viewport()
@@ -47,6 +51,10 @@ func atualizar_carta() -> void:
 	var movendo = area_jogo.mira_fantasma
 	if is_instance_valid(movendo) and area_jogo.mira_acao == movendo.acao_mover:
 		carta = movendo
+	# o poder de atrair, escolhendo o lugar
+	var poder = GameManager.house.ui.poder
+	if poder.etapa == poder.Etapa.EscolheLugar:
+		carta = poder
 	if carta != carta_atual:
 		carta_atual = carta
 		no_celulas.visible = carta != null
@@ -54,7 +62,7 @@ func atualizar_carta() -> void:
 			calcular_celulas(carta)
 			no_celulas.queue_redraw()
 			# carta que só cabe lá fora: mostra o lado de fora pra dar onde soltar
-			if carta.fora_de_casa and not carta is Fantasma:
+			if carta.fora_de_casa and carta.get("cena") != null:
 				GameManager.house.camera.mostrar_exterior()
 	if carta:
 		no_celulas.modulate.a = 0.75 + 0.25 * sin(tempo * 5.0)
@@ -106,6 +114,15 @@ func todas_de(fantasma: Node, forca: float) -> Array:
 	return lista
 
 func _draw() -> void:
+	var poder = GameManager.house.ui.poder
+	if poder.etapa == poder.Etapa.EscolheLugar and is_instance_valid(poder.escolhido):
+		# corrente frouxa do convidado até o mouse, e o círculo de onde ele vai parar
+		var mouse = GameManager.house.get_global_mouse_position() - global_position
+		var cor = Color(1, 0.3, 0.25) if poder.no_mapa_ok else Color(0.5, 0.5, 0.5, 0.7)
+		MARCA.desenhar_corrente(self, poder.escolhido.global_position - global_position + Vector2(0, -55), mouse, cor, tempo, 0.8)
+		draw_set_transform(mouse, 0.0, Vector2(1.0, 0.5))
+		draw_arc(Vector2.ZERO, MARCA.RAIO * (1.0 + 0.06 * sin(tempo * 6.0)), 0.0, TAU, 48, cor, 4.0, true)
+		draw_set_transform(Vector2.ZERO)
 	var pulso = 0.85 + 0.15 * sin(tempo * 3.0)
 	for item in areas:
 		var area: Dictionary = item[0]
