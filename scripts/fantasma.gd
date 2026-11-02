@@ -70,6 +70,8 @@ var luz: PointLight2D
 var tempo_luz: float = randf() * TAU
 # o mouse está em cima (decidido no _process): depois de entrar, o raio fica maior pra sair
 var no_hover: bool = false
+# o mouse está no ícone dele na lista de fantasmas
+var destacado: bool = false
 # criada ao entrar na casa, não na cena: assim não aparece na carta, que lista as ações próprias dele
 var acao_mover: Acao
 var destino_passeio: Vector2 = Vector2.INF
@@ -117,7 +119,7 @@ func _process(delta: float) -> void:
 
 	no_hover = mouse_em_cima()
 	passear(delta)
-	var destaque = selecionado or no_hover
+	var destaque = selecionado or no_hover or destacado
 	$AnimatedSprite2D.material = material_fantasma
 	material_fantasma.set_shader_parameter("contorno", destaque)
 	if not (tween_aparecer and tween_aparecer.is_running()):

@@ -6,6 +6,8 @@ extends Camera2D
 @export var posicao_inicial: Vector2 = Vector2(990, 620)
 # zoom acima disso é o jogador olhando algo de perto: o lembrete do zumbi não atrapalha
 @export var zoom_de_perto: float = 1.15
+# clicar num fantasma da lista aproxima até aqui (se já estiver mais perto, fica como está)
+@export var zoom_aproximar: float = 1.1
 # quanto cada lembrete afasta, no mínimo
 @export var passo_lembrete: float = 0.1
 @export var suavidade_conducao: float = 3.0
@@ -114,6 +116,17 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func jogador_mexeu() -> void:
 	conduzindo = false
+	mexeu_em = Time.get_ticks_msec()
+
+# leva a vista até um ponto, aproximando um pouco
+func aproximar_de(ponto: Vector2) -> void:
+	if focando:
+		return
+	zoom_alvo = maxf(zoom_alvo, zoom_aproximar)
+	posicao_conduzida = ponto
+	conduzindo = true
+	volta = false
+	# conta como mexer na câmera: o lembrete do zumbi não puxa ela de volta logo depois
 	mexeu_em = Time.get_ticks_msec()
 
 # afasta até mostrar tudo, inclusive o lado de fora da casa (ganhou o zumbi)

@@ -100,7 +100,8 @@ func comecar(casa, comeco_da_partida: bool = false) -> void:
 			"destaque": house.ui.poder},
 		{"texto": "Rodinha dá zoom, botão direito arrasta a câmera. Experimente!",
 			"feito": func(): return absf(cam.zoom_alvo - zoom_inicial) > 0.01 or cam.arrastado - arrastado_inicial > 100.0},
-		{"texto": "Com %d mortes a polícia aparece. Em %d minutos amanhece. Esc pausa. Boa assombração!" % [house.limite_mortes, int(house.tempo_limite / 60.0)]},
+		{"texto": "Com %d mortes vem a polícia. Ela não foge: só o Cavaleiro mata, e isso cumpre um objetivo!" % house.limite_mortes},
+		{"texto": "Em %d minutos amanhece e a festa acaba. Esc pausa. Boa assombração!" % int(house.tempo_limite / 60.0)},
 	]
 	viu_lore = false
 	vaso_atual = null
