@@ -123,7 +123,7 @@ func _draw() -> void:
 	var cor = Color(1, 1, 1, 0.9) if mira_ok else Color(1, 0.35, 0.35, 0.8)
 	draw_arc(mouse, 26.0, 0.0, TAU, 40, cor, 3.0, true)
 	draw_circle(mouse, 4.0, cor)
-	draw_string(get_theme_default_font(), mouse + Vector2(36, 8), "Clique pra escolher o lugar" if mira_ok else "Longe demais", HORIZONTAL_ALIGNMENT_LEFT, -1, 24, cor)
+	draw_string(get_theme_default_font(), mouse + Vector2(36, 8), "Clique pra escolher o lugar" if mira_ok else "Aqui não dá", HORIZONTAL_ALIGNMENT_LEFT, -1, 24, cor)
 
 func _can_drop_data(_at_position: Vector2, card: Variant) -> bool:
 	var pode = pode_soltar(card)

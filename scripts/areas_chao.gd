@@ -43,6 +43,10 @@ func atualizar_carta() -> void:
 	var carta = viewport.gui_get_drag_data() if viewport.gui_is_dragging() else null
 	if not (is_instance_valid(carta) and carta.get("cena") != null):
 		carta = null
+	# escolhendo pra onde mover: os mesmos quadradinhos, pela regra do próprio fantasma
+	var movendo = area_jogo.mira_fantasma
+	if is_instance_valid(movendo) and area_jogo.mira_acao == movendo.acao_mover:
+		carta = movendo
 	if carta != carta_atual:
 		carta_atual = carta
 		no_celulas.visible = carta != null
@@ -50,7 +54,7 @@ func atualizar_carta() -> void:
 			calcular_celulas(carta)
 			no_celulas.queue_redraw()
 			# carta que só cabe lá fora: mostra o lado de fora pra dar onde soltar
-			if carta.fora_de_casa:
+			if carta.fora_de_casa and not carta is Fantasma:
 				GameManager.house.camera.mostrar_exterior()
 	if carta:
 		no_celulas.modulate.a = 0.75 + 0.25 * sin(tempo * 5.0)
@@ -76,10 +80,14 @@ func desenhar_celulas() -> void:
 # mirando: o alcance da mira. no menu: a ação escolhida, ou de leve todas. com o mouse em cima: de leve todas
 func areas_de_agora() -> Array:
 	if is_instance_valid(area_jogo.mira_fantasma):
+		if area_jogo.mira_acao == area_jogo.mira_fantasma.acao_mover:
+			return []
 		return [[area_jogo.mira_fantasma.area_de(area_jogo.mira_acao), 1.0]]
 	var fantasma = menu_acoes.fantasma
 	if is_instance_valid(fantasma):
 		var escolhida = menu_acoes.acao_na_bolinha()
+		if escolhida == fantasma.acao_mover and escolhida != null:
+			return []
 		if escolhida:
 			return [[fantasma.area_de(escolhida), 1.0]]
 		return todas_de(fantasma, 0.5)
@@ -93,7 +101,8 @@ func areas_de_agora() -> Array:
 func todas_de(fantasma: Node, forca: float) -> Array:
 	var lista = []
 	for acao in fantasma.acoes:
-		lista.append([fantasma.area_de(acao), forca])
+		if acao != fantasma.acao_mover:
+			lista.append([fantasma.area_de(acao), forca])
 	return lista
 
 func _draw() -> void:

@@ -7,6 +7,10 @@ extends Fantasma
 
 @onready var lagrimas: AnimatedSprite2D = $lagrimas
 
+# as lágrimas só aparecem chorando (na cena elas ficam à mostra pra dar pra editar)
+func _ready() -> void:
+	lagrimas.hide()
+
 func ocupado() -> bool:
 	return lagrimas.visible
 

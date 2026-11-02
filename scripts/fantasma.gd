@@ -42,6 +42,10 @@ const NOME_TIPO = {
 @export var raio_clique: float = 32.0
 # só aparece na loja depois dessa quantidade de infartos (GameManager.mortes)
 @export var mortes_para_liberar: int = 0
+# ganha a ação "Mover": some e aparece onde o jogador escolher, respeitando as regras de onde pode ser colocado.
+# quem não alcança o próprio alvo sozinho precisa disso, senão fica dependendo de quem passa por perto
+@export var pode_mover: bool = false
+@export var recarga_mover: float = 30.0
 # sem ação pra fazer, anda devagar por perto em vez de ficar parado
 @export var passeia: bool = false
 @export var velocidade_passeio: float = 45.0
@@ -66,6 +70,8 @@ var luz: PointLight2D
 var tempo_luz: float = randf() * TAU
 # o mouse está em cima (decidido no _process): depois de entrar, o raio fica maior pra sair
 var no_hover: bool = false
+# criada ao entrar na casa, não na cena: assim não aparece na carta, que lista as ações próprias dele
+var acao_mover: Acao
 var destino_passeio: Vector2 = Vector2.INF
 var espera_passeio: float = randf_range(1.0, 3.0)
 var tempo_passeio: float = 0.0
@@ -77,6 +83,16 @@ var quadro_caminho: int = 0
 
 func _enter_tree() -> void:
 	add_to_group("fantasma")
+	if pode_mover and acao_mover == null:
+		acao_mover = Acao.new()
+		acao_mover.nome = "Mover"
+		acao_mover.descricao = "Some daqui e aparece no lugar que você escolher."
+		acao_mover.recarga = recarga_mover
+		acao_mover.metodo = &"mover_para"
+		acao_mover.mira = true
+		acao_mover.icone = icone_mover()
+		acoes = acoes.duplicate()
+		acoes.append(acao_mover)
 	if luz == null:
 		var sprite: AnimatedSprite2D = $AnimatedSprite2D
 		luz = PointLight2D.new()
@@ -202,9 +218,59 @@ func sentir_grupo(npcs: Array, centro: Vector2 = Vector2.INF) -> void:
 	if som:
 		som.pitch_scale = 1.0 + 0.18 * nivel
 
-# ação com mira: dá pra escolher esse lugar?
-func mira_valida(_acao: Acao, _onde: Vector2) -> bool:
-	return false
+# ação com mira: dá pra escolher esse lugar? mover vale pela mesma regra de colocar a carta
+func mira_valida(acao: Acao, onde: Vector2) -> bool:
+	return acao == acao_mover and GameManager.house.ui.get_node("area_jogo").pode_soltar_em(self, onde)
+
+# some numa fumaça e aparece lá; o caminho é na hora, então não vale no meio de outra ação
+func mover_para(onde: Vector2) -> bool:
+	if ocupado_agora():
+		return false
+	destino_passeio = Vector2.INF
+	caminho = PackedVector2Array()
+	onomatopeia("VUUSH!", Color(0.7, 1, 0.9))
+	GameManager.som.tocar("vush")
+	var fumaca = FUMACA.instantiate()
+	fumaca.position = get_parent().to_local(global_position)
+	get_parent().add_child(fumaca)
+	var some = create_tween()
+	some.tween_property(self, "scale", escala_raiz * 0.2 if escala_raiz != Vector2.ZERO else scale * 0.2, 0.12)
+	some.parallel().tween_property(self, "modulate:a", 0.0, 0.12)
+	some.tween_callback(func():
+		global_position = onde
+		aparecer())
+	return true
+
+static var textura_mover: ImageTexture
+
+# seta em quatro direções, em pixel (é a única ação sem arte própria)
+static func icone_mover() -> ImageTexture:
+	if textura_mover:
+		return textura_mover
+	var desenho = [
+		"......##......",
+		".....####.....",
+		"....######....",
+		"......##......",
+		"..#...##...#..",
+		".##...##...##.",
+		"##############",
+		"##############",
+		".##...##...##.",
+		"..#...##...#..",
+		"......##......",
+		"....######....",
+		".....####.....",
+		"......##......",
+	]
+	var imagem = Image.create(14, 14, false, Image.FORMAT_RGBA8)
+	for y in 14:
+		for x in 14:
+			if desenho[y][x] == "#":
+				imagem.set_pixel(x, y, Color(0.86, 0.84, 0.76))
+	imagem.resize(56, 56, Image.INTERPOLATE_NEAREST)
+	textura_mover = ImageTexture.create_from_image(imagem)
+	return textura_mover
 
 # chamado quando é solto da loja: cresce com um pulinho e aparece
 func aparecer() -> void:

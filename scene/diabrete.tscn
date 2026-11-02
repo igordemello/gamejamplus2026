@@ -82,6 +82,7 @@ em_grupo = true
 [node name="Diabrete" type="Node2D"]
 script = ExtResource("1_script")
 custo = 4
+pode_mover = true
 passeia = true
 tipo = 3
 acoes = Array[ExtResource("2_acao")]([SubResource("Resource_quebrar")])
