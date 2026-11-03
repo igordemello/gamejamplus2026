@@ -45,6 +45,7 @@ var conduzindo: bool = false
 var posicao_conduzida: Vector2
 # quando o jogador mexeu na câmera pela última vez, em ms
 var mexeu_em: int = 0
+var dedos: Dictionary = {}
 
 func _ready() -> void:
 	var tela = Vector2(ProjectSettings.get_setting("display/window/size/viewport_width"), ProjectSettings.get_setting("display/window/size/viewport_height"))
@@ -108,11 +109,49 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	# segurando o botão direito arrasta o mapa junto com o mouse
 	elif event is InputEventMouseMotion and event.button_mask & MOUSE_BUTTON_MASK_RIGHT:
-		volta = false
-		jogador_mexeu()
-		position -= event.relative / zoom
-		prender()
-		arrastado += event.relative.length()
+		arrastar(event.relative)
+
+# arrasta o mapa junto com o mouse ou o dedo (a area_jogo chama no arraste com um dedo)
+func arrastar(relativo: Vector2) -> void:
+	if focando:
+		return
+	volta = false
+	jogador_mexeu()
+	position -= relativo / zoom
+	prender()
+	arrastado += relativo.length()
+
+# dedos na tela (índice -> posição): com dois, a pinça dá zoom e arrasta pelo meio deles
+func _input(event: InputEvent) -> void:
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			# o primeiro dedo: o que ficou de antes (soltou com o jogo pausado) não vale
+			if event.index == 0:
+				dedos.clear()
+			dedos[event.index] = event.position
+		else:
+			dedos.erase(event.index)
+	elif event is InputEventScreenDrag and dedos.has(event.index):
+		if dedos.size() == 2 and not focando:
+			var outro = dedos.keys().filter(func(i): return i != event.index)[0]
+			pincar(dedos[outro], dedos[event.index], event.position)
+		dedos[event.index] = event.position
+
+# o ponto do mundo que estava no meio dos dedos continua no meio deles
+func pincar(fixo: Vector2, antes: Vector2, depois: Vector2) -> void:
+	var fator = fixo.distance_to(depois) / maxf(fixo.distance_to(antes), 1.0)
+	var novo = clampf(zoom_atual * fator, zoom_min, zoom_max)
+	var meio_tela = get_viewport_rect().size / 2.0
+	var mundo = position + ((fixo + antes) / 2.0 - meio_tela) / zoom_atual
+	zoom_alvo = novo
+	zoom_atual = novo
+	zoom = Vector2.ONE * novo * (1.0 + tranco)
+	volta = false
+	jogador_mexeu()
+	var destino = mundo - ((fixo + depois) / 2.0 - meio_tela) / novo
+	arrastado += position.distance_to(destino) * novo
+	position = destino
+	prender()
 
 func jogador_mexeu() -> void:
 	conduzindo = false

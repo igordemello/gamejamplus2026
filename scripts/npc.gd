@@ -516,7 +516,8 @@ func tomar_susto(susto: String, pontosDeSusto: int, fantasma: Fantasma = null) -
 # o mouse está em cima do desenho: o retângulo do quadro, já com escala, respiração e flip
 func mouse_em_cima() -> bool:
 	var tamanho = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame).get_size()
-	return Rect2(sprite.offset - tamanho / 2.0, tamanho).has_point(sprite.get_local_mouse_position())
+	# o dedo é mais grosso que o mouse
+	return Rect2(sprite.offset - tamanho / 2.0, tamanho).grow(8.0 if GameManager.toque else 0.0).has_point(sprite.get_local_mouse_position())
 
 # nome do tipo e os textos da lore, do npc ou, se ele não tiver, do visual
 func dados_lore() -> Dictionary:

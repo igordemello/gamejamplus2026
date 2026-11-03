@@ -78,7 +78,7 @@ func _process(delta: float) -> void:
 			pulsar()
 	elif not (tween_queda and tween_queda.is_running()):
 		var posicao_alvo = posicao_original
-		if mouse_em_cima():
+		if mouse_em_cima() and GameManager.hover_valido():
 			posicao_alvo.y -= altura_hover
 		position = position.lerp(posicao_alvo, min(suavidade * delta, 1.0))
 
@@ -97,10 +97,10 @@ func _input(event: InputEvent) -> void:
 			soltar()
 
 func mouse_em_cima() -> bool:
-	return get_rect().has_point(to_local(get_global_mouse_position()))
+	return get_rect().grow(8.0 if GameManager.toque else 0.0).has_point(to_local(get_global_mouse_position()))
 
 func atualizar_marca() -> void:
-	material.set_shader_parameter("cor", Color(1, 1, 1, 1.0 if segurando or mouse_em_cima() else 0.0))
+	material.set_shader_parameter("cor", Color(1, 1, 1, 1.0 if segurando or (mouse_em_cima() and GameManager.hover_valido()) else 0.0))
 	material.set_shader_parameter("noite", GameManager.house.noite.color)
 
 func levantar() -> void:

@@ -21,6 +21,9 @@ mono_crash.*.json
 
 # Export outputs
 *.exe
+*.apk
+*.idsig
+build/
 # Uncomment if your project does not version PCK files as runtime dependencies.
 # *.pck
 

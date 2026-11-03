@@ -66,6 +66,20 @@ func _ready() -> void:
 	add_child(lista_fantasmas)
 	sustos_antes = GameManager.sustos
 	mortes_antes = GameManager.mortes
+	if GameManager.toque:
+		# celular não tem Esc: botão de pausa no canto, e os objetivos chegam pro lado
+		var pausar = Button.new()
+		pausar.text = "II"
+		pausar.add_theme_font_size_override("font_size", 32)
+		pausar.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+		pausar.offset_left = -84
+		pausar.offset_top = 10
+		pausar.offset_right = -16
+		pausar.offset_bottom = 78
+		pausar.pressed.connect(func(): get_parent().get_node("pausa").pausar())
+		add_child(pausar)
+		painel_objetivos.offset_left -= 78
+		painel_objetivos.offset_right -= 78
 	$contadores/mortes.tooltip_text = "Mortes\nQuantas pessoas morreram de susto. Com %d mortes a polícia é chamada." % get_parent().limite_mortes
 
 
@@ -87,7 +101,7 @@ func _process(delta: float) -> void:
 	atualizar_relogio()
 	if objetivos_abertos:
 		# com o mouse em cima não fecha: some uns instantes depois que ele sair
-		if painel_objetivos.get_global_rect().has_point(get_viewport().get_mouse_position()):
+		if GameManager.hover_valido() and painel_objetivos.get_global_rect().has_point(get_viewport().get_mouse_position()):
 			restante_objetivos = maxf(restante_objetivos, 1.5)
 		restante_objetivos -= minf(delta / maxf(Engine.time_scale, 0.01), 0.05)
 		if restante_objetivos <= 0.0:

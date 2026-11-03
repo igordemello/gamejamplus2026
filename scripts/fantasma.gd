@@ -117,7 +117,7 @@ func _process(delta: float) -> void:
 	tempo_luz += delta
 	luz.energy = 0.55 + 0.15 * sin(tempo_luz * 1.5)
 
-	no_hover = mouse_em_cima()
+	no_hover = mouse_em_cima() and GameManager.hover_valido()
 	passear(delta)
 	var destaque = selecionado or no_hover or destacado
 	$AnimatedSprite2D.material = material_fantasma
@@ -145,7 +145,8 @@ func piscar(vezes: int, duracao: float) -> void:
 func mouse_em_cima() -> bool:
 	var sprite: AnimatedSprite2D = $AnimatedSprite2D
 	var centro = sprite.global_position + sprite.offset * sprite.global_scale
-	return centro.distance_to(get_global_mouse_position()) <= raio_clique * (1.25 if no_hover else 1.0)
+	# o dedo é mais grosso que o mouse
+	return centro.distance_to(get_global_mouse_position()) <= raio_clique * (1.25 if no_hover else 1.0) * (1.5 if GameManager.toque else 1.0)
 
 func executar(acao: Acao) -> void:
 	if acao.mira and recarga_restante.get(acao, 0.0) <= 0.0:

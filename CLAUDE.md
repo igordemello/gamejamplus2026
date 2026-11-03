@@ -105,6 +105,14 @@ Fluxo: `scene/menu.tscn` (cena principal) → `btn_play` chama `change_scene_to_
 
 Configuração de tela em `project.godot`: 1920×1080, tela cheia exclusiva (`mode=3`), stretch `canvas_items`/`expand`.
 
+## Celular (Android)
+
+- **Liga com** `GameManager.toque` (`OS.has_feature("mobile")`). No PC nada muda, a não ser três coisas que valem nos dois: arrastar com o botão esquerdo no vazio também move o mapa; a lore abre no soltar (clique sem arrastar mais que `area_jogo.ARRASTO_MINIMO`); a mira e o lugar do ímã valem no soltar (o soltar do clique que abriu a mira não conta: `mira_apertou`, `apertou_no_lugar`). Em teste, ponha `toque = true` antes do `add_child` da casa.
+- **Tela**: `GameManager.ajustar_tela` (no `node_added`, só com `toque`, antes do `_ready` da cena) usa `content_scale_factor` 1,5 (`ESCALA_CELULAR`) com `expand` na casa, e 1,0 com `keep` no menu e nos créditos, que são posições fixas de 1920×1080 (ficam com faixas nas laterais). Na casa a vista fica entre 1280×720 (16:9) e ~1600×720 (20:9). O tutorial, no celular, vai pra esquerda (x 176, logo depois dos contadores) e encolhe pra não tampar os objetivos. Um botão "II" no canto (criado pelo `ui_main`) pausa, e os objetivos chegam 78 px pra esquerda. A opção de tela cheia some da config.
+- **Toque**: o Godot transforma o primeiro dedo em mouse (`emulate_mouse_from_touch`), então o resto do jogo é o mesmo. Dois dedos: `camera._input` guarda os `dedos` e a pinça (`pincar`) dá zoom e arrasta. Um dedo no vazio arrasta (`camera.arrastar`). O "mouse" fica parado onde o dedo saiu, então hover (anel do NPC, contorno do fantasma, vaso subindo, objetivos sem fechar) só vale com o dedo na tela: `GameManager.hover_valido()`. A carta sobe também no apertar (tocar pra ler, tocar fora abaixa). Fantasma, NPC e vaso têm a área de toque maior. O voltar do Android (`quit_on_go_back=false`) vira `ui_cancel`: pausa, fecha a lore, cancela a mira.
+- **Exportar**: renderer `gl_compatibility` só no celular (`rendering_method.mobile`), ETC2/ASTC ligado, orientação paisagem pelo sensor. Preset "Android" em `export_presets.cfg` (APK de debug, arm64 + armeabi-v7a, `com.igordemello.residenthaunter`), sai em `build/` (no `.gitignore`). Precisa do Android SDK (build-tools 35) em `%LOCALAPPDATA%\Android\Sdk`, do JDK 17 e da keystore de debug apontados nas configurações do editor. Pela linha de comando: `godot --headless --path . --export-debug "Android" build/ResidentHaunter.apk`.
+- **Teste**: `--headless --path . --fixed-fps 60 --script res://tests/verificar_toque.gd` (pinça, arrastar, tocar no NPC, ímã, carta, pausa e escala). Os toques entram por `Input.parse_input_event` em pixels da janela (`root.get_final_transform() * pos`), pra o Godot emular o mouse como no aparelho; `push_input` não atualiza a posição do mouse.
+
 ## Convenções e cuidados
 
 - Pastas: cenas em `scene/` (singular), scripts em `scripts/`, imagens em `assets/`.

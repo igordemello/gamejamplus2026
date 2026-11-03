@@ -9,6 +9,14 @@ const INVOCACAO = preload("res://scene/invocacao.tscn")
 var mira_fantasma: Fantasma
 var mira_acao: Acao
 var mira_ok: bool = false
+# o clique da mira começou nela (o soltar do menu de ações que abriu a mira não conta)
+var mira_apertou: bool = false
+
+# apertou no mapa: arrastar mais que ARRASTO_MINIMO move a câmera, menos que isso é clique (abre a lore)
+const ARRASTO_MINIMO = 14.0
+var arrastando_mapa: bool = false
+var arrastou: float = 0.0
+var npc_tocado: Npc
 
 # o anel no chão aparece no npc que o clique abriria: nenhum com fantasma embaixo, carta sendo arrastada,
 # menu de ações aberto ou outro controle (loja, painel de lore) por cima do mouse
@@ -24,7 +32,7 @@ func _process(_delta: float) -> void:
 		return
 	var sobre = viewport.gui_get_hovered_control()
 	var alvo: Npc = null
-	if not (viewport.gui_is_dragging() or menu_acoes.visible or (sobre != null and sobre != self) or fantasma_sob_mouse()):
+	if GameManager.hover_valido() and not (viewport.gui_is_dragging() or menu_acoes.visible or (sobre != null and sobre != self) or fantasma_sob_mouse()):
 		alvo = npc_sob_mouse()
 	# o que já está aberto na lore não precisa
 	if alvo == lore.npc:
@@ -35,21 +43,35 @@ func _process(_delta: float) -> void:
 	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND if alvo or levitavel else Control.CURSOR_ARROW
 
 # clicar e segurar num fantasma abre o menu de ações, soltar executa a que estiver no mouse;
-# clicar num npc (sem fantasma na frente) abre a lore dele
+# clicar num npc (sem fantasma na frente) abre a lore dele; arrastar no vazio move o mapa (um dedo, no celular)
 func _gui_input(event: InputEvent) -> void:
 	var poder = GameManager.house.ui.poder
 	if poder.ativo():
-		if event is InputEventMouseButton and event.pressed:
+		if event is InputEventMouseButton:
 			poder.clique_no_mapa(event, self)
 			accept_event()
 		return
 	if mira_fantasma != null:
-		if event is InputEventMouseButton and event.pressed:
+		# a mira segue o dedo enquanto ele está na tela e vale onde ele sai
+		if event is InputEventMouseButton:
 			if event.button_index == MOUSE_BUTTON_LEFT:
-				confirmar_mira()
-			elif event.button_index == MOUSE_BUTTON_RIGHT:
+				if event.pressed:
+					mira_apertou = true
+				elif mira_apertou:
+					confirmar_mira()
+			elif event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
 				terminar_mira()
 			accept_event()
+		return
+	if event is InputEventMouseMotion:
+		if arrastando_mapa and event.button_mask & MOUSE_BUTTON_MASK_LEFT:
+			# dois dedos é a pinça da câmera: nem arrasta nem conta como toque
+			if GameManager.house.camera.dedos.size() > 1:
+				arrastou = INF
+			elif arrastou < INF:
+				arrastou += event.relative.length()
+				if arrastou > ARRASTO_MINIMO:
+					GameManager.house.camera.arrastar(event.relative)
 		return
 	if not (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT):
 		return
@@ -59,11 +81,16 @@ func _gui_input(event: InputEvent) -> void:
 			lore.fechar(false)
 			menu_acoes.abrir(fantasma, event.global_position)
 			return
-		var npc = npc_sob_mouse()
-		if npc:
-			lore.abrir(npc)
+		npc_tocado = npc_sob_mouse()
+		arrastou = 0.0
+		arrastando_mapa = not get_tree().get_nodes_in_group("levitavel").any(func(o): return o.segurando)
 	else:
 		menu_acoes.soltar()
+		# soltou sem arrastar: foi um clique no npc
+		if arrastando_mapa and arrastou <= ARRASTO_MINIMO and is_instance_valid(npc_tocado) and npc_tocado.is_in_group("npc"):
+			lore.abrir(npc_tocado)
+		arrastando_mapa = false
+		npc_tocado = null
 
 func fantasma_sob_mouse() -> Fantasma:
 	for fantasma in get_tree().get_nodes_in_group("fantasma"):
@@ -90,6 +117,7 @@ func npc_sob_mouse() -> Npc:
 func comecar_mira(fantasma: Fantasma, acao: Acao) -> void:
 	mira_fantasma = fantasma
 	mira_acao = acao
+	mira_apertou = false
 	GameManager.house.mirando = true
 	GameManager.mudar_tempo(menu_acoes.tempo_lento, 0.15)
 	for npc in get_tree().get_nodes_in_group("npc"):
@@ -137,14 +165,16 @@ func _draw() -> void:
 		return
 	if mira_fantasma == null:
 		return
-	desenhar_mira("Clique pra escolher o lugar" if mira_ok else "Aqui não dá", mira_ok)
+	desenhar_mira(("Solte" if GameManager.toque else "Clique") + " pra escolher o lugar" if mira_ok else "Aqui não dá", mira_ok)
 
 func desenhar_mira(texto: String, valido: bool) -> void:
 	var mouse = get_local_mouse_position()
 	var cor = Color(1, 1, 1, 0.9) if valido else Color(1, 0.35, 0.35, 0.8)
-	draw_arc(mouse, 26.0, 0.0, TAU, 40, cor, 3.0, true)
+	# o dedo tampa a mira: no celular o anel é maior que ele
+	var raio = 60.0 if GameManager.toque else 26.0
+	draw_arc(mouse, raio, 0.0, TAU, 40, cor, 3.0, true)
 	draw_circle(mouse, 4.0, cor)
-	draw_string(get_theme_default_font(), mouse + Vector2(36, 8), texto, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, cor)
+	draw_string(get_theme_default_font(), mouse + Vector2(raio + 10, 8), texto, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, cor)
 
 func _can_drop_data(_at_position: Vector2, card: Variant) -> bool:
 	var pode = pode_soltar(card)

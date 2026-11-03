@@ -97,8 +97,9 @@ func carta_em(pos: Vector2) -> Control:
 			return carta
 	return null
 
+# apertar também escolhe: no celular não tem hover, tocar na carta levanta ela (pra ler) e tocar fora abaixa
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion and not get_viewport().gui_is_dragging():
+	if (event is InputEventMouseMotion or (event is InputEventMouseButton and event.pressed)) and not get_viewport().gui_is_dragging():
 		escolher(carta_em(event.position))
 
 # arrastando, todas voltam pra repouso

@@ -13,10 +13,40 @@ var som: Node = preload("res://scripts/som.gd").new()
 # um tween só mexe no time_scale da câmera lenta (menu de ações e arraste de carta): quem pede por último vale
 var tween_tempo: Tween
 
+# celular: o dedo faz o papel do mouse e a interface da partida fica maior (ajustar_tela)
+var toque: bool = OS.has_feature("mobile")
+const ESCALA_CELULAR = 1.5
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	add_child(som)
 	Config.carregar()
+	if toque:
+		get_tree().node_added.connect(ajustar_tela)
+
+# no celular a partida usa a interface 1,5x maior; menu e créditos foram desenhados em 1920×1080 fixos e
+# ficam como são, com faixas nas laterais. roda quando a cena entra, antes do _ready de qualquer filho dela
+func ajustar_tela(node: Node) -> void:
+	# só a cena nova: prévia de arraste e dica também entram na raiz
+	if node.get_parent() != get_tree().root or node.scene_file_path == "":
+		return
+	var jogo = node is House
+	var janela = get_tree().root
+	janela.content_scale_factor = ESCALA_CELULAR if jogo else 1.0
+	janela.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_EXPAND if jogo else Window.CONTENT_SCALE_ASPECT_KEEP
+
+# o voltar do Android vale o Esc: pausa, fecha a lore, cancela a mira
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		for apertado in [true, false]:
+			var esc = InputEventAction.new()
+			esc.action = &"ui_cancel"
+			esc.pressed = apertado
+			Input.parse_input_event(esc)
+
+# no celular o "mouse" fica parado onde o dedo saiu: hover só vale com o dedo na tela
+func hover_valido() -> bool:
+	return not toque or Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
 
 # a casa chama quando começa (também no Jogar de novo)
 func comecar_partida() -> void:

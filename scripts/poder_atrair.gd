@@ -19,6 +19,8 @@ var etapa: int = Etapa.Nada
 var escolhido: Npc
 var restante: float = 0.0
 var no_mapa_ok: bool = false
+# o clique do lugar começou depois de escolher o convidado (o soltar desse clique não conta)
+var apertou_no_lugar: bool = false
 var realce: float = 0.0
 var piscada: float = 0.0
 # tranco do botão, em tamanho
@@ -104,15 +106,18 @@ func processar(area: Control) -> void:
 			npc.em_destaque = npc == escolhido
 	area.mouse_default_cursor_shape = Control.CURSOR_CROSS
 
-# clique no mapa enquanto ativo (vem do _gui_input da area_jogo)
+# clique no mapa enquanto ativo (vem do _gui_input da area_jogo, apertando e soltando): o convidado
+# vale no apertar, o lugar no soltar (no celular dá pra ver a corrente arrastando o dedo antes)
 func clique_no_mapa(event: InputEventMouseButton, area: Control) -> void:
 	if event.button_index == MOUSE_BUTTON_RIGHT:
-		cancelar()
+		if event.pressed:
+			cancelar()
 	elif event.button_index != MOUSE_BUTTON_LEFT:
 		return
-	elif etapa == Etapa.EscolheNpc:
+	elif event.pressed:
+		apertou_no_lugar = etapa == Etapa.EscolheLugar
 		var npc = area.npc_sob_mouse()
-		if npc and npc.pode_ser_atraido():
+		if etapa == Etapa.EscolheNpc and npc and npc.pode_ser_atraido():
 			# agarrou: ele leva um susto, sem saber de onde
 			escolhido = npc
 			etapa = Etapa.EscolheLugar
@@ -120,7 +125,7 @@ func clique_no_mapa(event: InputEventMouseButton, area: Control) -> void:
 			npc.pular_de_susto()
 			npc.mostrar_exclamacao("?")
 			GameManager.house.camera.tremer(2.5)
-	elif no_mapa_ok:
+	elif apertou_no_lugar and no_mapa_ok:
 		var quem = escolhido
 		terminar()
 		usar(quem, GameManager.house.get_global_mouse_position())
@@ -159,7 +164,7 @@ func usar(npc: Npc, onde: Vector2) -> bool:
 func dica() -> String:
 	if etapa == Etapa.EscolheNpc:
 		return "Escolha um convidado"
-	return "Clique onde ele vai ficar" if no_mapa_ok else "Aqui não dá"
+	return ("Solte" if GameManager.toque else "Clique") + " onde ele vai ficar" if no_mapa_ok else "Aqui não dá"
 
 func _process(delta: float) -> void:
 	var antes = restante

@@ -11,6 +11,8 @@ const ARQUIVO = "user://config.cfg"
 func _ready() -> void:
 	volume.value = db_to_linear(AudioServer.get_bus_volume_db(0)) * 100
 	tela_cheia.button_pressed = DisplayServer.window_get_mode() >= DisplayServer.WINDOW_MODE_FULLSCREEN
+	# no celular é sempre tela cheia
+	tela_cheia.visible = not OS.has_feature("mobile")
 	# conecta depois de preencher pra não salvar só de abrir
 	volume.value_changed.connect(salvar.unbind(1))
 	tela_cheia.toggled.connect(salvar.unbind(1))

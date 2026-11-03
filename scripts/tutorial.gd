@@ -52,6 +52,16 @@ func _ready() -> void:
 	estilo = StyleBoxFlat.new()
 	estilo.bg_color = Color(0.86, 0.84, 0.76)
 	painel.add_theme_stylebox_override("panel", estilo)
+	if GameManager.toque:
+		# a tela do celular é estreita: no meio o painel tampa os objetivos (canto de cima à direita),
+		# então ele vai pra esquerda, logo depois dos contadores
+		var largura = get_viewport().get_visible_rect().size.x
+		%texto.custom_minimum_size.x = 400.0
+		painel.grow_horizontal = Control.GROW_DIRECTION_END
+		painel.anchor_left = 0.0
+		painel.anchor_right = 0.0
+		painel.offset_left = 176.0
+		painel.offset_right = 176.0 + clampf(largura - 176.0 - 490.0, 700.0, 1000.0)
 	fundo = ColorRect.new()
 	fundo.color = Color(0, 0, 0, 0)
 	fundo.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -73,9 +83,10 @@ func comecar(casa, comeco_da_partida: bool = false) -> void:
 	do_comeco = comeco_da_partida
 	niveis_inicial = total_de_niveis()
 	var cam = house.camera
+	var toque = GameManager.toque
 	passos = [
 		{"texto": "Deram uma festa na SUA casa sem convidar você. Hora de assombrar até não sobrar ninguém!"},
-		{"texto": "Segure o botão esquerdo no vaso da seta: todo mundo naquele cômodo leva um susto.",
+		{"texto": ("Segure o dedo" if toque else "Segure o botão esquerdo") + " no vaso da seta: todo mundo naquele cômodo leva um susto.",
 			"alvo": levitavel_com_gente,
 			"fazendo": func(): return get_tree().get_nodes_in_group("levitavel").any(func(o): return o.segurando),
 			"texto_fazendo": "Isso! Continue segurando até a barra de medo em cima deles encher.",
@@ -86,11 +97,11 @@ func comecar(casa, comeco_da_partida: bool = false) -> void:
 		{"texto": "Gaste seus sustos: arraste uma carta até a casa. Os quadradinhos mostram onde ela cabe.",
 			"destaque": house.ui.get_node("painel_fantasmas"),
 			"feito": func(): return get_tree().get_nodes_in_group("fantasma").size() > fantasmas_inicial},
-		{"texto": "Um fantasma! Segure o botão esquerdo nele e solte numa ação. O círculo mostra o alcance.",
+		{"texto": "Um fantasma! Segure " + ("o dedo" if toque else "o botão esquerdo") + " nele e solte numa ação. O círculo mostra o alcance.",
 			"alvo": ultimo_fantasma,
 			"feito": func(): return get_tree().get_nodes_in_group("fantasma").any(func(f): return f.recarga_restante.values().any(func(r): return r > 0.0))},
 		{"texto": "Quanto mais gente dentro do alcance, mais forte o susto. Junte o povo e capriche!", "auto": 5.0},
-		{"texto": "Cada convidado morre de medo de um fantasma. Clique em quem tem a caveira e leia as pistas.",
+		{"texto": "Cada convidado morre de medo de um fantasma. " + ("Toque" if toque else "Clique") + " em quem tem a caveira e leia as pistas.",
 			"alvo": marcado_vivo,
 			"feito": func(): return viu_lore and not house.get_node("lore").aberto},
 		{"texto": "Com a vítima apavorada (nível %d de medo), um susto do fantasma certo mata do coração!" % Npc.NIVEL_INFARTO},
@@ -98,10 +109,10 @@ func comecar(casa, comeco_da_partida: bool = false) -> void:
 			"destaque": house.ui.get_node("objetivos"), "abrir_objetivos": true},
 		{"texto": "Difícil alcançar alguém? O ímã puxa um convidado pra onde quiser e prende ele lá por %d s." % house.ui.poder.tempo_preso,
 			"destaque": house.ui.poder},
-		{"texto": "Rodinha dá zoom, botão direito arrasta a câmera. Experimente!",
+		{"texto": "Pince com dois dedos pra dar zoom e arraste o mapa com um. Experimente!" if toque else "Rodinha dá zoom, botão direito arrasta a câmera. Experimente!",
 			"feito": func(): return absf(cam.zoom_alvo - zoom_inicial) > 0.01 or cam.arrastado - arrastado_inicial > 100.0},
 		{"texto": "Com %d mortes vem a polícia. Ela não foge: só o Cavaleiro mata, e isso cumpre um objetivo!" % house.limite_mortes},
-		{"texto": "Em %d minutos amanhece e a festa acaba. Esc pausa. Boa assombração!" % int(house.tempo_limite / 60.0)},
+		{"texto": "Em %d minutos amanhece e a festa acaba. %s pausa. Boa assombração!" % [int(house.tempo_limite / 60.0), "O botão II" if toque else "Esc"]},
 	]
 	viu_lore = false
 	vaso_atual = null
