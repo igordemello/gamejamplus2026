@@ -144,8 +144,12 @@ func piscar(vezes: int, duracao: float) -> void:
 # é maior: o fantasma cresce 8% e o centro do desenho anda, e sem folga o hover ficava piscando na borda
 func mouse_em_cima() -> bool:
 	var sprite: AnimatedSprite2D = $AnimatedSprite2D
+	var raio = raio_clique * (1.25 if no_hover else 1.0)
+	var vista = GameManager.house.vista() if is_instance_valid(GameManager.house) else null
+	if vista:
+		return vista.mouse_perto(sprite, raio)
 	var centro = sprite.global_position + sprite.offset * sprite.global_scale
-	return centro.distance_to(get_global_mouse_position()) <= raio_clique * (1.25 if no_hover else 1.0)
+	return centro.distance_to(get_global_mouse_position()) <= raio
 
 func executar(acao: Acao) -> void:
 	if acao.mira and recarga_restante.get(acao, 0.0) <= 0.0:

@@ -75,7 +75,7 @@ func _process(delta: float) -> void:
 			novo = zoom_destino
 		# aproxima na direção do mouse: o ponto embaixo dele não sai do lugar
 		if not focando and not volta and not conduzindo:
-			var mouse = get_viewport().get_mouse_position() - get_viewport_rect().size / 2
+			var mouse = tela_mundo(get_viewport().get_mouse_position() - get_viewport_rect().size / 2)
 			position += mouse / zoom_atual - mouse / novo
 		zoom_atual = novo
 	zoom = Vector2.ONE * zoom_atual * (1.0 + tranco)
@@ -110,7 +110,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event is InputEventMouseMotion and event.button_mask & MOUSE_BUTTON_MASK_RIGHT:
 		volta = false
 		jogador_mexeu()
-		position -= event.relative / zoom
+		position -= tela_mundo(event.relative) / zoom
 		prender()
 		arrastado += event.relative.length()
 
@@ -141,7 +141,7 @@ func mostrar_exterior() -> void:
 # um ponto está na vista nesse zoom e nessa posição? (as cartas tampam a parte de baixo da tela)
 func ponto_na_vista(ponto: Vector2, zoom_ref: float, centro: Vector2) -> bool:
 	var tela = get_viewport_rect().size
-	var tela_ponto = (ponto - centro) * zoom_ref + tela / 2.0
+	var tela_ponto = mundo_tela(ponto - centro) * zoom_ref + tela / 2.0
 	return Rect2(60, 40, tela.x - 120, tela.y - 200).has_point(tela_ponto)
 
 # lembra o jogador de algo fora da vista com um afastamento leve, só o que precisar pra aparecer.
@@ -168,7 +168,7 @@ func lembrar_de(ponto: Vector2) -> bool:
 # já respeitando o limite. centro é o ponto do desenho do alvo, relativo à origem dele
 func posicao_foco(alvo: Node2D, centro: Vector2, lado: float) -> Vector2:
 	var tela = get_viewport_rect().size
-	return limitar(alvo.global_position + centro + Vector2(lado * tela.x / 4.0 / zoom_foco, 0.0), zoom_foco)
+	return limitar(alvo.global_position + centro + tela_mundo(Vector2(lado * tela.x / 4.0, 0.0)) / zoom_foco, zoom_foco)
 
 # desliza e dá zoom no alvo, guardando o enquadramento de antes (só na primeira vez: trocar de alvo não perde)
 func focar(alvo: Node2D, centro: Vector2, lado: float) -> void:
@@ -187,6 +187,16 @@ func soltar_foco() -> void:
 	focando = false
 	foco = null
 	volta = true
+
+# deslocamento na tela -> no mundo 2D (sem zoom), e o contrário. Na vista 2.5D girada a tela não anda
+# junto com x/y do mundo; sem giro é o próprio vetor
+func tela_mundo(d: Vector2) -> Vector2:
+	var vista = get_parent().vista() if get_parent().has_method("vista") else null
+	return vista.tela_para_mundo(d) if vista else d
+
+func mundo_tela(d: Vector2) -> Vector2:
+	var vista = get_parent().vista() if get_parent().has_method("vista") else null
+	return vista.mundo_para_tela(d) if vista else d
 
 func prender() -> void:
 	position = limitar(position, zoom.x)

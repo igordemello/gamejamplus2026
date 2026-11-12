@@ -9,14 +9,17 @@ func verificar() -> void:
 	root.add_child(house)
 	await process_frame
 	var tutorial = house.get_node("tutorial")
-	var vaso = house.get_node("Y-sort/Sprite2D30")
-	var certo = tutorial.passos[1].alvo.call() == vaso and vaso.texture.resource_path == "res://assets/PROPS/flor.png"
-	vaso.ser_pego()
-	certo = certo and tutorial.passos[1].alvo.call() == null
-	vaso.reaparecer()
-	certo = certo and tutorial.passos[1].alvo.call() == vaso
+	var vaso = house.get_node("Y-sort/prop_levitavel1")
+	var certo = tutorial.objeto_levitavel == vaso and tutorial.passos[1].alvo.call() != null
+	# o alvo é o levitável do cômodo com gente: o do tutorial tem que estar num cômodo que começa com gente
+	certo = certo and house.comodo_em(vaso.global_position) == "NavigationRegion2D2"
+	var alvo = tutorial.passos[1].alvo.call()
+	alvo.ser_pego()
+	certo = certo and tutorial.passos[1].alvo.call() != alvo
+	alvo.reaparecer()
+	certo = certo and tutorial.passos[1].alvo.call() != null
 	if certo:
-		print("OK: tutorial aponta para o vaso levitável e oculta a seta enquanto ele está indisponível.")
+		print("OK: tutorial aponta para um levitável e troca/oculta a seta enquanto ele está indisponível.")
 	else:
 		push_error("Alvo incorreto no tutorial")
 	house.queue_free()

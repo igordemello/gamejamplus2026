@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/objeto_levitavel.gd" id="1_lev"]
+[ext_resource type="Script" path="res://scripts/prop3d.gd" id="2_prop3d"]
+[ext_resource type="Texture2D" path="res://assets/PROPS/flor.png" id="3_flor"]
+
+[node name="prop_debug_levitavel" type="Sprite2D" groups=["quebravel"]]
+texture_filter = 1
+texture = ExtResource("3_flor")
+script = ExtResource("1_lev")
+
+[node name="prop3d" type="Node" parent="."]
+script = ExtResource("2_prop3d")
+cor = Color(0.1, 0.9, 1, 1)

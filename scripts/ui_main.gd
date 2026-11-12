@@ -100,7 +100,7 @@ func _process(delta: float) -> void:
 		foco.material.set_shader_parameter("raio", foco_raio)
 		foco.material.set_shader_parameter("proporcao", foco.size.x / foco.size.y)
 		if is_instance_valid(foco_alvo):
-			var centro = foco_alvo.get_global_transform_with_canvas() * Vector2(0, -30)
+			var centro = GameManager.house.na_tela(foco_alvo, Vector2(0, -30))
 			foco.material.set_shader_parameter("centro", centro / foco.size)
 
 func mostrar_marcados(marcados: Array) -> void:

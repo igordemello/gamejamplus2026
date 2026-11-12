@@ -156,6 +156,8 @@ func _ready() -> void:
 	medidor.draw.connect(_desenhar_medidor)
 	# sombra no chão, embaixo dos pés (fica no lugar quando ele pula de susto)
 	var sombra = Node2D.new()
+	# a vista 2.5D esconde ela pelo nome (lá a sombra é um decal no chão 3D)
+	sombra.name = "sombra"
 	sombra.position = Vector2(0, altura_sprite)
 	sombra.draw.connect(func():
 		sombra.draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, 0.35))
@@ -485,7 +487,7 @@ func tomar_susto(susto: String, pontosDeSusto: int, fantasma: Fantasma = null) -
 		nivel_medo += 1
 		GameManager.sustos += 1
 		# o +1 sai da cabeça e voa até o contador
-		house.ui.voar_susto(get_global_transform_with_canvas() * Vector2(0, -144))
+		house.ui.voar_susto(house.na_tela(self, Vector2(0, -144)))
 		mostrar_exclamacao("!!")
 		if nivel_medo < 5:
 			GameManager.som.gritar()
@@ -515,6 +517,9 @@ func tomar_susto(susto: String, pontosDeSusto: int, fantasma: Fantasma = null) -
 
 # o mouse está em cima do desenho: o retângulo do quadro, já com escala, respiração e flip
 func mouse_em_cima() -> bool:
+	var vista = house.vista() if house else null
+	if vista:
+		return vista.mouse_no_desenho(sprite)
 	var tamanho = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame).get_size()
 	return Rect2(sprite.offset - tamanho / 2.0, tamanho).has_point(sprite.get_local_mouse_position())
 
@@ -830,7 +835,7 @@ func parar_coracao() -> void:
 	create_tween().tween_property(self, "quebra", 1.0, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	house.ui.focar(self, 0.13)
 	house.camera.tremer(5.0)
-	house.ui.letreiro("INFARTO!", get_global_transform_with_canvas() * Vector2(0, -214))
+	house.ui.letreiro("INFARTO!", house.na_tela(self, Vector2(0, -214)))
 	GameManager.som.tocar("infarto")
 
 func bater_no_chao(lado: float) -> void:
@@ -846,7 +851,7 @@ func bater_no_chao(lado: float) -> void:
 	GameManager.sustos += 1 + bonus_infarto
 	GameManager.mortes += 1
 	house.registrar_morte(self)
-	house.ui.voar_susto(get_global_transform_with_canvas() * Vector2(lado * 40.0, -44.0), 1 + bonus_infarto)
+	house.ui.voar_susto(house.na_tela(self, Vector2(lado * 40.0, -44.0)), 1 + bonus_infarto)
 
 # a alma sai do corpo: o mesmo desenho em branco, meio transparente, subindo e balançando
 func soltar_alma() -> void:

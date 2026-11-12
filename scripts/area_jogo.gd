@@ -80,7 +80,8 @@ func npc_sob_mouse() -> Npc:
 	for npc in get_tree().get_nodes_in_group("npc"):
 		if npc.current_estado == Npc.Estado.Infarta or not npc.mouse_em_cima():
 			continue
-		var distancia = mouse.distance_to(npc.sprite.global_position + npc.sprite.offset * npc.sprite.global_scale)
+		var vista = GameManager.house.vista()
+		var distancia = vista.centro_na_tela(npc.sprite).distance_to(vista.mouse_tela()) if vista else mouse.distance_to(npc.sprite.global_position + npc.sprite.offset * npc.sprite.global_scale)
 		if distancia < menor:
 			menor = distancia
 			melhor = npc

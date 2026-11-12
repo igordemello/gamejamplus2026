@@ -89,6 +89,8 @@ func pegar() -> void:
 	while altura_subida > 0.0 and GameManager.house.eh_parede(global_position + Vector2(0, -altura_subida)):
 		altura_subida -= 8.0
 	altura_subida = maxf(altura_subida, 0.0)
+	# o espelho 3D usa o chão de antes pra mostrar ele subindo (e não andando pra trás)
+	set_meta("chao_y", global_position.y)
 	var tween = create_tween()
 	tween.tween_property(self, "global_position:y", global_position.y - altura_subida, 0.45).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(soltar.bind(objeto, chao, restaurar))
@@ -104,7 +106,9 @@ func soltar(objeto: Node2D, chao: Vector2, restaurar: Callable) -> void:
 	queda.tween_callback(quebrar.bind(objeto, restaurar))
 
 	# volta pra altura de antes
-	create_tween().tween_property(self, "global_position:y", global_position.y + altura_subida, 0.4)
+	var descida = create_tween()
+	descida.tween_property(self, "global_position:y", global_position.y + altura_subida, 0.4)
+	descida.tween_callback(remove_meta.bind("chao_y"))
 
 func quebrar(objeto: Node2D, restaurar: Callable) -> void:
 	var assustados = get_tree().get_nodes_in_group("npc").filter(

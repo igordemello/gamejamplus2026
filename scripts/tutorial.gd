@@ -326,12 +326,12 @@ func apagar_destaques() -> void:
 func topo_na_tela(no: CanvasItem) -> Vector2:
 	if no is Npc:
 		# acima da caveira de marcado
-		return no.get_global_transform_with_canvas() * Vector2(0, no.altura_marca - 16.0) if no.marca else no.get_global_transform_with_canvas() * Vector2(0, no.topo_desenho)
+		return house.na_tela(no, Vector2(0, no.altura_marca - 16.0) if no.marca else Vector2(0, no.topo_desenho))
 	if no is Fantasma:
 		var sprite: AnimatedSprite2D = no.get_node("AnimatedSprite2D")
-		return sprite.get_global_transform_with_canvas() * sprite.offset - Vector2(0, no.raio_clique * house.camera.zoom.x)
+		return house.na_tela(sprite, sprite.offset) - Vector2(0, no.raio_clique * house.camera.zoom.x)
 	var retangulo = no.get_rect()
-	return no.get_global_transform_with_canvas() * Vector2(retangulo.get_center().x, retangulo.position.y)
+	return house.na_tela(no, Vector2(retangulo.get_center().x, retangulo.position.y))
 
 # seta grande quicando, com a ponta em cima do alvo
 func desenhar_seta() -> void:

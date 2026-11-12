@@ -1,0 +1,24 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/espelho3d.gd" id="1_espelho"]
+[ext_resource type="PackedScene" path="res://scene/estrutura3d.tscn" id="2_estrutura"]
+[ext_resource type="PackedScene" path="res://scene/ambiente3d.tscn" id="3_ambiente"]
+
+[node name="mundo3d" type="Node3D"]
+script = ExtResource("1_espelho")
+energia_luz = 1.0
+alcance_luz = 1.6
+altura_luz = 60.0
+
+[node name="camera" type="Camera3D" parent="."]
+projection = 1
+current = true
+size = 1080.0
+near = 10.0
+far = 12000.0
+
+[node name="estrutura" parent="." instance=ExtResource("2_estrutura")]
+
+[node name="ambiente" parent="." instance=ExtResource("3_ambiente")]
+
+[node name="espelhos" type="Node3D" parent="."]

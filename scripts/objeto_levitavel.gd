@@ -97,6 +97,11 @@ func _input(event: InputEvent) -> void:
 			soltar()
 
 func mouse_em_cima() -> bool:
+	# na vista 2.5D o desenho é a caixa 3D do prop3d: vale o contorno dela na tela
+	var vista = GameManager.house.vista() if is_instance_valid(GameManager.house) else null
+	var visual = get_node_or_null("prop3d")
+	if vista and visual and visual.malha:
+		return vista.mouse_na_malha(visual.malha)
 	return get_rect().has_point(to_local(get_global_mouse_position()))
 
 func atualizar_marca() -> void:

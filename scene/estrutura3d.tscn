@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://assets/casa3d_paredes.tres" id="1_paredes"]
+[ext_resource type="ArrayMesh" path="res://assets/casa3d_chao.tres" id="2_chao"]
+[ext_resource type="ArrayMesh" path="res://assets/casa3d_grama.tres" id="3_grama"]
+
+[node name="estrutura" type="Node3D"]
+
+[node name="paredes" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_paredes")
+
+[node name="chao" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = ExtResource("2_chao")
+
+[node name="grama" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = ExtResource("3_grama")

@@ -17,6 +17,8 @@ var regionsHouse: Array[NavigationRegion2D] = []
 @onready var efeitos_chao: Node2D = $efeitos_chao
 # a malha de dentro da casa (a da grama é outra região, no mesmo mapa)
 @onready var malha_casa: NavigationRegion2D = $NavigationRegion2D
+# a vista 2.5D (scene/casa3d.tscn, scripts/espelho3d.gd)
+@onready var mundo3d = get_node_or_null("mundo3d")
 
 @export var ponto_fuga: Marker2D
 @export var chao: Sprite2D
@@ -99,6 +101,16 @@ func _process(delta: float) -> void:
 		if npcs_no_comeco > 0 and restantes == 0:
 			acabou = true
 			terminar()
+
+# a vista 2.5D, se estiver ligada (F3 volta pro 2D): hover, clique e projeção passam por ela
+func vista():
+	return mundo3d if mundo3d and mundo3d.vista_3d else null
+
+# onde um ponto local de um nó do mundo aparece na tela. Na vista 2.5D girada o que está acima do pé
+# fica em pé (altura), em vez de ir pro fundo junto com o chão
+func na_tela(no: Node2D, local: Vector2) -> Vector2:
+	var v = vista()
+	return v.projetar(no, local) if v else no.get_global_transform_with_canvas() * local
 
 func objetivo_cumprido() -> bool:
 	return objetivo_marcados or objetivo_comodos or objetivo_policial

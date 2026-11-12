@@ -96,7 +96,7 @@ func abrir(alvo: Npc) -> void:
 	# onde ele cabe na tela (o limite da câmera pode empurrar): o painel vai pro outro lado
 	var centro = Vector2(0.0, (alvo.topo_desenho + alvo.altura_sprite) / 2.0)
 	var tela = get_viewport().get_visible_rect().size
-	var x_tela = tela.x / 2.0 + (alvo.global_position.x + centro.x - camera.posicao_foco(alvo, centro, 1.0).x) * camera.zoom_foco
+	var x_tela = tela.x / 2.0 + camera.mundo_tela(alvo.global_position + centro - camera.posicao_foco(alvo, centro, 1.0)).x * camera.zoom_foco
 	lado = 1.0 if x_tela < tela.x * 0.55 else -1.0
 	camera.focar(alvo, centro, lado)
 

@@ -15,7 +15,7 @@ func verificar() -> void:
 	var house = load("res://scene/house.tscn").instantiate()
 	root.add_child(house)
 	await process_frame
-	var objetos = [house.get_node("Y-sort/objeto_quebravel1"), house.get_node("objeto_levitavel")]
+	var objetos = [house.get_node("Y-sort/prop_quebravel1"), house.get_node("Y-sort/prop_levitavel1")]
 	var estados = []
 	var diabretes = []
 	for objeto in objetos:
