@@ -1,0 +1,17 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/objetos/objeto_levitavel.gd" id="1_lev"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_prop"]
+size = Vector3(0.45, 0.45, 0.45)
+
+[sub_resource type="StandardMaterial3D" id="Material_prop"]
+albedo_color = Color(0.1, 0.9, 1, 1)
+
+[node name="prop_debug_levitavel" type="Node3D" groups=["quebravel"]]
+script = ExtResource("1_lev")
+
+[node name="malha" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.225, 0)
+mesh = SubResource("BoxMesh_prop")
+surface_material_override/0 = SubResource("Material_prop")

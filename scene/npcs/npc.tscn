@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://bvro6fjibueab"]
+
+[ext_resource type="Script" uid="uid://b5ra8fdddq376" path="res://scripts/npcs/npc.gd" id="1_np5a4"]
+[ext_resource type="SpriteFrames" uid="uid://cj0axhg677v7v" path="res://assets/npc/gotica.tres" id="2_gotica"]
+[ext_resource type="Script" path="res://scripts/globais/sprite_personagem.gd" id="3_sprite"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_corpo"]
+radius = 0.18
+height = 1.6
+
+[node name="npc" type="CharacterBody3D" groups=["convidado", "npc"]]
+collision_layer = 8
+script = ExtResource("1_np5a4")
+visual = ExtResource("2_gotica")
+
+[node name="colisao" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+shape = SubResource("CapsuleShape3D_corpo")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+path_desired_distance = 0.25
+target_desired_distance = 0.3
+radius = 0.2
+height = 1.7
+
+[node name="sprite" type="AnimatedSprite3D" parent="."]
+pixel_size = 0.0273
+offset = Vector2(0, 24)
+sprite_frames = ExtResource("2_gotica")
+animation = &"andar"
+script = ExtResource("3_sprite")

@@ -1,0 +1,48 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/efeitos/efeito_unico.gd" id="1_script"]
+
+[sub_resource type="Gradient" id="Gradient_fumaca"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(1, 1, 1, 0.8, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_fumaca"]
+gradient = SubResource("Gradient_fumaca")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fumaca"]
+emission_shape = 1
+emission_sphere_radius = 0.16
+direction = Vector3(0, 1, 0)
+spread = 180.0
+gravity = Vector3(0, 0.45, 0)
+initial_velocity_min = 0.68
+initial_velocity_max = 1.48
+damping_min = 1.36
+damping_max = 2.05
+scale_min = 0.11
+scale_max = 0.23
+color = Color(0.92, 0.9, 1, 1)
+color_ramp = SubResource("GradientTexture1D_fumaca")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_particula"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_particula"]
+material = SubResource("StandardMaterial3D_particula")
+
+[node name="fumaca" type="GPUParticles3D"]
+emitting = false
+amount = 18
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-3, -1, -3, 6, 5, 6)
+process_material = SubResource("ParticleProcessMaterial_fumaca")
+draw_pass_1 = SubResource("QuadMesh_particula")
+script = ExtResource("1_script")

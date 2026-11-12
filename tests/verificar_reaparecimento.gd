@@ -1,5 +1,9 @@
 extends SceneTree
 
+# o diabrete quebra um objeto comum e um levitável (este sendo segurado) duas vezes: eles somem, saem
+# dos grupos e voltam iguais depois de 30 s
+#   godot --headless --path . --fixed-fps 60 --script res://tests/verificar_reaparecimento.gd
+
 var falhas: int = 0
 
 func _initialize() -> void:
@@ -12,17 +16,17 @@ func exigir(condicao: bool, mensagem: String) -> void:
 
 func verificar() -> void:
 	await process_frame
-	var house = load("res://scene/house.tscn").instantiate()
-	root.add_child(house)
+	var fase = load("res://scene/fases/casa/casa.tscn").instantiate()
+	root.add_child(fase)
 	await process_frame
-	var objetos = [house.get_node("Y-sort/prop_quebravel1"), house.get_node("Y-sort/prop_levitavel1")]
+	var objetos = [fase.get_node("level/props/prop_quebravel1"), fase.get_node("level/props/prop_levitavel1")]
 	var estados = []
 	var diabretes = []
 	for objeto in objetos:
 		objeto.add_to_group("quebravel")
-		estados.append({"pai": objeto.get_parent(), "transform": objeto.transform, "cor": objeto.modulate})
-		var diabrete = load("res://scene/diabrete.tscn").instantiate()
-		house.y_sort.add_child(diabrete)
+		estados.append({"pai": objeto.get_parent(), "transform": objeto.transform})
+		var diabrete = load("res://scene/fantasmas/diabrete.tscn").instantiate()
+		fase.mundo.add_child(diabrete)
 		diabrete.altura_levantar = 0.0
 		exigir(diabrete.tempo_reaparecer == 30.0, "Tempo padrão diferente de 30 segundos")
 		diabretes.append(diabrete)
@@ -36,7 +40,7 @@ func verificar() -> void:
 		await create_timer(1.0).timeout
 		for objeto in objetos:
 			exigir(is_instance_valid(objeto), "Objeto foi destruído em vez de aguardar o retorno")
-			exigir(objeto.modulate.a == 0.0, "Objeto quebrado ainda visível")
+			exigir(not objeto.is_visible_in_tree() or objeto.scale.length() < 0.01, "Objeto quebrado ainda visível")
 			exigir(not objeto.is_in_group("quebravel"), "Objeto quebrado continua disponível ao Diabrete")
 		exigir(not objetos[1].is_processing_input(), "Levitável quebrado ainda recebe cliques")
 		exigir(not objetos[1].is_in_group("levitavel"), "Tutorial ainda encontra levitável quebrado")
@@ -48,15 +52,13 @@ func verificar() -> void:
 			var objeto = objetos[i]
 			exigir(objeto.is_in_group("quebravel"), "Objeto não voltou a ser quebrável")
 			exigir(objeto.get_parent() == estados[i].pai, "Objeto retornou ao pai errado")
-			exigir(objeto.position.distance_to(estados[i].transform.origin) < 0.1, "Objeto retornou à posição errada")
-			exigir(objeto.scale.is_equal_approx(estados[i].transform.get_scale()), "Escala não restaurada")
-			exigir(is_equal_approx(objeto.rotation, estados[i].transform.get_rotation()), "Rotação não restaurada")
-			exigir(objeto.modulate == estados[i].cor, "Cor e opacidade não restauradas")
+			exigir(objeto.transform.is_equal_approx(estados[i].transform), "Objeto voltou com outra posição, giro ou escala")
+			exigir(objeto.is_visible_in_tree(), "Objeto voltou invisível")
 		exigir(objetos[1].is_processing_input() and objetos[1].is_processing(), "Levitação não reativada")
-		exigir(objetos[1].is_in_group("levitavel") and objetos[1].sombra.visible, "Sombra ou grupo não restaurados")
+		exigir(objetos[1].is_in_group("levitavel"), "Grupo levitavel não restaurado")
 		exigir(not objetos[1].segurando, "Objeto voltou preso ao mouse")
 	if falhas == 0:
 		print("OK: objetos comuns e levitáveis voltam após 30 segundos, em dois ciclos de quebra.")
-	house.queue_free()
+	fase.queue_free()
 	await process_frame
 	quit(1 if falhas > 0 else 0)

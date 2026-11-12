@@ -5,14 +5,14 @@ func _initialize() -> void:
 
 func verificar() -> void:
 	await process_frame
-	var house = load("res://scene/house.tscn").instantiate()
-	root.add_child(house)
+	var fase = load("res://scene/fases/casa/casa.tscn").instantiate()
+	root.add_child(fase)
 	await process_frame
-	var tutorial = house.get_node("tutorial")
-	var vaso = house.get_node("Y-sort/prop_levitavel1")
+	var tutorial = fase.tutorial
+	var vaso = fase.get_node("level/props/prop_levitavel1")
 	var certo = tutorial.objeto_levitavel == vaso and tutorial.passos[1].alvo.call() != null
 	# o alvo é o levitável do cômodo com gente: o do tutorial tem que estar num cômodo que começa com gente
-	certo = certo and house.comodo_em(vaso.global_position) == "NavigationRegion2D2"
+	certo = certo and fase.comodo_em(vaso.global_position) == "sala"
 	var alvo = tutorial.passos[1].alvo.call()
 	alvo.ser_pego()
 	certo = certo and tutorial.passos[1].alvo.call() != alvo
@@ -22,6 +22,6 @@ func verificar() -> void:
 		print("OK: tutorial aponta para um levitável e troca/oculta a seta enquanto ele está indisponível.")
 	else:
 		push_error("Alvo incorreto no tutorial")
-	house.queue_free()
+	fase.queue_free()
 	await process_frame
 	quit(0 if certo else 1)

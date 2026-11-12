@@ -36,6 +36,20 @@ quebravel="Objetos do cenário que o diabrete pode pegar e quebrar"
 
 theme/custom="res://assets/tema.tres"
 
+[layer_names]
+
+3d_physics/layer_1="paredes"
+3d_navigation/layer_1="casa"
+3d_physics/layer_2="chao_casa"
+3d_navigation/layer_2="fora"
+3d_physics/layer_3="terreno"
+3d_physics/layer_4="personagens"
+
+[navigation]
+
+3d/default_cell_size=0.1
+3d/default_cell_height=0.05
+
 [physics]
 
 3d/physics_engine="Jolt Physics"

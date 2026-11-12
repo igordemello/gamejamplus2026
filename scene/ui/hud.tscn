@@ -1,0 +1,316 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/ui_main.gd" id="1_upeg5"]
+[ext_resource type="Script" path="res://scripts/ui/area_jogo.gd" id="2_et4c0"]
+[ext_resource type="Texture2D" path="res://assets/UI/icon_susto.png" id="3_0vnuw"]
+[ext_resource type="Texture2D" path="res://assets/UI/icon_morte.png" id="4_4wh6w"]
+[ext_resource type="Script" path="res://scripts/ui/baralho.gd" id="5_rc07w"]
+[ext_resource type="PackedScene" path="res://scene/ui/card_fantasma.tscn" id="6_o2e4s"]
+[ext_resource type="PackedScene" path="res://scene/fantasmas/morcego.tscn" id="7_4fjty"]
+[ext_resource type="Texture2D" path="res://assets/bat-Sheet.png" id="8_3w6ex"]
+[ext_resource type="PackedScene" path="res://scene/fantasmas/geleia.tscn" id="9_56s4f"]
+[ext_resource type="Texture2D" path="res://assets/mordida-Sheet.png" id="10_t8cnj"]
+[ext_resource type="PackedScene" path="res://scene/fantasmas/crianca.tscn" id="11_pf3g6"]
+[ext_resource type="Texture2D" path="res://assets/criança medonha/criança.png" id="12_2li7i"]
+[ext_resource type="PackedScene" path="res://scene/fantasmas/cavaleiro.tscn" id="13_c1he7"]
+[ext_resource type="Texture2D" path="res://assets/cavaleiro/Estatua_parada.png" id="14_4u4kp"]
+[ext_resource type="PackedScene" path="res://scene/fantasmas/cao.tscn" id="15_t24pq"]
+[ext_resource type="Texture2D" path="res://assets/cao possuido/loboIdle128x128.png" id="16_unxbr"]
+[ext_resource type="PackedScene" path="res://scene/fantasmas/diabrete.tscn" id="17_drnhp"]
+[ext_resource type="Texture2D" path="res://assets/diabrete/diabrete_spritesheet.png" id="18_1kwl5"]
+[ext_resource type="PackedScene" path="res://scene/fantasmas/caveira.tscn" id="19_xji4q"]
+[ext_resource type="Texture2D" path="res://assets/caveira/idleCaveira 64x112.png" id="20_4864c"]
+[ext_resource type="PackedScene" path="res://scene/fantasmas/palhaco.tscn" id="21_px7f2"]
+[ext_resource type="Texture2D" path="res://assets/palhaço/palhaço.png" id="22_u7t31"]
+[ext_resource type="PackedScene" path="res://scene/fantasmas/zumbi.tscn" id="23_ubhqu"]
+[ext_resource type="Texture2D" path="res://assets/zumbie/zumbiIdle64x64.png" id="24_dmyov"]
+[ext_resource type="Script" path="res://scripts/ui/menu_acoes.gd" id="25_cfxvu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_morc0"]
+atlas = ExtResource("8_3w6ex")
+region = Rect2(5, 0, 56, 56)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_geleia0"]
+atlas = ExtResource("10_t8cnj")
+region = Rect2(148, 10, 40, 40)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_crianca"]
+atlas = ExtResource("12_2li7i")
+region = Rect2(34, 396, 300, 300)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_cavaleiro"]
+atlas = ExtResource("14_4u4kp")
+region = Rect2(13, 0, 38, 84)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_cao"]
+atlas = ExtResource("16_unxbr")
+region = Rect2(30, 28, 68, 68)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_diabrete"]
+atlas = ExtResource("18_1kwl5")
+region = Rect2(2, 1, 28, 28)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_caveira"]
+atlas = ExtResource("20_4864c")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_zumbi"]
+atlas = ExtResource("24_dmyov")
+region = Rect2(10, 6, 44, 50)
+
+[node name="UI_main" type="CanvasLayer" unique_id=1000281048]
+layer = 2
+script = ExtResource("1_upeg5")
+
+[node name="area_jogo" type="Control" parent="." unique_id=266802649]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("2_et4c0")
+
+[node name="contadores" type="VBoxContainer" parent="." unique_id=256585518]
+offset_left = 16.0
+offset_top = 10.0
+offset_right = 300.0
+offset_bottom = 124.0
+theme_override_constants/separation = 6
+
+[node name="sustos" type="HBoxContainer" parent="contadores" unique_id=1693541514]
+layout_mode = 2
+tooltip_text = "Sustos
+Sua moeda. Toda vez que alguém sobe um nível de medo, você ganha. Use para conjurar fantasmas."
+theme_override_constants/separation = 10
+
+[node name="icone" type="TextureRect" parent="contadores/sustos" unique_id=1966020292]
+texture_filter = 1
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_0vnuw")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="lbl_sustos" type="Label" parent="contadores/sustos" unique_id=410184512]
+layout_mode = 2
+theme_override_font_sizes/font_size = 60
+text = "0"
+
+[node name="mortes" type="HBoxContainer" parent="contadores" unique_id=57193233]
+layout_mode = 2
+tooltip_text = "Mortes"
+theme_override_constants/separation = 10
+
+[node name="icone" type="TextureRect" parent="contadores/mortes" unique_id=1353899061]
+texture_filter = 1
+custom_minimum_size = Vector2(64, 40)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("4_4wh6w")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="lbl_mortes" type="Label" parent="contadores/mortes" unique_id=707831205]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "0"
+
+[node name="objetivos" type="PanelContainer" parent="." unique_id=331926869]
+custom_minimum_size = Vector2(380, 0)
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -396.0
+offset_top = 10.0
+offset_right = -16.0
+offset_bottom = 218.0
+grow_horizontal = 0
+mouse_filter = 2
+
+[node name="margem" type="MarginContainer" parent="objetivos" unique_id=871964330]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+
+[node name="coluna" type="VBoxContainer" parent="objetivos/margem" unique_id=1441197807]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="cabecalho" type="HBoxContainer" parent="objetivos/margem/coluna" unique_id=1679408715]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="titulo" type="Label" parent="objetivos/margem/coluna/cabecalho" unique_id=686167761]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Cumpra pelo menos 1"
+
+[node name="resumo" type="Label" parent="objetivos/margem/coluna/cabecalho" unique_id=1382184531]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.86, 0.84, 0.76, 0.7)
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 2
+clip_text = true
+
+[node name="botao" type="Button" parent="objetivos/margem/coluna/cabecalho" unique_id=2057372961]
+custom_minimum_size = Vector2(40, 34)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+tooltip_text = "Mostrar ou esconder os objetivos"
+focus_mode = 0
+theme_type_variation = &"BotaoSemBorda"
+
+[node name="recorte" type="Control" parent="objetivos/margem/coluna" unique_id=276511566]
+clip_contents = true
+layout_mode = 2
+mouse_filter = 2
+
+[node name="corpo" type="VBoxContainer" parent="objetivos/margem/coluna/recorte" unique_id=338933429]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="separador" type="HSeparator" parent="objetivos/margem/coluna/recorte/corpo" unique_id=1908681511]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="casa" type="Label" parent="objetivos/margem/coluna/recorte/corpo" unique_id=1602806740]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.84, 0.76, 1)
+text = "Tirar todo mundo da casa"
+
+[node name="um_destes" type="Label" parent="objetivos/margem/coluna/recorte/corpo" unique_id=414424472]
+modulate = Color(0.75, 0.75, 0.75, 1)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.84, 0.76, 1)
+text = "e cumprir um destes:"
+
+[node name="marcados" type="Label" parent="objetivos/margem/coluna/recorte/corpo" unique_id=709234385]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.84, 0.76, 1)
+text = "Matar os marcados"
+
+[node name="retratos" type="HBoxContainer" parent="objetivos/margem/coluna/recorte/corpo" unique_id=1486088368]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="comodos" type="Label" parent="objetivos/margem/coluna/recorte/corpo" unique_id=880667902]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.84, 0.76, 1)
+text = "Assustar em todos os cômodos juntos"
+
+[node name="policial" type="Label" parent="objetivos/margem/coluna/recorte/corpo" unique_id=230750829]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.86, 0.84, 0.76, 1)
+text = "Matar um policial"
+
+[node name="painel_fantasmas" type="Control" parent="." unique_id=2048188518]
+layout_mode = 3
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -300.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="lista" type="Control" parent="painel_fantasmas" unique_id=1479472140]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("5_rc07w")
+
+[node name="card_morcego" parent="painel_fantasmas/lista" unique_id=514541539 instance=ExtResource("6_o2e4s")]
+layout_mode = 0
+cena = ExtResource("7_4fjty")
+icone = SubResource("AtlasTexture_morc0")
+
+[node name="card_geleia" parent="painel_fantasmas/lista" unique_id=2032382898 instance=ExtResource("6_o2e4s")]
+layout_mode = 0
+cena = ExtResource("9_56s4f")
+icone = SubResource("AtlasTexture_geleia0")
+
+[node name="card_crianca" parent="painel_fantasmas/lista" unique_id=948504173 instance=ExtResource("6_o2e4s")]
+layout_mode = 0
+cena = ExtResource("11_pf3g6")
+icone = SubResource("AtlasTexture_icone_crianca")
+
+[node name="card_cavaleiro" parent="painel_fantasmas/lista" unique_id=1834857916 instance=ExtResource("6_o2e4s")]
+layout_mode = 0
+cena = ExtResource("13_c1he7")
+icone = SubResource("AtlasTexture_icone_cavaleiro")
+
+[node name="card_cao" parent="painel_fantasmas/lista" unique_id=1922704704 instance=ExtResource("6_o2e4s")]
+layout_mode = 0
+cena = ExtResource("15_t24pq")
+icone = SubResource("AtlasTexture_icone_cao")
+
+[node name="card_diabrete" parent="painel_fantasmas/lista" unique_id=319544632 instance=ExtResource("6_o2e4s")]
+layout_mode = 0
+cena = ExtResource("17_drnhp")
+icone = SubResource("AtlasTexture_icone_diabrete")
+
+[node name="card_caveira" parent="painel_fantasmas/lista" unique_id=1009804634 instance=ExtResource("6_o2e4s")]
+layout_mode = 0
+cena = ExtResource("19_xji4q")
+icone = SubResource("AtlasTexture_icone_caveira")
+
+[node name="card_palhaco" parent="painel_fantasmas/lista" unique_id=1442087356 instance=ExtResource("6_o2e4s")]
+layout_mode = 0
+cena = ExtResource("21_px7f2")
+icone = ExtResource("22_u7t31")
+
+[node name="card_zumbi" parent="painel_fantasmas/lista" unique_id=1366094218 instance=ExtResource("6_o2e4s")]
+layout_mode = 0
+cena = ExtResource("23_ubhqu")
+icone = SubResource("AtlasTexture_icone_zumbi")
+
+[node name="menu_acoes" type="Control" parent="." unique_id=1039218413]
+visible = false
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+script = ExtResource("25_cfxvu")
+
+[node name="painel_descricao" type="PanelContainer" parent="menu_acoes" unique_id=1187047143]
+visible = false
+layout_mode = 0
+mouse_filter = 2
+
+[node name="textos" type="VBoxContainer" parent="menu_acoes/painel_descricao" unique_id=93011430]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 2
+
+[node name="titulo" type="Label" parent="menu_acoes/painel_descricao/textos" unique_id=1465813810]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
+
+[node name="descricao" type="Label" parent="menu_acoes/painel_descricao/textos" unique_id=780904053]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+horizontal_alignment = 1
+autowrap_mode = 3

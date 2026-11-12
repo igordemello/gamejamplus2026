@@ -21,21 +21,21 @@ func verificar_infarto(npc) -> void:
 	for frase in dados.lore:
 		exigir(not frase.is_empty(), "Frase vazia: " + dados.nome)
 	for nome in ["cavaleiro", "caveira", "geleia", "crianca", "diabrete", "palhaco", "cao", "zumbi", "morcego"]:
-		var fantasma = load("res://scene/%s.tscn" % nome).instantiate()
+		var fantasma = load("res://scene/fantasmas/%s.tscn" % nome).instantiate()
 		exigir(npc.mata_do_coracao(fantasma) == (nome == esperados[dados.nome]), "Relação de infarto incorreta: %s / %s" % [dados.nome, nome])
 		fantasma.free()
 
 func verificar() -> void:
 	await process_frame
-	var house = load("res://scene/house.tscn").instantiate()
-	root.add_child(house)
+	var fase = load("res://scene/fases/casa/casa.tscn").instantiate()
+	root.add_child(fase)
 	await process_frame
 	var npcs = get_nodes_in_group("npc")
-	exigir(npcs.size() == 9, "A casa precisa começar com 9 NPCs")
+	exigir(npcs.size() == 9, "A fase precisa começar com 9 NPCs")
 	exigir(get_nodes_in_group("policial").is_empty(), "Policial presente no início")
 	var nomes = {}
-	var modelo = load("res://scene/npc.tscn").instantiate()
-	var escala_padrao = modelo.get_node("AnimatedSprite2D").scale
+	var modelo = load("res://scene/npcs/npc.tscn").instantiate()
+	var escala_padrao = modelo.get_node("sprite").scale
 	modelo.free()
 	for npc in npcs:
 		exigir(npc.escala_sprite.is_equal_approx(escala_padrao), "Escala diferente do padrão: " + npc.dados_lore().nome)
@@ -51,21 +51,21 @@ func verificar() -> void:
 	for nome in ["Advogado", "Atleta", "Cientista", "Criança", "Gótica", "Hippie", "Idoso", "Psicopata", "Adulto religioso"]:
 		exigir(nomes.has(nome), "NPC ausente: " + nome)
 	var gm = root.get_node("GameManager")
-	gm.mortes = house.limite_mortes - 1
-	house.registrar_morte(npcs[0])
+	gm.mortes = fase.limite_mortes - 1
+	fase.registrar_morte(npcs[0])
 	exigir(get_nodes_in_group("policial").is_empty(), "Polícia chegou antes do limite")
-	gm.mortes = house.limite_mortes
-	house.registrar_morte(npcs[0])
+	gm.mortes = fase.limite_mortes
+	fase.registrar_morte(npcs[0])
 	await process_frame
 	var policiais = get_nodes_in_group("policial")
 	exigir(policiais.size() == 1, "Polícia não chegou no limite de mortes")
 	verificar_infarto(policiais[0])
 	exigir(policiais[0].visual.resource_path == "res://assets/npc/policial.tres", "Visual errado do policial")
 	exigir(policiais[0].visual.get_frame_count("andar") == 6, "Animação incompleta do policial")
-	house.registrar_morte(npcs[0])
+	fase.registrar_morte(npcs[0])
 	exigir(get_nodes_in_group("policial").size() == 1, "Polícia duplicada")
 	if falhas == 0:
 		print("OK: 9 NPCs únicos, sprites novos, 30 frases, 90 relações de infarto e policial separado no limite de mortes.")
-	house.queue_free()
+	fase.queue_free()
 	await process_frame
 	quit(1 if falhas > 0 else 0)

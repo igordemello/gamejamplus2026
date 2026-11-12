@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://f2yhpcodfc00"]
+
+[ext_resource type="Script" uid="uid://c630bbcoty01m" path="res://scripts/fases/fase.gd" id="1_fase"]
+[ext_resource type="PackedScene" uid="uid://bcaldqcv8cuk5" path="res://scene/fases/casa/casa_level.tscn" id="2_level"]
+[ext_resource type="Script" uid="uid://b4deurdln0fr8" path="res://scripts/fases/camera.gd" id="3_camera"]
+[ext_resource type="PackedScene" path="res://scene/ui/hud.tscn" id="4_hud"]
+[ext_resource type="Shader" uid="uid://bd6y804bpplm4" path="res://assets/pos.gdshader" id="5_pos"]
+[ext_resource type="Script" uid="uid://cppofi6aqxbco" path="res://scripts/fases/pos.gd" id="6_pos"]
+[ext_resource type="PackedScene" path="res://scene/ui/pausa.tscn" id="7_pausa"]
+[ext_resource type="PackedScene" path="res://scene/ui/tutorial.tscn" id="8_tutorial"]
+[ext_resource type="PackedScene" path="res://scene/ui/vitoria.tscn" id="9_vitoria"]
+[ext_resource type="PackedScene" uid="uid://j6h3cgx7o8i1" path="res://scene/ui/lore.tscn" id="10_lore"]
+[ext_resource type="PackedScene" path="res://scene/npcs/policial.tscn" id="11_policial"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pos"]
+shader = ExtResource("5_pos")
+shader_parameter/cor_sombra = Color(0.09, 0.03, 0.14, 1)
+shader_parameter/cor_luz = Color(1.06, 0.98, 0.9, 1)
+shader_parameter/saturacao = 1.15
+shader_parameter/contraste = 1.08
+shader_parameter/vinheta = 0.55
+shader_parameter/grao = 0.025
+shader_parameter/aberracao = 1.0
+
+[node name="casa" type="Node3D" unique_id=1931051689 node_paths=PackedStringArray("ambiente", "ponto_fuga", "malha_casa", "no_comodos")]
+script = ExtResource("1_fase")
+ambiente = NodePath("level/ambiente/WorldEnvironment")
+ponto_fuga = NodePath("level/PontoFuga")
+malha_casa = NodePath("level/navegacao/casa")
+no_comodos = NodePath("level/comodos")
+cena_policial = ExtResource("11_policial")
+
+[node name="level" parent="." unique_id=1451595707 instance=ExtResource("2_level")]
+
+[node name="mundo" type="Node3D" parent="." unique_id=1187819144]
+
+[node name="camera" type="Camera3D" parent="." unique_id=418563167]
+current = true
+fov = 30.0
+near = 0.2
+far = 200.0
+script = ExtResource("3_camera")
+
+[node name="UI_main" parent="." unique_id=1013972051 instance=ExtResource("4_hud")]
+
+[node name="pos" type="CanvasLayer" parent="." unique_id=624117060]
+
+[node name="tela" type="ColorRect" parent="pos" unique_id=1557138196]
+material = SubResource("ShaderMaterial_pos")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("6_pos")
+
+[node name="pausa" parent="." unique_id=1812985786 instance=ExtResource("7_pausa")]
+
+[node name="tutorial" parent="." unique_id=37340453 node_paths=PackedStringArray("objeto_levitavel") instance=ExtResource("8_tutorial")]
+objeto_levitavel = NodePath("../level/props/prop_levitavel1")
+
+[node name="vitoria" parent="." unique_id=1391535381 instance=ExtResource("9_vitoria")]
+
+[node name="lore" parent="." unique_id=294816269 instance=ExtResource("10_lore")]

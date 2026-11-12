@@ -1,0 +1,133 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/fantasmas/diabrete.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/globais/sprite_personagem.gd" id="5_sprite"]
+[ext_resource type="Script" path="res://scripts/fantasmas/acao.gd" id="2_acao"]
+[ext_resource type="Texture2D" path="res://assets/diabrete/diabrete_spritesheet.png" id="3_voar"]
+[ext_resource type="Texture2D" path="res://assets/diabrete/diabrete_quebrando_objeto_spritesheet.png" id="4_carregar"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_voar0"]
+atlas = ExtResource("3_voar")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_voar1"]
+atlas = ExtResource("3_voar")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_voar2"]
+atlas = ExtResource("3_voar")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_carregar0"]
+atlas = ExtResource("4_carregar")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_carregar1"]
+atlas = ExtResource("4_carregar")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_carregar2"]
+atlas = ExtResource("4_carregar")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icone_quebrar"]
+atlas = ExtResource("4_carregar")
+region = Rect2(34, 1, 28, 28)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_diabrete"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_voar0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_voar1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_voar2")
+}],
+"loop": true,
+"name": &"voar",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_carregar0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_carregar1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_carregar2")
+}],
+"loop": true,
+"name": &"carregar",
+"speed": 10.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_brasas"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(1, 0.95, 0.5, 1, 1, 0.5, 0.1, 0.95, 0.7, 0.1, 0.05, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_brasas"]
+gradient = SubResource("Gradient_brasas")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_brasas"]
+emission_shape = 1
+emission_sphere_radius = 0.18
+direction = Vector3(0, 1, 0)
+spread = 35.0
+initial_velocity_min = 0.25
+initial_velocity_max = 0.6
+gravity = Vector3(0, 0.7, 0)
+scale_min = 0.6
+scale_max = 1.0
+color_ramp = SubResource("GradientTexture1D_brasas")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_brasas"]
+shading_mode = 0
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_brasas"]
+material = SubResource("StandardMaterial3D_brasas")
+size = Vector2(0.045, 0.045)
+
+[sub_resource type="Resource" id="Resource_quebrar"]
+script = ExtResource("2_acao")
+nome = "Quebrar Objetos"
+icone = SubResource("AtlasTexture_icone_quebrar")
+descricao = "Pega o objeto do cenário mais perto, ergue e derruba no chão. Quem estiver bem perto se assusta."
+resumo = "Derruba um objeto do cenário e assusta quem está perto"
+propriedade_medo = &"medo_quebra"
+recarga = 6.0
+metodo = &"quebrar_objetos"
+em_grupo = true
+
+[node name="Diabrete" type="Node3D"]
+script = ExtResource("1_script")
+custo = 4
+pode_mover = true
+passeia = true
+tipo = 3
+acoes = Array[ExtResource("2_acao")]([SubResource("Resource_quebrar")])
+
+[node name="sprite" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+pixel_size = 0.0341
+sprite_frames = SubResource("SpriteFrames_diabrete")
+animation = &"voar"
+autoplay = "voar"
+script = ExtResource("5_sprite")
+
+[node name="peito" type="Marker3D" parent="sprite"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0.05)
+
+[node name="brasas" type="GPUParticles3D" parent="sprite"]
+emitting = false
+amount = 22
+lifetime = 0.7
+process_material = SubResource("ParticleProcessMaterial_brasas")
+draw_pass_1 = SubResource("QuadMesh_brasas")

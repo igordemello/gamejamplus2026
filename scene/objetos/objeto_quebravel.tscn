@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_prop"]
+top_radius = 0.175
+bottom_radius = 0.175
+height = 0.5
+
+[sub_resource type="StandardMaterial3D" id="Material_prop"]
+albedo_color = Color(1, 0.5, 0.05, 1)
+
+[node name="objeto_quebravel" type="Node3D" groups=["quebravel"]]
+
+[node name="malha" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+mesh = SubResource("CylinderMesh_prop")
+surface_material_override/0 = SubResource("Material_prop")

@@ -1,0 +1,94 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/efeitos/efeito_unico.gd" id="1_script"]
+
+[sub_resource type="Gradient" id="Gradient_cacos"]
+offsets = PackedFloat32Array(0, 0.7, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_cacos"]
+gradient = SubResource("Gradient_cacos")
+
+[sub_resource type="Gradient" id="Gradient_cor_cacos"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(0.95, 0.28, 0.22, 1, 1, 0.9, 0.8, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_cor_cacos"]
+gradient = SubResource("Gradient_cor_cacos")
+
+[sub_resource type="Gradient" id="Gradient_poeira"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(1, 1, 1, 0.75, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_poeira"]
+gradient = SubResource("Gradient_poeira")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_cacos"]
+emission_shape = 1
+emission_sphere_radius = 0.07
+direction = Vector3(0, 1, 0)
+spread = 70.0
+gravity = Vector3(0, -10.2, 0)
+initial_velocity_min = 2.05
+initial_velocity_max = 3.86
+angular_velocity_min = -720.0
+angular_velocity_max = 720.0
+scale_min = 0.045
+scale_max = 0.09
+color_ramp = SubResource("GradientTexture1D_cacos")
+color_initial_ramp = SubResource("GradientTexture1D_cor_cacos")
+collision_mode = 1
+collision_friction = 0.6
+collision_bounce = 0.3
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_poeira"]
+emission_shape = 1
+emission_sphere_radius = 0.09
+direction = Vector3(0, 1, 0)
+spread = 180.0
+gravity = Vector3(0, 0.34, 0)
+initial_velocity_min = 0.34
+initial_velocity_max = 0.8
+damping_min = 0.68
+damping_max = 1.02
+scale_min = 0.11
+scale_max = 0.2
+color = Color(0.88, 0.84, 0.8, 1)
+color_ramp = SubResource("GradientTexture1D_poeira")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_particula"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_particula"]
+material = SubResource("StandardMaterial3D_particula")
+
+[node name="estilhacos" type="GPUParticles3D"]
+emitting = false
+amount = 22
+lifetime = 0.8
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-4, -1, -4, 8, 6, 8)
+process_material = SubResource("ParticleProcessMaterial_cacos")
+draw_pass_1 = SubResource("QuadMesh_particula")
+script = ExtResource("1_script")
+
+[node name="chao" type="GPUParticlesCollisionBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+size = Vector3(40, 1, 40)
+
+[node name="poeira" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 14
+lifetime = 0.7
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-3, -1, -3, 6, 5, 6)
+process_material = SubResource("ParticleProcessMaterial_poeira")
+draw_pass_1 = SubResource("QuadMesh_particula")

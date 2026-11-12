@@ -1,0 +1,154 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/efeitos/invocacao.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dx4o3ndwfgpui" path="res://assets/pentagrama.png" id="2_penta"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta0"]
+atlas = ExtResource("2_penta")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta1"]
+atlas = ExtResource("2_penta")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta2"]
+atlas = ExtResource("2_penta")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta3"]
+atlas = ExtResource("2_penta")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta4"]
+atlas = ExtResource("2_penta")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta5"]
+atlas = ExtResource("2_penta")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta6"]
+atlas = ExtResource("2_penta")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta7"]
+atlas = ExtResource("2_penta")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta8"]
+atlas = ExtResource("2_penta")
+region = Rect2(512, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta9"]
+atlas = ExtResource("2_penta")
+region = Rect2(576, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta10"]
+atlas = ExtResource("2_penta")
+region = Rect2(640, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_penta11"]
+atlas = ExtResource("2_penta")
+region = Rect2(704, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_penta"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta9")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta10")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_penta11")
+}],
+"loop": false,
+"name": &"desenhar",
+"speed": 16.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_brasas"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(1, 0.85, 0.4, 1, 1, 0.3, 0.1, 0.9, 0.5, 0.05, 0.05, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_brasas"]
+gradient = SubResource("Gradient_brasas")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_brasas"]
+emission_shape = 3
+emission_box_extents = Vector3(0.45, 0.02, 0.45)
+direction = Vector3(0, 1, 0)
+spread = 15.0
+gravity = Vector3(0, 0.57, 0)
+initial_velocity_min = 0.23
+initial_velocity_max = 0.68
+scale_min = 0.03
+scale_max = 0.06
+color_ramp = SubResource("GradientTexture1D_brasas")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_brasas"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_brasas"]
+material = SubResource("StandardMaterial3D_brasas")
+
+[node name="invocacao" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="pentagrama" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+pixel_size = 0.0218
+axis = 1
+shaded = false
+texture_filter = 0
+sprite_frames = SubResource("SpriteFrames_penta")
+animation = &"desenhar"
+
+[node name="luz" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+light_color = Color(1, 0.2, 0.15, 1)
+light_energy = 0.0
+omni_range = 3.2
+
+[node name="brasas" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 30
+lifetime = 0.9
+visibility_aabb = AABB(-2, -0.5, -2, 4, 3, 4)
+process_material = SubResource("ParticleProcessMaterial_brasas")
+draw_pass_1 = SubResource("QuadMesh_brasas")
