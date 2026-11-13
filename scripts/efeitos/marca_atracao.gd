@@ -8,6 +8,7 @@ extends Node3D
 enum Etapa { Puxando, Preso, Fim }
 
 const COR = Color(1, 0.3, 0.25)
+const FONTE = preload("res://fonts/Halloween Spooky Acentos.otf")
 # metros (era 56 px)
 const RAIO = 0.64
 # tempo que falta pra piscar e fazer tique-taque
@@ -298,7 +299,7 @@ func atualizar_contagem() -> void:
 	contagem.queue_redraw()
 
 func desenhar_contagem() -> void:
-	contagem.draw_string(ThemeDB.fallback_font, Vector2(-30, 10), str(ceili(npc.tempo_preso)), HORIZONTAL_ALIGNMENT_CENTER, 60, 30, Color(Color.WHITE, 0.95))
+	contagem.draw_string(FONTE, Vector2(-30, 10), str(ceili(npc.tempo_preso)), HORIZONTAL_ALIGNMENT_CENTER, 60, 30, Color(Color.WHITE, 0.95))
 
 # elos alternando grosso e fino, com uma onda que some nas pontas; tremor faz ela sacudir.
 # também usada na prévia enquanto o jogador escolhe o lugar. Só acrescenta triângulos à malha

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bcaldqcv8cuk5"]
 
-[ext_resource type="Shader" uid="uid://bx6nif84hd1h4" path="res://assets/fumaca.gdshader" id="1_d144k"]
+[ext_resource type="Shader" uid="uid://ch01xkf3bhrce" path="res://assets/nevoa.gdshader" id="1_d144k"]
 [ext_resource type="Texture2D" uid="uid://gd0regqg5x46" path="res://assets/cenario em partes/Casa_chao.png" id="2_y7nxx"]
 [ext_resource type="Shader" uid="uid://boblwripu7cjj" path="res://assets/chao_pintado.gdshader" id="3_ow4uc"]
 [ext_resource type="Texture2D" uid="uid://qmpjsyiljvbw" path="res://assets/cenario em partes/Casa_gramachao.png" id="4_6n8au"]
@@ -35,45 +35,54 @@ glow_enabled = true
 glow_intensity = 0.9
 glow_bloom = 0.05
 glow_hdr_threshold = 0.9
-volumetric_fog_enabled = true
-volumetric_fog_density = 0.015
+volumetric_fog_density = 0.0
 volumetric_fog_anisotropy = 0.5
 volumetric_fog_length = 16.0
 volumetric_fog_ambient_inject = 0.4
 volumetric_fog_sky_affect = 0.0
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_x071n"]
-frequency = 0.06
+frequency = 0.012
 fractal_octaves = 3
 
-[sub_resource type="NoiseTexture3D" id="NoiseTexture3D_1sv7h"]
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_nevoa"]
 noise = SubResource("FastNoiseLite_x071n")
 seamless = true
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_f7klt"]
+render_priority = 0
 shader = ExtResource("1_d144k")
-shader_parameter/ruido = SubResource("NoiseTexture3D_1sv7h")
-shader_parameter/densidade = 2.5
+shader_parameter/ruido = SubResource("NoiseTexture2D_nevoa")
 shader_parameter/cor = Color(0.42, 0.48, 0.68, 1)
-shader_parameter/vento = Vector3(0.12, 0, 0.06)
-shader_parameter/escala = 0.12
-shader_parameter/altura = 0.55
-shader_parameter/corte = 0.25
+shader_parameter/densidade = 0.28
+shader_parameter/escala = 0.07
+shader_parameter/vento = Vector2(0.012, 0.005)
+shader_parameter/corte = 0.42
+shader_parameter/suavidade = 0.5
+shader_parameter/luz_propria = 0.15
 shader_parameter/usar_mascara = true
 shader_parameter/mascara = ExtResource("2_y7nxx")
 shader_parameter/retangulo = Vector4(1.2727265, -0.8455479, 19.272728, 17.712004)
 
+[sub_resource type="PlaneMesh" id="PlaneMesh_quintal"]
+size = Vector2(100, 100)
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_w8dwc"]
+render_priority = 0
 shader = ExtResource("1_d144k")
-shader_parameter/ruido = SubResource("NoiseTexture3D_1sv7h")
-shader_parameter/densidade = 4.0
+shader_parameter/ruido = SubResource("NoiseTexture2D_nevoa")
 shader_parameter/cor = Color(0.8, 0.8, 0.85, 1)
-shader_parameter/vento = Vector3(0.25, 0, -0.12)
+shader_parameter/densidade = 0.3
 shader_parameter/escala = 0.3
-shader_parameter/altura = 0.75
-shader_parameter/corte = 0.2
+shader_parameter/vento = Vector2(0.03, -0.015)
+shader_parameter/corte = 0.3
+shader_parameter/suavidade = 0.35
+shader_parameter/luz_propria = 0.05
 shader_parameter/usar_mascara = false
 shader_parameter/retangulo = Vector4(0, 0, 10, 10)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_pista"]
+size = Vector2(6.875, 5.3403025)
 
 [sub_resource type="Gradient" id="Gradient_otnkl"]
 offsets = PackedFloat32Array(0, 0.2, 0.8, 1)
@@ -160,7 +169,6 @@ shader = ExtResource("3_ow4uc")
 shader_parameter/textura = ExtResource("2_y7nxx")
 shader_parameter/retangulo = Vector4(1.2727265, -0.8455479, 19.272728, 17.712004)
 shader_parameter/recortar = true
-shader_parameter/cor_fora = Color(0.1, 0.12, 0.1, 1)
 shader_parameter/tom = Color(1, 1, 1, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jt52u"]
@@ -169,7 +177,6 @@ shader = ExtResource("3_ow4uc")
 shader_parameter/textura = ExtResource("4_6n8au")
 shader_parameter/retangulo = Vector4(-8.797274, -10.10007, 39.412727, 36.221046)
 shader_parameter/recortar = false
-shader_parameter/cor_fora = Color(0.1153429, 0.19694343, 0.07378909, 1)
 shader_parameter/tom = Color(0.5, 0.52, 0.58, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_m6gdr"]
@@ -328,11 +335,8 @@ emission_enabled = true
 emission = Color(1, 0.5, 0.1, 1)
 emission_energy_multiplier = 3.8
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nw84y"]
-albedo_color = Color(0.1153429, 0.19694343, 0.07378909, 1)
-
 [sub_resource type="PlaneMesh" id="PlaneMesh_iye2o"]
-size = Vector2(240, 240)
+size = Vector2(800, 800)
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_qsbh4"]
 vertices = PackedVector3Array(13.845455, 0.10000001, 1.4713769, 17.045454, 0.10000001, 1.4713769, 17.045454, 0.10000001, 1.071377, 13.845455, 0.10000001, 0.97137696, 8.845455, 0.10000001, 7.5713773, 10.445455, 0.10000001, 7.5713773, 10.545454, 0.10000001, 7.171377, 11.145454, 0.10000001, 1.971377, 8.645454, 0.10000001, 1.971377, 8.745455, 0.10000001, 7.171377, 13.245455, 0.10000001, 7.171377, 13.245455, 0.10000001, 1.4713769, 6.8454547, 0.10000001, 1.4713769, 6.8454547, 0.10000001, 7.171377, 17.045454, 0.10000001, 7.5713773, 17.345455, 0.10000001, 7.4713774, 17.345455, 0.10000001, 6.9713774, 17.045454, 0.10000001, 6.871377, 14.845455, 0.10000001, 8.271377, 13.845455, 0.10000001, 7.771377, 17.045454, 0.10000001, 2.271377, 13.845455, 0.10000001, 2.271377, 17.045454, 0.10000001, 8.171377, 2.9454546, 0.10000001, 7.0713773, 6.1454544, 0.10000001, 7.0713773, 6.1454544, 0.10000001, 3.1713772, 2.9454546, 0.10000001, 3.1713772, 17.645454, 0.10000001, 6.871377, 17.745455, 0.10000001, 7.5713773, 18.945454, 0.10000001, 8.171377, 18.945454, 0.10000001, 5.0713773, 17.645454, 0.10000001, 5.0713773, 17.745455, 0.10000001, 8.171377, 6.1454544, 0.10000001, 7.771377, 2.9454546, 0.10000001, 10.471376, 5.345454, 0.10000001, 10.471376, 8.845455, 0.10000001, 7.871377, 10.545454, 0.10000001, 7.9713774, 8.645454, 0.10000001, 7.9713774, 8.645454, 0.10000001, 10.971376, 9.445455, 0.10000001, 10.971376, 11.945456, 0.10000001, 11.071377, 12.845455, 0.10000001, 10.971376, 12.845455, 0.10000001, 7.9713774, 9.545454, 0.10000001, 11.871377, 11.945456, 0.10000001, 11.871377, 6.5454545, 0.10000001, 10.971376, 6.6454544, 0.10000001, 11.371377, 6.8454547, 0.10000001, 11.371377, 6.9454546, 0.10000001, 10.971376, 5.745455, 0.10000001, 10.571377, 6.245455, 0.10000001, 7.9713774, 5.745455, 0.10000001, 10.971376, 13.745455, 0.10000001, 10.971376, 13.845455, 0.10000001, 11.371377, 14.145454, 0.10000001, 11.371377, 14.245455, 0.10000001, 10.971376, 16.245455, 0.10000001, 10.971376, 16.345455, 0.10000001, 8.871377, 14.945456, 0.10000001, 8.871377, 13.745455, 0.10000001, 7.9713774, 18.945454, 0.10000001, 11.371377, 19.245455, 0.10000001, 11.271377, 19.245455, 0.10000001, 9.871377, 18.945454, 0.10000001, 9.771377, 16.945456, 0.10000001, 11.071377, 18.945454, 0.10000001, 8.871377, 16.945456, 0.10000001, 11.871377, 18.945454, 0.10000001, 11.871377, 6.9454546, 0.10000001, 11.771377, 6.5454545, 0.10000001, 11.771377, 5.845454, 0.10000001, 14.971376, 5.845454, 0.10000001, 11.771377, 7.0454545, 0.10000001, 15.171377, 8.845455, 0.10000001, 15.071377, 8.845455, 0.10000001, 11.771377, 14.245455, 0.10000001, 11.771377, 13.745455, 0.10000001, 11.771377, 13.845455, 0.10000001, 15.071377, 14.945456, 0.10000001, 15.071377, 15.245455, 0.10000001, 15.271377, 16.345455, 0.10000001, 15.771377, 16.345455, 0.10000001, 11.771377, 13.745455, 0.10000001, 15.671377, 13.645454, 0.10000001, 15.271377, 12.645454, 0.10000001, 15.771377, 12.645454, 0.10000001, 11.771377, 15.245455, 0.10000001, 15.571377, 10.245455, 0.10000001, 14.171377, 11.245455, 0.10000001, 14.171377, 11.345455, 0.10000001, 13.871377, 10.145454, 0.10000001, 13.871377, 9.545454, 0.10000001, 13.871377, 11.945456, 0.10000001, 13.871377, 9.545454, 0.10000001, 14.571377, 9.545454, 0.10000001, 15.071377, 9.945455, 0.10000001, 15.171377, 10.145454, 0.10000001, 14.571377, 11.945456, 0.10000001, 15.071377, 11.945456, 0.10000001, 14.571377, 11.345455, 0.10000001, 14.571377, 11.345455, 0.10000001, 15.171377, 9.945455, 0.10000001, 18.471378, 11.345455, 0.10000001, 18.471378)
@@ -387,15 +391,69 @@ shadow_enabled = true
 shadow_blur = 1.5
 directional_shadow_max_distance = 60.0
 
-[node name="neblina_quintal" type="FogVolume" parent="ambiente" unique_id=1365727455]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.90909, 1, 8.158795)
-size = Vector3(40, 2, 31.151766)
-material = SubResource("ShaderMaterial_f7klt")
+[node name="neblina_quintal" type="Node3D" parent="ambiente" unique_id=2043245300]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.90909, 0, 8.158795)
 
-[node name="fumaca_pista" type="FogVolume" parent="ambiente" unique_id=262840933]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.028409, 0.7, 3.7827144)
-size = Vector3(6.875, 1.4, 5.3403025)
-material = SubResource("ShaderMaterial_w8dwc")
+[node name="camada1" type="MeshInstance3D" parent="ambiente/neblina_quintal" unique_id=603440087]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+material_override = SubResource("ShaderMaterial_f7klt")
+cast_shadow = 0
+instance_shader_parameters/camada = 0.0
+instance_shader_parameters/forca = 1.0
+mesh = SubResource("PlaneMesh_quintal")
+
+[node name="camada2" type="MeshInstance3D" parent="ambiente/neblina_quintal" unique_id=807087490]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
+material_override = SubResource("ShaderMaterial_f7klt")
+cast_shadow = 0
+instance_shader_parameters/camada = 1.0
+instance_shader_parameters/forca = 0.8
+mesh = SubResource("PlaneMesh_quintal")
+
+[node name="camada3" type="MeshInstance3D" parent="ambiente/neblina_quintal" unique_id=1268063991]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)
+material_override = SubResource("ShaderMaterial_f7klt")
+cast_shadow = 0
+instance_shader_parameters/camada = 2.0
+instance_shader_parameters/forca = 0.55
+mesh = SubResource("PlaneMesh_quintal")
+
+[node name="camada4" type="MeshInstance3D" parent="ambiente/neblina_quintal" unique_id=1570204837]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.68, 0)
+visible = false
+material_override = SubResource("ShaderMaterial_f7klt")
+cast_shadow = 0
+instance_shader_parameters/camada = 3.0
+instance_shader_parameters/forca = 0.3
+mesh = SubResource("PlaneMesh_quintal")
+
+[node name="fumaca_pista" type="Node3D" parent="ambiente" unique_id=2058218499]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.028409, 0, 3.7827144)
+visible = false
+
+[node name="camada1" type="MeshInstance3D" parent="ambiente/fumaca_pista" unique_id=181474473]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+material_override = SubResource("ShaderMaterial_w8dwc")
+cast_shadow = 0
+instance_shader_parameters/camada = 0.0
+instance_shader_parameters/forca = 1.0
+mesh = SubResource("PlaneMesh_pista")
+
+[node name="camada2" type="MeshInstance3D" parent="ambiente/fumaca_pista" unique_id=1245330525]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+material_override = SubResource("ShaderMaterial_w8dwc")
+cast_shadow = 0
+instance_shader_parameters/camada = 1.0
+instance_shader_parameters/forca = 0.7
+mesh = SubResource("PlaneMesh_pista")
+
+[node name="camada3" type="MeshInstance3D" parent="ambiente/fumaca_pista" unique_id=666945268]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+material_override = SubResource("ShaderMaterial_w8dwc")
+cast_shadow = 0
+instance_shader_parameters/camada = 2.0
+instance_shader_parameters/forca = 0.4
+mesh = SubResource("PlaneMesh_pista")
 
 [node name="fogos_fatuos" type="GPUParticles3D" parent="ambiente" unique_id=806415910]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.90909, 0.8, 8.158795)
@@ -704,6 +762,7 @@ material = SubResource("ShaderMaterial_bhnty")
 
 [node name="saida" type="CSGBox3D" parent="casa/chao" unique_id=1416143009]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.664772, -0.045, 16.762617)
+visible = false
 use_collision = true
 collision_layer = 2
 collision_mask = 0
@@ -1034,23 +1093,22 @@ mesh = SubResource("SphereMesh_ggpu3")
 [node name="terreno" type="Node3D" parent="." unique_id=1165913556 groups=["nav_fora"]]
 
 [node name="grama" type="CSGBox3D" parent="terreno" unique_id=770532659]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.90909, -0.07, 8.158795)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.00432, -0.07, 8.248273)
 use_collision = true
 collision_layer = 4
 collision_mask = 0
-size = Vector3(40, 0.1, 31.151766)
+size = Vector3(39.96811, 0.1, 30.846436)
 material = SubResource("ShaderMaterial_jt52u")
 
 [node name="sem_casa1" type="NavigationObstacle3D" parent="terreno" unique_id=1828541799]
 height = 3.0
 vertices = PackedVector3Array(6.3636365, 0, 1.7207642, 2.5454545, 0, 1.7207642, 2.5454545, 0, 11.4519825, 5.4545455, 0, 11.4519825, 5.4545455, 0, 16.198917, 9.272727, 0, 16.198917, 9.272727, 0, 15.249531, 9.818182, 0, 15.249531, 9.818182, 0, 18.69106, 11.454545, 0, 18.69106, 11.454545, 0, 15.249531, 12.181818, 0, 15.249531, 12.181818, 0, 16.198917, 16.727272, 0, 16.198917, 16.727272, 0, 12.401369, 19.454546, 0, 12.401369, 19.454546, 0, 3.6195383, 17.454546, 0, 3.6195383, 17.454546, 0, 0.771377, 13.636364, 0, 0.771377, 13.636364, 0, -0.17801009, 6.3636365, 0, -0.17801009)
 affect_navigation_mesh = true
-carve_navigation_mesh = false
 avoidance_enabled = false
 
 [node name="longe" type="MeshInstance3D" parent="." unique_id=257341155]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.90909, -0.08, 8.158795)
-material_override = SubResource("StandardMaterial3D_nw84y")
+material_override = SubResource("ShaderMaterial_jt52u")
 cast_shadow = 0
 mesh = SubResource("PlaneMesh_iye2o")
 

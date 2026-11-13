@@ -38,7 +38,7 @@ cena_policial = ExtResource("11_policial")
 current = true
 fov = 30.0
 near = 0.2
-far = 200.0
+far = 600.0
 script = ExtResource("3_camera")
 
 [node name="UI_main" parent="." unique_id=1013972051 instance=ExtResource("4_hud")]

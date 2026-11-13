@@ -106,7 +106,7 @@ func _process(delta: float) -> void:
 	var real = minf(delta / maxf(Engine.time_scale, 0.01), 0.05)
 	for acao in recarga_restante:
 		var antes = recarga_restante[acao]
-		recarga_restante[acao] = maxf(antes - delta, 0.0)
+		recarga_restante[acao] = maxf(antes - real, 0.0)
 		# piscadinha: ação pronta de novo
 		if antes > 0.0 and recarga_restante[acao] == 0.0:
 			piscar(1, 0.08)
@@ -397,7 +397,8 @@ func andar_pelo_caminho(destino: Vector3, passo: float) -> void:
 		destino_caminho = destino
 		caminho = NavigationServer3D.map_get_path(get_world_3d().navigation_map, global_position, destino, true, 1)
 		indice_caminho = 0
-	while indice_caminho < caminho.size() and global_position.distance_to(caminho[indice_caminho]) < 0.012:
+	# a malha fica uns 10 cm acima do chão: compara sem o y, senão o ponto nunca é "alcançado" e ele não sai do lugar
+	while indice_caminho < caminho.size() and Vector2(global_position.x - caminho[indice_caminho].x, global_position.z - caminho[indice_caminho].z).length() < 0.012:
 		indice_caminho += 1
 	quadro_caminho = quadro
 	# sem caminho fica parado; no fim dele o último trecho é reto até o destino

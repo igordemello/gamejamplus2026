@@ -87,7 +87,8 @@ func _process(delta: float) -> void:
 		return
 	# o relógio espera o tutorial
 	if not tutorial.rodando():
-		tempo_partida += delta
+		# tempo real: câmera lenta e hitstop não atrasam o relógio
+		tempo_partida += minf(delta / maxf(Engine.time_scale, 0.01), 0.05)
 	if restantes == 1 and policia_chamada and not amanheceu and get_tree().get_nodes_in_group("policial").size() == 1:
 		tempo_limite = minf(tempo_limite, tempo_partida + tempo_so_policial)
 	if tempo_partida >= tempo_limite and not amanheceu:

@@ -119,6 +119,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		jogador_mexeu()
 		atualizar()
 
+# força da névoa em qualquer zoom: 1 = densidade do level, 0 = sem névoa
+@export_range(0.0, 1.0) var fog_forca: float = 0.4
+var densidade_base: float = -1.0
+
 func distancia() -> float:
 	return distancia_base / zoom_atual
 
@@ -131,6 +135,14 @@ func atualizar() -> void:
 	var escala = distancia() / 1000.0
 	h_offset = randf_range(-1.0, 1.0) * tremida * escala
 	v_offset = randf_range(-1.0, 1.0) * tremida * escala
+	# névoa com a mesma espessura em qualquer zoom (senão perto/longe muda a densidade vista)
+	var fase = GameManager.fase
+	if fase and fase.ambiente:
+		var env = fase.ambiente.environment
+		if densidade_base < 0.0:
+			densidade_base = env.volumetric_fog_density
+		env.volumetric_fog_density = densidade_base * fog_forca * distancia_base / distancia()
+		env.volumetric_fog_length = maxf(distancia() * 1.6, 16.0)
 	var a: CameraAttributesPractical = attributes
 	a.dof_blur_amount = desfoque
 	a.dof_blur_far_enabled = desfoque > 0.0

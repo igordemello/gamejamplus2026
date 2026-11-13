@@ -88,7 +88,7 @@ func atualizar_carta() -> void:
 func montar_celulas(carta: Variant) -> void:
 	var malha = ImmediateMesh.new()
 	var centro: Vector3 = GameManager.fase.camera.alvo
-	var cor = Color(1, 1, 1, 0.13)
+	var cor = Color(1, 1, 1, 0.07)
 	var meio = CELULA / 2.0
 	var folga = CELULA * 0.04
 	malha.surface_begin(Mesh.PRIMITIVE_TRIANGLES)

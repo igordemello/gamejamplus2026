@@ -83,9 +83,9 @@ Hoje só existe a `casa`. `GameManager.fase` é a fase atual; ela se registra no
 
 Montado no editor com peças separadas. Não há gerador por script: mudou o level, edite as peças e aperte **Bake NavigationMesh** nas duas regiões de `navegacao`.
 
-- `ambiente`: `WorldEnvironment` (névoa volumétrica), lua (`DirectionalLight3D`), `FogVolume` `neblina_quintal` e `fumaca_pista` (shader `assets/fumaca.gdshader`), partículas `fogos_fatuos` e `folhas`.
+- `ambiente`: `WorldEnvironment` (a névoa volumétrica está desligada: era forte demais), lua (`DirectionalLight3D`), a névoa em camadas `neblina_quintal` e `fumaca_pista` (escondida; ligue a visibilidade pra usar) e as partículas `fogos_fatuos` (escondida) e `folhas`.
 - `casa` (grupo `nav_casa`): `chao` (peças `CSGBox3D` de piso), `paredes` (peças `CSGBox3D`), `tapete` (`Sprite3D` deitado), `fogo_lareira` (`GPUParticles3D`) e `varal` (lâmpadas, `scripts/fases/varal.gd`: acendem de três em três).
-- `terreno` (grupo `nav_fora`): a grama (`CSGBox3D`) e o `NavigationObstacle3D` `sem_casa1`, que tira a casa da malha de fora. `longe` é um plano enorme da cor da grama.
+- `terreno` (grupo `nav_fora`): a grama (`CSGBox3D`) e o `NavigationObstacle3D` `sem_casa1`, que tira a casa da malha de fora. `longe` é um plano de 800 m logo abaixo, com o mesmo material da grama (a imagem se repete espelhada até o horizonte): não dá pra ver o vazio em nenhum zoom.
 - `navegacao`: `casa` (`NavigationRegion3D`, camada 1), `fora` (camada 2) e os `NavigationLink3D` `porta_esquerda`/`porta_direita` (camada 2), que ligam a grama aos lados do corredor da porta da frente.
 - `comodos`: um `Area3D` com `CollisionShape3D` de caixa por cômodo: `quarto`, `sala`, `escritorio`, `quarto2`, `cozinha`. O nome do nó é o nome do cômodo (os requisitos de spawn dependem disso).
 - `pontos_festa` (`Marker3D` com `scripts/fases/ponto_festa.gd`), `pontos_armadura` (`armadura1`…`armadura5`, grupo `armadura`) e `pontos_lareira` (`lareira1`, grupo `lareira`), os dois últimos com `scripts/fases/ponto_spawn.gd`.
@@ -126,11 +126,11 @@ Perspectiva (fov 30), de cima, com `inclinacao` fixa de 40° e o ponto do chão 
 
 ### Mundo 3D e materiais
 
-- `assets/chao_pintado.gdshader`: a imagem do chão/grama presa no mundo por `retangulo`; qualquer peça em cima mostra o pedaço certo, e `recortar` some onde a imagem é transparente.
+- `assets/chao_pintado.gdshader`: a imagem do chão/grama presa no mundo por `retangulo`; qualquer peça em cima mostra o pedaço certo. Fora do retângulo a imagem se repete espelhada (por isso a grama e o `longe` não têm emenda). Com `recortar` (chão da casa) some onde a imagem é transparente e fora do retângulo.
 - `assets/parede.gdshader`: topo escuro, face pra dentro marrom e pra fora bege, decidido pela imagem do chão na frente da face.
 - `assets/personagem.gdshader`: sprite em pé virado pra câmera, com contorno, brilho e giro (ver Sprites).
 - `assets/alma.gdshader`: silhueta branca 3D (alma do infarto); a textura vai em `texture_albedo` na mão.
-- `assets/fumaca.gdshader`: shader de `FogVolume` (neblina do quintal e fumaça da pista, que fica colorida com as luzes de festa). `assets/neblina.gdshader` é a neblina de tela do menu e dos créditos.
+- `assets/nevoa.gdshader`: névoa rasteira em camadas. Cada camada é um `MeshInstance3D` com `PlaneMesh` deitado, com fiapos de ruído andando com o vento; várias empilhadas em alturas diferentes (filhas de `neblina_quintal` e `fumaca_pista`) dão volume quando a câmera mexe. Cada camada tem os parâmetros de instância `camada` (muda o ruído) e `forca` (as de cima são mais ralas). Recebe as luzes (a fumaça da pista fica colorida com a festa), some suave onde encosta em parede, chão ou gente (pela profundidade da cena) e, com `usar_mascara`, não entra na casa (usa a imagem do chão). Pra mudar a névoa, mexa no material (`densidade`, `corte`, `escala`, `vento`) ou acrescente/tire camadas. `assets/neblina.gdshader` é a neblina de tela do menu e dos créditos.
 - `assets/pos.gdshader` + `scripts/fases/pos.gd` (`ColorRect` `tela` no `CanvasLayer` `pos`): cor (escuros puxando pro roxo, claros quentes), vinheta, granulado e aberração cromática. `fase.pos.chutar(forca)` dá um tranco na aberração, em tempo real; o NPC chama ao subir de nível e o infarto também. `assets/foco.gdshader` escurece a tela em volta do infartado.
 - **Luzes**: `OmniLight3D` dentro de `luzes`, todas com `scripts/fases/luz.gd`. O script cuida do `tremor` (vela/lareira), da `falha` (lâmpada apagando sozinha) e, com `cores` + `bpm` + `raio_orbita`, das luzes da pista, que trocam de cor na batida e andam em órbita. Toda `luz.gd` entra no grupo `luz` e tem `piscar(duracao)`. `Fase.piscar_luzes(p, duracao)` pisca as do mesmo cômodo ou a até 3,5 m. Quem chama: o NPC ao subir de nível (mais forte quando foge), o infarto durante o ataque inteiro, e `Fantasma.executar` em toda ação que deu certo. A lua é uma luz enorme e fraca.
 - Cada `Fantasma` cria no `_enter_tree` uma luz verde-água fraca, pulsando, perto do desenho. Ela não está no grupo `luz`.
@@ -336,6 +336,6 @@ Bem fácil, para a jam. Começa com 5 sustos (`GameManager.SUSTOS_INICIAIS`, dá
 - Ao editar `.tscn` à mão, cuidado com os blocos grandes de sub-resources. Exports de nó usam `node_paths=PackedStringArray(...)` no cabeçalho do nó. Posição 3D numa cena é `Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, x, y, z)` ou `position = Vector3(...)`. Use LF e tab.
 - Um `float` de 32 bits do Godot (zoom, por exemplo) compara-se com `is_equal_approx`, nunca com `==`.
 - Antes de commitar mudança de script/cena, rode `tests/compilar.gd` e `tests/verificar_partida.gd`.
-- Desempenho: roda a ~165 FPS (teto do vsync) com sombras, névoa volumétrica e desfoque. A névoa volumétrica e o desfoque são os candidatos se precisar cortar.
+- Desempenho: roda a ~165 FPS (teto do vsync) com sombras, névoa em camadas e desfoque. O desfoque e as sombras das luzes são os candidatos se precisar cortar.
 
 Configuração de tela em `project.godot`: 1920×1080, tela cheia exclusiva (`mode=3`), stretch `canvas_items`/`expand`.

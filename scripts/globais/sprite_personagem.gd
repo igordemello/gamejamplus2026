@@ -23,7 +23,12 @@ const SHADER = preload("res://assets/personagem.gdshader")
 		giro = valor
 		_material().set_shader_parameter("giro", valor)
 
+# TAMANHO DE TODOS OS NPCs E FANTASMAS: mude aqui (1.0 = como está nas cenas)
+const AUMENTO = 1.1
+
 func _ready() -> void:
+	pixel_size *= AUMENTO
+	cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	frame_changed.connect(_trocar_textura)
 	animation_changed.connect(_trocar_textura)
 	sprite_frames_changed.connect(_trocar_textura)
